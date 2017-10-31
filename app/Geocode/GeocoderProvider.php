@@ -30,8 +30,8 @@ class GeocoderProvider
 
         $this->registerProviders([
             new Chain([
-                new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
                 Nominatim::withOpenStreetMapServer($this->adapter),
+                new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
             ])
         ]);
     }

@@ -34,10 +34,6 @@
                 text-align: center;
             }
 
-            .input-address {
-                width: 300px;
-                padding: 5px;
-            }
         </style>
     </head>
     <body>
@@ -46,10 +42,10 @@
             <div class="content">
 
                 <form action="{{ url('/') }}" method="get">
-                    <label>
-                        Endereço:
-                        <input type="text" name="address" class="input-address"/>
-                    </label>
+                    <input type="text" name="address" placeholder="Logradouro" style="width: 200px" value="{{ $address or "" }}" required/>
+                    <input type="text" name="number" placeholder="Nº" style="width: 30px" value="{{ $number or "" }}" />
+                    <input type="text" name="city" placeholder="Cidade" style="width: 60px" value="{{ $city or "" }}" required/>
+                    <input type="text" name="state" placeholder="Estado" style="width: 60px" value="{{ $state or "" }}"/>
                     <input type="submit" value="Localizar"/>
                 </form>
 
