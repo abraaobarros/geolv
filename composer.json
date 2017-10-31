@@ -1,0 +1,68 @@
+{
+    "name": "laravel/laravel",
+    "description": "The Laravel Framework.",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "type": "project",
+    "require": {
+        "php": ">=7.0.0",
+        "fideloper/proxy": "~3.3",
+        "geocoder-php/cache-provider": "^4.0",
+        "geocoder-php/google-maps-provider": "^4.1",
+        "geocoder-php/nominatim-provider": "^4.0",
+        "laravel/framework": "5.5.*",
+        "laravel/tinker": "~1.0",
+        "php-http/guzzle6-adapter": "^1.1",
+        "toin0u/geocoder-laravel": "^4.0"
+    },
+    "require-dev": {
+        "filp/whoops": "~2.0",
+        "fzaninotto/faker": "~1.4",
+        "mockery/mockery": "0.9.*",
+        "phpunit/phpunit": "~6.0"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+                "toin0u/geocoder-laravel"
+            ]
+        }
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "php7 -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "php7 artisan key:generate"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "php7 artisan package:discover"
+        ],
+        "post-update-cmd": [
+            "php7 artisan cache:clear"
+        ],
+        "post-install-cmd": [
+            "php7 artisan cache:clear"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
+}
