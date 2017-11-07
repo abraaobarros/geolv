@@ -29,10 +29,8 @@ class GeocoderProvider
         $this->cacheDuration = 9999999;
 
         $this->registerProviders([
-            new Chain([
-                Nominatim::withOpenStreetMapServer($this->adapter),
-                new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
-            ])
+            Nominatim::withOpenStreetMapServer($this->adapter),
+            new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
         ]);
     }
 
