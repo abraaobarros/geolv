@@ -44,20 +44,20 @@
     },
     "scripts": {
         "post-root-package-install": [
-            "php7 -r \"file_exists('.env') || copy('.env.example', '.env');\""
+            "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "php7 artisan key:generate"
+            "php artisan key:generate"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "php7 artisan package:discover"
+            "php artisan package:discover"
         ],
         "post-update-cmd": [
-            "php7 artisan cache:clear"
+            "php artisan cache:clear"
         ],
         "post-install-cmd": [
-            "php7 artisan cache:clear"
+            "php artisan cache:clear"
         ]
     },
     "config": {
