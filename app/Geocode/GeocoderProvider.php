@@ -2,8 +2,7 @@
 
 namespace App\Geocode;
 
-use Geocoder\Provider\Cache\ProviderCache;
-use Geocoder\Provider\Chain\Chain;
+use Geocoder\Provider\ArcGISOnline\ArcGISOnline;
 use Geocoder\Provider\GoogleMaps\GoogleMaps;
 use Geocoder\Provider\Nominatim\Nominatim;
 use Geocoder\ProviderAggregator;
@@ -29,8 +28,11 @@ class GeocoderProvider
         $this->cacheDuration = 9999999;
 
         $this->registerProviders([
-            Nominatim::withOpenStreetMapServer($this->adapter),
-            new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
+            new GroupResults([
+                Nominatim::withOpenStreetMapServer($this->adapter),
+                new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
+                new ArcGISOnline($this->adapter)
+            ])
         ]);
     }
 
