@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Geocode;
+namespace GeoLV\Geocode;
 
+use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\ArcGISOnline\ArcGISOnline;
 use Geocoder\Provider\GoogleMaps\GoogleMaps;
 use Geocoder\Provider\Nominatim\Nominatim;
 use Geocoder\ProviderAggregator;
 use Geocoder\Query\GeocodeQuery;
-use Geocoder\Query\ReverseQuery;
+use GeoLV\Address;
 use Http\Adapter\Guzzle6\Client;
-use Illuminate\Container\EntryNotFoundException;
 use Illuminate\Support\Collection;
+use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;
 
 class GeocoderProvider
 {
@@ -18,125 +19,61 @@ class GeocoderProvider
     protected $limit;
     protected $results;
     protected $adapter;
-    private $cacheDuration;
+    protected $searchDriver;
+    protected $relevanceFieldName = 'relevance';
+    protected $searchColumns = [
+        'street_name::street_number::sub_locality::locality::country_name',
+        'street_name::street_number::sub_locality::locality',
+        'street_name::street_number::sub_locality',
+        'street_name::street_number',
+        'street_name',
+        'locality',
+        'sub_locality',
+        'postal_code',
+        'country_name',
+        'country_code',
+    ];
 
     public function __construct()
     {
+        $this->results = new AddressCollection();
         $this->aggregator = new ProviderAggregator();
-        $this->results = collect();
         $this->adapter = Client::createWithConfig(['verify' => false]);
-        $this->cacheDuration = 9999999;
+        $this->searchDriver = new FuzzySearchDriver('addresses', $this->searchColumns, $this->relevanceFieldName);
 
         $this->registerProviders([
-            new GroupResults([
-                Nominatim::withOpenStreetMapServer($this->adapter),
-                new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
-                new ArcGISOnline($this->adapter)
-            ])
+            new SearchResults($this->searchDriver,
+                new GroupResults([
+                    Nominatim::withOpenStreetMapServer($this->adapter),
+                    new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
+                    new ArcGISOnline($this->adapter)
+                ])
+            )
         ]);
     }
 
     public function get() : Collection
     {
-        return $this->results;
+        return Address::hydrate($this->results->all());
     }
 
     public function geocodeQuery(GeocodeQuery $query) : self
     {
-        $cacheKey = serialize($query);
-        $this->results = app('cache')->remember(
-            "geocoder-{$cacheKey}",
-            $this->cacheDuration,
-            function () use ($query) {
-                return collect($this->aggregator->geocodeQuery($query));
-            }
-        );
-
-        $this->removeEmptyCacheEntry("geocoder-{$cacheKey}");
-
-        return $this;
-    }
-
-    public function reverseQuery(ReverseQuery $query) : self
-    {
-        $cacheKey = serialize($query);
-        $this->results = app('cache')->remember(
-            "geocoder-{$cacheKey}",
-            $this->cacheDuration,
-            function () use ($query) {
-                return collect($this->aggregator->reverseQuery($query));
-            }
-        );
-
-        $this->removeEmptyCacheEntry("geocoder-{$cacheKey}");
-
+        $this->results = $this->aggregator->geocodeQuery($query);
         return $this;
     }
 
     public function geocode(string $value) : self
     {
-        $cacheKey = str_slug(strtolower(urlencode($value)));
-        $this->results = app('cache')->remember(
-            "geocoder-{$cacheKey}",
-            $this->cacheDuration,
-            function () use ($value) {
-                return collect($this->aggregator->geocode($value));
-            }
-        );
-
-        $this->removeEmptyCacheEntry("geocoder-{$cacheKey}");
-
+        $this->results = $this->aggregator->geocode($value);
         return $this;
     }
 
-    public function reverse(float $latitude, float $longitude) : self
-    {
-        $cacheKey = str_slug(strtolower(urlencode("{$latitude}-{$longitude}")));
-        $this->results = app('cache')->remember(
-            "geocoder-{$cacheKey}",
-            $this->cacheDuration,
-            function () use ($latitude, $longitude) {
-                return collect($this->aggregator->reverse($latitude, $longitude));
-            }
-        );
-
-        $this->removeEmptyCacheEntry("geocoder-{$cacheKey}");
-
-        return $this;
-    }
-
-
-    public function registerProvider($provider) : self
-    {
-        $this->aggregator->registerProvider($provider);
-
-        return $this;
-    }
-
-    public function registerProviders(array $providers = []) : self
+    protected function registerProviders(array $providers = []) : self
     {
         $this->aggregator->registerProviders($providers);
 
         return $this;
     }
 
-    public function using(string $name) : self
-    {
-        $this->aggregator = $this->aggregator->using($name);
-
-        return $this;
-    }
-
-    protected function removeEmptyCacheEntry(string $cacheKey)
-    {
-        try {
-            $result = app('cache')->get($cacheKey);
-        } catch (EntryNotFoundException $e) {
-            $result = null;
-        }
-
-        if ($result && $result->isEmpty()) {
-            app('cache')->forget($cacheKey);
-        }
-    }
 }

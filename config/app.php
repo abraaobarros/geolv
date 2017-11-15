@@ -171,12 +171,12 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        App\Providers\GeocoderService::class,
+        GeoLV\Providers\AppServiceProvider::class,
+        GeoLV\Providers\AuthServiceProvider::class,
+        // GeoLV\Providers\BroadcastServiceProvider::class,
+        GeoLV\Providers\EventServiceProvider::class,
+        GeoLV\Providers\RouteServiceProvider::class,
+        GeoLV\Providers\GeocoderService::class,
 
     ],
 
