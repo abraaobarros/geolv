@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCacheTable extends Migration
+class AddLevenshteinFunction extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateCacheTable extends Migration
      */
     public function up()
     {
-        Schema::create('cache', function (Blueprint $table) {
-            $table->string('key')->unique();
-            $table->text('value');
-            $table->integer('expiration');
-        });
+        $levenshtein = file_get_contents(storage_path('app/levenshtein.sql'));
+        \DB::unprepared($levenshtein);
     }
 
     /**
@@ -27,6 +24,6 @@ class CreateCacheTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cache');
+        \DB::unprepared('DROP IF EXISTS FUNCTION levenshtein;');
     }
 }

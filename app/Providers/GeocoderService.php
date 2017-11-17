@@ -1,4 +1,4 @@
-<?php namespace App\Providers;
+<?php namespace GeoLV\Providers;
 
 /**
  * This file is part of the Geocoder Laravel package.
@@ -9,7 +9,7 @@
  * @license    MIT License
  */
 
-use App\Geocode\GeocoderProvider;
+use GeoLV\Geocode\GeocoderProvider;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\ServiceProvider;
 

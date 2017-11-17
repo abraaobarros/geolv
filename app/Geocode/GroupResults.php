@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: luizg
- * Date: 06/11/2017
- * Time: 22:51
- */
 
-namespace App\Geocode;
+namespace GeoLV\Geocode;
 
 
 use Geocoder\Collection;

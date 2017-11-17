@@ -15,11 +15,8 @@ use Illuminate\Http\Request;
 
 Route::get('/', function (Request $request) {
     if ($request->has('address')) {
-
-        $address = join(", ", $request->all());
-
         $results = app('geocoder')
-            ->geocode($address)
+            ->geocode($request->get('address'))
             ->get();
     } else {
         $results = collect();
