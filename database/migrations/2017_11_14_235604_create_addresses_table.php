@@ -25,6 +25,8 @@ class CreateAddressesTable extends Migration
             $table->string('provider')->nullable();
             $table->double('latitude');
             $table->double('longitude');
+            $table->integer('search_id')->unsigned()->index();
+            $table->foreign('search_id')->references('id')->on('searches')->onDelete('cascade');
             $table->timestamps();
         });
     }

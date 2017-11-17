@@ -40,7 +40,8 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "toin0u/geocoder-laravel"
+                "toin0u/geocoder-laravel",
+                "tom-lingham/searchy"
             ]
         }
     },

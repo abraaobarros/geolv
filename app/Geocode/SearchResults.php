@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: luizg
- * Date: 14/11/2017
- * Time: 20:52
- */
 
 namespace GeoLV\Geocode;
 
@@ -17,6 +11,7 @@ use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
 use GeoLV\Address;
+use GeoLV\Search;
 use TomLingham\Searchy\Interfaces\SearchDriverInterface;
 
 class SearchResults implements Provider
@@ -39,7 +34,9 @@ class SearchResults implements Provider
      */
     public function geocodeQuery(GeocodeQuery $query): Collection
     {
-        //$this->store($this->provider->geocodeQuery($query));
+        if (!$this->hasAlreadyDoneSearch($query))
+            $this->store($query, $this->provider->geocodeQuery($query));
+
         $queryText = $this->formatQueryText($query);
         $results = $this->searchDriver->query($queryText)->get();
 
@@ -68,14 +65,19 @@ class SearchResults implements Provider
         return 'search';
     }
 
-    private function store(Collection $results)
+    private function store(GeocodeQuery $query, Collection $results)
     {
+        $search = Search::firstOrCreate([
+            'text' => $query->getText(),
+            'locale' => $query->getLocale(),
+        ]);
+
         /** @var Location $result */
         foreach ($results as $result) {
             if (empty($result->getStreetName()))
                 continue;
 
-            Address::firstOrCreate([
+            $search->addresses()->firstOrCreate([
                 'street_name'   => $result->getStreetName(),
                 'street_number' => $result->getStreetNumber(),
                 'locality'      => $result->getLocality(),
@@ -85,10 +87,9 @@ class SearchResults implements Provider
                 'country_name'  => $result->getCountry()->getName(),
                 'latitude'      => $result->getCoordinates()->getLatitude(),
                 'longitude'     => $result->getCoordinates()->getLongitude(),
-                'provider'      => $result->getProvidedBy()
+                'provider'      => $result->getProvidedBy(),
             ]);
         }
-
     }
 
     /**
@@ -98,6 +99,11 @@ class SearchResults implements Provider
     private function formatQueryText(GeocodeQuery $query)
     {
         return preg_replace('/\s+/', ' ', str_replace(["-", ","], " ", $query->getText()));
+    }
+
+    private function hasAlreadyDoneSearch(GeocodeQuery $query)
+    {
+        return Search::exists($query);
     }
 
 }

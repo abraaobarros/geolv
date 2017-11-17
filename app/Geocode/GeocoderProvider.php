@@ -12,6 +12,7 @@ use GeoLV\Address;
 use Http\Adapter\Guzzle6\Client;
 use Illuminate\Support\Collection;
 use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;
+use TomLingham\Searchy\SearchDrivers\SimpleSearchDriver;
 
 class GeocoderProvider
 {
@@ -20,28 +21,15 @@ class GeocoderProvider
     protected $results;
     protected $adapter;
     protected $searchDriver;
-    protected $relevanceFieldName = 'relevance';
-    protected $searchColumns = [
-        'street_name::street_number::sub_locality::locality::country_name',
-        'street_name::street_number::sub_locality::locality',
-        'street_name::street_number::sub_locality',
-        'street_name::street_number',
-        'street_name',
-        'locality',
-        'sub_locality',
-        'postal_code',
-        'country_name',
-        'country_code',
-    ];
 
     public function __construct()
     {
         $this->results = new AddressCollection();
         $this->aggregator = new ProviderAggregator();
         $this->adapter = Client::createWithConfig(['verify' => false]);
-        $this->searchDriver = new FuzzySearchDriver('addresses', $this->searchColumns, $this->relevanceFieldName);
+        $this->searchDriver = new GeoLVSearchDriver();
 
-        $this->registerProviders([
+        $this->aggregator->registerProviders([
             new SearchResults($this->searchDriver,
                 new GroupResults([
                     Nominatim::withOpenStreetMapServer($this->adapter),
@@ -66,13 +54,6 @@ class GeocoderProvider
     public function geocode(string $value) : self
     {
         $this->results = $this->aggregator->geocode($value);
-        return $this;
-    }
-
-    protected function registerProviders(array $providers = []) : self
-    {
-        $this->aggregator->registerProviders($providers);
-
         return $this;
     }
 
