@@ -36,7 +36,7 @@ class GeoLVSearchDriver implements SearchDriverInterface
 
     public function query($searchString)
     {
-        $search = Search::findFromQuery($searchString);
+        $search = Search::findFromText($searchString);
         $results = $this->searchDriver->query($searchString)->getQuery()->where('search_id', $search->id)->get();
         $this->results = $results;
         return $this;
