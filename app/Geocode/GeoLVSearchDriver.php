@@ -3,6 +3,7 @@
 namespace GeoLV\Geocode;
 
 
+use GeoLV\Address;
 use GeoLV\Search;
 use TomLingham\Searchy\Interfaces\SearchDriverInterface;
 use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;
@@ -22,6 +23,7 @@ class GeoLVSearchDriver implements SearchDriverInterface
         'street_name',
         'street_number',
         'postal_code',
+        'text'
     ];
 
     /**
@@ -30,7 +32,7 @@ class GeoLVSearchDriver implements SearchDriverInterface
     public function __construct()
     {
         $this->results = collect();
-        $this->searchDriver = new FuzzySearchDriver('addresses', $this->searchColumns, $this->relevanceFieldName, ['addresses.*']);
+        $this->searchDriver = new FuzzySearchDriver('addresses', $this->searchColumns, $this->relevanceFieldName, ['addresses.*', 'text']);
     }
 
     public function query($searchString)
@@ -39,8 +41,29 @@ class GeoLVSearchDriver implements SearchDriverInterface
         $results = $this->searchDriver
             ->query($this->formatQueryText($searchString))
             ->getQuery()
-            ->where('search_id', $search->id)
-            ->get();
+            ->leftJoin('searches', 'search_id', '=', 'searches.id')
+            ->get()
+            ->map(function ($address) use ($search) {
+
+                //Add points if is from search
+                if ($address->search_id == $search->id)
+                    $address->{$this->relevanceFieldName} += 100;
+
+                //Remove points if search not match
+                $address->{$this->relevanceFieldName} -= levenshtein($address->text, $search->text) * 25;
+
+                //Add points if has all data
+                $address->{$this->relevanceFieldName} += empty($address->street_name)? 0: 50;
+                $address->{$this->relevanceFieldName} += empty($address->street_number)? 0: 50;
+                $address->{$this->relevanceFieldName} += empty($address->locality)? 0: 50;
+                $address->{$this->relevanceFieldName} += empty($address->sub_locality)? 0: 50;
+                $address->{$this->relevanceFieldName} += empty($address->country_name)? 0: 50;
+
+
+                return $address;
+            })
+            ->sortByDesc('relevance')
+            ->values();
 
         $this->results = $results;
         return $this;
