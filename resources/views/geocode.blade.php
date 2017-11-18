@@ -17,7 +17,7 @@
                     <form action="{{ url('/') }}" method="get">
                         <div class="input-group">
                             <label for="address" class="sr-only">Endereço</label>
-                            <input type="text" class="form-control" name="address" id="address" value="{{ $address or "" }}">
+                            <input type="text" class="form-control" name="address" id="address" placeholder="Digite um endereço para geolocalizar" value="{{ $address or "" }}">
                             <div class="input-group-btn">
                                 <button type="submit" class="btn btn-primary">
                                     Localizar
