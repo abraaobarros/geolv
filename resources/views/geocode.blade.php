@@ -33,7 +33,7 @@
             <div class="row">
                 @foreach ($results as $result)
                 <div class="col-4">
-                    <div class="card">
+                    <div class="card" style="margin-bottom: 10px">
                         <div class="card-body">
                             <h4 class="card-title">{{ $result->street_name }}</h4>
                             <h6 class="card-subtitle mb-2 text-muted">{{ $result->provider }}</h6>

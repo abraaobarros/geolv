@@ -22,7 +22,6 @@ class GeoLVSearchDriver implements SearchDriverInterface
         'street_name',
         'street_number',
         'postal_code',
-        'text'
     ];
 
     /**
@@ -36,7 +35,8 @@ class GeoLVSearchDriver implements SearchDriverInterface
 
     public function query($searchString)
     {
-        $results = $this->searchDriver->query($searchString)->getQuery()->leftJoin('searches', 'search_id', '=', 'searches.id')->get();
+        $search = Search::findFromQuery($searchString);
+        $results = $this->searchDriver->query($searchString)->getQuery()->where('search_id', $search->id)->get();
         $this->results = $results;
         return $this;
     }
