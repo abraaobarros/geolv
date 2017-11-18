@@ -37,8 +37,7 @@ class SearchResults implements Provider
         if (!$this->hasAlreadyDoneSearch($query))
             $this->store($query, $this->provider->geocodeQuery($query));
 
-        $queryText = $this->formatQueryText($query);
-        $results = $this->searchDriver->query($queryText)->get();
+        $results = $this->searchDriver->query($query->getText())->get();
 
         return new AddressCollection($results->toArray());
     }
@@ -90,15 +89,6 @@ class SearchResults implements Provider
                 'provider'      => $result->getProvidedBy(),
             ]);
         }
-    }
-
-    /**
-     * @param GeocodeQuery $query
-     * @return null|string|string[]
-     */
-    private function formatQueryText(GeocodeQuery $query)
-    {
-        return preg_replace('/\s+/', ' ', str_replace(["-", ","], " ", $query->getText()));
     }
 
     private function hasAlreadyDoneSearch(GeocodeQuery $query)

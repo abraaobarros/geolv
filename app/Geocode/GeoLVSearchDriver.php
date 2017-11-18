@@ -6,7 +6,6 @@ namespace GeoLV\Geocode;
 use GeoLV\Search;
 use TomLingham\Searchy\Interfaces\SearchDriverInterface;
 use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;
-use TomLingham\Searchy\SearchDrivers\LevenshteinSearchDriver;
 
 class GeoLVSearchDriver implements SearchDriverInterface
 {
@@ -37,9 +36,24 @@ class GeoLVSearchDriver implements SearchDriverInterface
     public function query($searchString)
     {
         $search = Search::findFromText($searchString);
-        $results = $this->searchDriver->query($searchString)->getQuery()->where('search_id', $search->id)->get();
+        $results = $this->searchDriver
+            ->query($this->formatQueryText($searchString))
+            ->getQuery()
+            ->where('search_id', $search->id)
+            ->get();
+
         $this->results = $results;
         return $this;
+    }
+
+
+    /**
+     * @param $searchString
+     * @return null|string|string[]
+     */
+    private function formatQueryText($searchString)
+    {
+        return preg_replace('/\s+/', ' ', str_replace(["-", ","], " ", $searchString));
     }
 
     public function select(/* $columns */)

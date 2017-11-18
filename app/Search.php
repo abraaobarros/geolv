@@ -3,6 +3,7 @@
 namespace GeoLV;
 
 use Geocoder\Query\GeocodeQuery;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class Search
  * @package GeoLV
  * @method static Search|Model firstOrCreate(array $data)
+ * @property int $id
  */
 class Search extends Model
 {
