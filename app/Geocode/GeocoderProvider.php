@@ -32,9 +32,9 @@ class GeocoderProvider
         $this->aggregator->registerProviders([
             new SearchResults($this->searchDriver,
                 new GroupResults([
-                    Nominatim::withOpenStreetMapServer($this->adapter),
                     new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
-                    new ArcGISOnline($this->adapter)
+                    new ArcGISOnline($this->adapter),
+                    new HereGeocoder($this->adapter, env('HERE_GEOCODER_ID'), env('HERE_GEOCODER_CODE'))
                 ])
             )
         ]);

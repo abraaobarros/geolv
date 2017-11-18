@@ -52,6 +52,10 @@ class GeoLVSearchDriver implements SearchDriverInterface
                 //Remove points if search not match
                 $address->{$this->relevanceFieldName} -= levenshtein($address->text, $search->text) * 25;
 
+                //If not same street number
+                if (!empty($address->street_number))
+                    $address->{$this->relevanceFieldName} -= str_contains($search->text, $address->street_number)? 0: 170;
+
                 if ($address->{$this->relevanceFieldName} > 0) {
 
                     //Add points if has all data
