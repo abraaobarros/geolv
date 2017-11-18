@@ -29,7 +29,17 @@ class Search extends Model
      */
     public static function findFromQuery(GeocodeQuery $query)
     {
-        return static::whereText($query->getText())->first();
+        return static::findFromText($query->getText());
+    }
+
+    /**
+     * @param $queryString
+     * @return Search|null
+     * @internal param GeocodeQuery $query
+     */
+    public static function findFromText($queryString)
+    {
+        return static::whereText($queryString)->first();
     }
 
     public static function exists(GeocodeQuery $query): bool
