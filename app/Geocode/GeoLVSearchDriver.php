@@ -3,6 +3,7 @@
 namespace GeoLV\Geocode;
 
 
+use GeoLV\Search;
 use TomLingham\Searchy\Interfaces\SearchDriverInterface;
 use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;
 use TomLingham\Searchy\SearchDrivers\LevenshteinSearchDriver;
