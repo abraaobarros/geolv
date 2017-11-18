@@ -65,7 +65,7 @@ class GeoLVSearchDriver implements SearchDriverInterface
 
                 return $address;
             })
-            ->only(function ($address) {
+            ->filter(function ($address) {
                 return $address->{$this->relevanceFieldName} > 0;
             })
             ->sortByDesc('relevance')
