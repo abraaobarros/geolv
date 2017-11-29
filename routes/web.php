@@ -15,7 +15,7 @@ use GeoLv\Geocode\Dictionary;
 use Illuminate\Http\Request;
 
 Route::get('/', function (Request $request) {
-    if ($request->has('address')) {
+    if (!empty($request->get('address'))) {
         $address = $request->get('address');
         $results = app('geocoder')
             ->geocode($request->get('address'))
