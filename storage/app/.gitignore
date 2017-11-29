@@ -1,4 +1,5 @@
 *
 !levenshtein.sql
+!dictionary.csv
 !public/
 !.gitignore
