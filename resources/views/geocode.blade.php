@@ -64,6 +64,7 @@
                                         <li class="list-group-item">País: ({{ $result->country_code }}) {{ $result->country_name }}</li>
                                         <li class="list-group-item">Latitude: {{ $result->latitude }}</li>
                                         <li class="list-group-item">Longitude: {{ $result->longitude }}</li>
+                                        <li class="list-group-item">CEP: {{ $result->postal_code }}</li>
                                     </ul>
                                 </div>
                             </div>
