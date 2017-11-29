@@ -79,7 +79,7 @@ class GeoLVSearchDriver implements SearchDriverInterface
 
     private function getRelevanceCalculator(Search $search): IRelevanceCalculator
     {
-        if (preg_match('/\\d{5}[-]?\\d{2}/', $search->formatted_text))
+        if (preg_match('/(\\d{5}\s\\d{2})|\\d{7}/', $search->formatted_text))
             return new CEPRelevanceCalculator($search);
         else
             return new AddressRelevanceCalculator($search);
