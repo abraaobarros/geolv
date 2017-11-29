@@ -38,55 +38,56 @@ class GeoLVSearchDriver implements SearchDriverInterface
     public function query($searchString)
     {
         $search = Search::findFromText($searchString);
+        $formatted = $search->formatted_text;
+        $size = strlen($formatted);
+
         $results = $this->searchDriver
-            ->query($this->formatQueryText($searchString))
+            ->query($formatted)
             ->getQuery()
             ->leftJoin('searches', 'search_id', '=', 'searches.id')
             ->get()
-            ->map(function ($address) use ($search) {
+            ->map(function ($address) use ($search, $formatted, $size) {
 
                 //Add points if is from search
                 if ($address->search_id == $search->id)
-                    $address->{$this->relevanceFieldName} += 100;
+                    $address->relevance += 100;
 
-                //Remove points if search not match
-                $address->{$this->relevanceFieldName} -= levenshtein($address->text, $search->text) * 25;
+                $address->relevance -= (int) (levenshtein($address->text, $formatted) / $size) * 10;
+                $address->relevance -= (int) (levenshtein($address->street_name, $formatted) / $size) * 20;
 
                 //If not same street number
                 if (!empty($address->street_number))
-                    $address->{$this->relevanceFieldName} -= str_contains($search->text, $address->street_number)? 0: 170;
+                    $address->relevance += str_contains($search->text, $address->street_number)? 10: -17;
 
-                if ($address->{$this->relevanceFieldName} > 0) {
+                //If not same locality
+                if (!empty($address->locality))
+                    $address->relevance += str_contains($search->text, $address->locality)? 5: -10;
+
+                //If not same sub locality
+                if (!empty($address->sub_locality))
+                    $address->relevance += str_contains($search->text, $address->sub_locality)? 5: -10;
+
+                if ($address->relevance > 0) {
 
                     //Add points if has all data
-                    $address->{$this->relevanceFieldName} += empty($address->street_name)? 0: 50;
-                    $address->{$this->relevanceFieldName} += empty($address->street_number)? 0: 50;
-                    $address->{$this->relevanceFieldName} += empty($address->locality)? 0: 50;
-                    $address->{$this->relevanceFieldName} += empty($address->sub_locality)? 0: 50;
-                    $address->{$this->relevanceFieldName} += empty($address->country_name)? 0: 50;
+                    $address->relevance += empty($address->street_name)? 0: 5;
+                    $address->relevance += empty($address->street_number)? 0: 5;
+                    $address->relevance += empty($address->sub_locality)? 0: 5;
+                    $address->relevance += empty($address->locality)? 0: 5;
+                    $address->relevance += empty($address->country_name)? 0: 5;
 
                 }
 
                 return $address;
             })
             ->filter(function ($address) {
-                return $address->{$this->relevanceFieldName} > 0;
+                return $address->relevance > 0;
             })
             ->sortByDesc('relevance')
             ->values();
 
         $this->results = $results;
         return $this;
-    }
-
-
-    /**
-     * @param $searchString
-     * @return null|string|string[]
-     */
-    private function formatQueryText($searchString)
-    {
-        return preg_replace('/\s+/', ' ', str_replace(["-", ","], " ", $searchString));
     }
 
     public function select(/* $columns */)

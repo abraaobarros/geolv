@@ -12,7 +12,7 @@
         <div class="container">
 
             <div class="row justify-content-center" style="margin-top: 200px">
-                <div class="col-8">
+                <div class="col-md-8 col-sm-12">
                     <h1>GeoLV</h1>
                     <form action="{{ url('/') }}" method="get">
                         <div class="input-group">
@@ -30,9 +30,22 @@
 
             <hr>
 
+            @if ($results->count() > 0)
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        Procurando por:
+                        @foreach ($matches as $match)
+                            <span class="badge badge-secondary">{{ ucwords($match) }}</span>
+                        @endforeach
+                    </p>
+                </div>
+            </div>
+            @endif
+
             <div class="row">
                 @foreach ($results as $result)
-                <div class="col-4">
+                <div class="col-lg-4 col-md-12">
                     <div class="card" style="margin-bottom: 10px">
                         <div class="card-body">
                             <h4 class="card-title">{{ $result->street_name }}</h4>

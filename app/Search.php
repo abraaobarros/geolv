@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @package GeoLV
  * @method static Search|Model firstOrCreate(array $data)
  * @property int $id
+ * @property-read string $formatted_text
  */
 class Search extends Model
 {
@@ -23,6 +24,11 @@ class Search extends Model
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
+    }
+
+    public function getFormattedTextAttribute()
+    {
+        return preg_replace('/\s+/', ' ', str_replace(["-", ","], " ", $this->text));
     }
 
     /**

@@ -11,17 +11,21 @@
 |
 */
 
+use GeoLv\Geocode\Dictionary;
 use Illuminate\Http\Request;
 
 Route::get('/', function (Request $request) {
     if ($request->has('address')) {
+        $address = $request->get('address');
         $results = app('geocoder')
             ->geocode($request->get('address'))
             ->get();
+        $matches = (new Dictionary())->getMatchingQueries($address);
     } else {
         $results = collect();
+        $matches = collect();
     }
 
-    return view('geocode', compact('results'))->with($request->all());
+    return view('geocode', compact('results', 'matches'))->with($request->all());
 });
 
