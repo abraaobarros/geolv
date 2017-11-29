@@ -34,10 +34,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <p>
-                        Procurando por:
-                        @foreach ($matches as $match)
-                            <span class="badge badge-secondary">{{ ucwords($match) }}</span>
-                        @endforeach
+                        Procurando por: <span class="badge badge-secondary">{{ ucwords($match) }}</span>
                     </p>
                 </div>
             </div>

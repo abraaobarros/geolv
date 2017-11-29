@@ -18,26 +18,26 @@ class Dictionary
 
         $reader = Reader::createFromPath(storage_path('app/dictionary.csv'), 'r')->setDelimiter(';');
         foreach ($reader as $match)
-            $this->collection->put(strtolower($match[1]), strtolower($match[0]));
+            $this->collection->put(mb_strtolower($match[1]), mb_strtolower($match[0]));
     }
 
-    public function get($word) {
+    public function get($word)
+    {
         return $this->collection->get($word, null);
     }
 
-    public function getMatchingQueries($queryText)
+    public function getMatchingQuery($queryText)
     {
-        $queryText = strtolower($queryText);
-        $queries = [$queryText];
+        $queryText = mb_strtolower(strtolower($queryText));
         $queryWords = explode(' ', $queryText);
 
         foreach ($queryWords as $word) {
             $match = $this->get($word);
 
             if ($match)
-                $queries[] = preg_replace('/\b' . $word . '\b/', $match, $queryText);
+                $queryText = preg_replace('/\b' . $word . '\b/', $match, $queryText);
         }
 
-        return array_unique($queries);
+        return $queryText;
     }
 }

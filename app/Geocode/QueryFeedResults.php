@@ -28,12 +28,10 @@ class QueryFeedResults implements Provider
     public function geocodeQuery(GeocodeQuery $query): Collection
     {
         $results = collect();
-        $matches = $this->dictionary->getMatchingQueries($query->getText());
-
-        foreach ($matches as $q) {
-            $providerResults = $this->provider->geocodeQuery(GeocodeQuery::create($q));
-            $results = $results->merge($providerResults->all());
-        }
+        $queryText = $query->getText();
+        $match = $this->dictionary->getMatchingQuery($queryText);
+        $providerResults = $this->provider->geocodeQuery(GeocodeQuery::create($match));
+        $results = $results->merge($providerResults->all());
 
         return new AddressCollection($results->sortByDesc('relevance')->values()->toArray());
     }

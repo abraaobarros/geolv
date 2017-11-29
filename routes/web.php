@@ -20,12 +20,12 @@ Route::get('/', function (Request $request) {
         $results = app('geocoder')
             ->geocode($request->get('address'))
             ->get();
-        $matches = (new Dictionary())->getMatchingQueries($address);
+        $match = (new Dictionary())->getMatchingQuery($address);
     } else {
         $results = collect();
-        $matches = collect();
+        $match = null;
     }
 
-    return view('geocode', compact('results', 'matches'))->with($request->all());
+    return view('geocode', compact('results', 'match'))->with($request->all());
 });
 
