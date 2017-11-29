@@ -4,11 +4,13 @@ namespace GeoLV;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class Address
  * @package GeoLV
  * @method static Search|Model firstOrCreate(array $data)
+ * @property int $relevance
  */
 class Address extends Model
 {
@@ -33,5 +35,16 @@ class Address extends Model
     public function search(): BelongsTo
     {
         return $this->belongsTo(Search::class);
+    }
+
+    public function getPostalCodeAttribute($value)
+    {
+        return preg_replace('/\D/', '', $value);
+    }
+
+    public function getHashCode()
+    {
+        $data = array_except($this->attributesToArray(), ['id', 'relevance', 'text', 'created_at', 'updated_at', 'search_id']);
+        return md5(json_encode($data));
     }
 }

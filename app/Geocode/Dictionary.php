@@ -28,7 +28,7 @@ class Dictionary
 
     public function getMatchingQuery($queryText)
     {
-        $queryText = mb_strtolower(strtolower($queryText));
+        $queryText = mb_strtolower($queryText);
         $queryWords = explode(' ', $queryText);
 
         foreach ($queryWords as $word) {
