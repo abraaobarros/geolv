@@ -14,18 +14,6 @@
 use GeoLv\Geocode\Dictionary;
 use Illuminate\Http\Request;
 
-Route::get('/', function (Request $request) {
-    if (!empty($request->get('address'))) {
-        $address = $request->get('address');
-        $results = app('geocoder')
-            ->geocode($request->get('address'))
-            ->get();
-        $match = (new Dictionary())->getMatchingQuery($address);
-    } else {
-        $results = collect();
-        $match = null;
-    }
-
-    return view('geocode', compact('results', 'match'))->with($request->all());
-});
+Route::get('/', 'GeocodingController@index');
+Route::get('/geocode', 'GeocodingController@geocode');
 
