@@ -16,7 +16,10 @@ class Dictionary
     {
         $this->collection = collect();
 
-        $reader = Reader::createFromPath(storage_path('app/dictionary.csv'), 'r')->setDelimiter(';');
+        $reader = Reader::createFromPath(storage_path('app/dictionary.csv'), 'r')
+            ->setDelimiter(',')
+            ->setEnclosure('"');
+
         foreach ($reader as $match)
             $this->collection->put(mb_strtolower($match[1]), mb_strtolower($match[0]));
     }
