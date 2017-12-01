@@ -29,7 +29,7 @@ class GeocodingController extends Controller
     public function geocode(GeocodingRequest $request)
     {
         $dictionary = new Dictionary();
-        $address = join(" ", $request->only(['street_name', 'cep']));
+        $address = join(" ", $request->only(['street_name', 'locality', 'cep']));
         $match = $dictionary->getMatchingQuery($address);
         $results = $this->geocoder
             ->geocode($address)

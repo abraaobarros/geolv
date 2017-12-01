@@ -2,27 +2,31 @@
 
 @section('content')
 
-    <div class="row justify-content-center" style="margin-top: {{ $results->count() == 0? 200: 50 }}px">
-        <div class="col-md-8 col-sm-12">
+    <div class="row justify-content-center" style="margin: {{ $results->count() == 0? 200: 50 }}px 0 0 0">
+        <div class="col-lg-8 col-md-10 col-xs-12">
             <h1>GeoLV</h1>
             <form action="{{ url('/geocode') }}" method="get">
-                <div class="form-group">
+                <div class="row text-center">
                     <div class="input-group">
-                        <label for="address" class="sr-only">Endereço</label>
-                        <input type="text" class="form-control form-control-danger col-9" name="street_name"
-                               placeholder="R. Exemplo, 8, Bairro"
+                        <input type="text" class="form-control form-control-danger col-md-7" name="street_name"
+                               placeholder="Endereço"
                                value="{{ old('street_name') ?? $street_name ?? "" }}" tabindex="1" autofocus>
-                        <input type="text" class="form-control form-control-danger col-3" name="cep" placeholder="CEP"
-                               value="{{ old('cep') ?? $cep ?? "" }}" tabindex="2">
-                        <div class="input-group-btn">
-                            <button type="submit" class="btn btn-primary" tabindex="3">
-                                <span class="fa fa-search"></span>
-                            </button>
-                        </div>
+                        <input type="text" class="form-control form-control-danger col-md-2" name="locality"
+                               placeholder="Cidade"
+                               value="{{ old('locality') ?? $locality ?? "" }}" tabindex="2">
+                        <input type="text" class="form-control form-control-danger col-md-3" name="cep"
+                               placeholder="CEP"
+                               value="{{ old('cep') ?? $cep ?? "" }}" tabindex="3">
                     </div>
                     @if($errors->any())
                         <div class="form-control-feedback text-danger">{{ $errors->first() }}</div>
                     @endif
+                </div>
+                <div class="row justify-content-center" style="margin-top: 20px">
+                    <button type="submit" class="btn btn-outline-primary" tabindex="4">
+                        <span class="hidden-sm-up">Pesquisar</span>
+                        <span class="fa fa-search"></span>
+                    </button>
                 </div>
             </form>
         </div>
@@ -62,7 +66,8 @@
                             <li class="list-group-item">Número: {{ $result->street_number }}</li>
                             <li class="list-group-item">Localidade: {{ $result->locality }}</li>
                             <li class="list-group-item">Sub-localidade: {{ $result->sub_locality }}</li>
-                            <li class="list-group-item">País: ({{ $result->country_code }}) {{ $result->country_name }}</li>
+                            <li class="list-group-item">País: ({{ $result->country_code }}
+                                ) {{ $result->country_name }}</li>
                             <li class="list-group-item">Latitude: {{ $result->latitude }}</li>
                             <li class="list-group-item">Longitude: {{ $result->longitude }}</li>
                             <li class="list-group-item">CEP: {{ $result->postal_code }}</li>

@@ -25,6 +25,7 @@ class GeocodingRequest extends FormRequest
     {
         return [
             'street_name' => ['required_without:cep'],
+            'locality' => ['required_with:street_name'],
             'cep' => ['required_without:street_name', 'nullable', 'regex:/(\d{5}\-\d{2})|\d{7}/'],
         ];
     }
