@@ -54,7 +54,7 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item list-group-item-{{ $result->relevance > 0? 'default' : 'danger' }}">
-                            Relevância: {{ $result->relevance }}
+                            Relevância: {{ $result->relevance }}%
                             <a href="#info-{{ $result->id }}" class="card-link" style="float: right"
                                data-toggle="collapse" aria-expanded="false" aria-controls="info-{{ $result->id }}">
                                 Mais

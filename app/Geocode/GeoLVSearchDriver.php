@@ -44,6 +44,8 @@ class GeoLVSearchDriver implements SearchDriverInterface
         $this->results = $this->searchResults($search)
             ->map(function (Address $address) use ($relevanceCalculator) {
                 $relevanceCalculator->calculateRelevance($address);
+                $address->relevance = (int) (($address->relevance * 100) / 522);
+
                 return $address;
             })
             ->unique(function (Address $address) {

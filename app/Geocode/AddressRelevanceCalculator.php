@@ -18,7 +18,7 @@ class AddressRelevanceCalculator extends RelevanceCalculator
 
         //If not same street number
         if (!empty($address->street_number))
-            $address->relevance += str_contains($this->searchText, $address->street_number)? 10: -17;
+            $address->relevance += str_contains($this->searchText, $address->street_number)? 10: -20;
 
         //If not same locality
         if (!empty($address->locality))
