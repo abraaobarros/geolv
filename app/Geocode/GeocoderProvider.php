@@ -30,14 +30,12 @@ class GeocoderProvider
         $this->searchDriver = new GeoLVSearchDriver();
 
         $this->aggregator->registerProviders([
-            new QueryFeedResults(
-                new SearchResults($this->searchDriver,
-                    new GroupResults([
-                        new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
-                        new ArcGISOnline($this->adapter, 'BRA'),
-                        new HereGeocoder($this->adapter, env('HERE_GEOCODER_ID'), env('HERE_GEOCODER_CODE'))
-                    ])
-                )
+            new SearchResults($this->searchDriver,
+                new GroupResults([
+                    new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
+                    new ArcGISOnline($this->adapter, 'BRA'),
+                    new HereGeocoder($this->adapter, env('HERE_GEOCODER_ID'), env('HERE_GEOCODER_CODE'))
+                ])
             )
         ]);
     }

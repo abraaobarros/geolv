@@ -126,7 +126,7 @@ class GeoLVMap extends View {
                 map: map,
                 title: address.streetName,
                 position: address.position,
-                label: address.label,
+                label: address.label
             });
 
             let info = new google.maps.InfoWindow({
@@ -138,12 +138,14 @@ class GeoLVMap extends View {
             });
 
             bounds.extend(address.position);
+
+            if (address.isFocus) {
+                map.setCenter(address.position);
+                info.open(map, marker);
+            }
         }
 
         map.fitBounds(bounds);
-
-        if (results.length)
-            map.setCenter(results[0].position)
     }
 
 }

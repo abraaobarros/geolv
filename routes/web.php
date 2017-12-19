@@ -16,4 +16,5 @@ use Illuminate\Http\Request;
 
 Route::get('/', 'GeocodingController@index');
 Route::get('/geocode', 'GeocodingController@geocode');
+Route::get('/geocode/map', 'GeocodingController@map')->name('map');
 

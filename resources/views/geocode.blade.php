@@ -39,41 +39,55 @@
             <div class="row">
                 <div class="col-md-12">
                     <p>
-                        Procurando por: <span class="badge badge-secondary">{{ ucwords($match) }}</span>
+                        Procurando por: <span class="badge badge-secondary">{{ ucwords($search->text) }}</span>
                     </p>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-md-12" id="geolv-container">
-                    <div class="geolv-map"
-                         data-center="{{ $results->getCenter()->getLatitude() . ',' . $results->getCenter()->getLongitude() }}"
-                         style="width: 100%; height: 500px">
-                    </div>
-
-                    @foreach ($results as $result)
-                        <div class="geolv-result"
-                             data-id="{{ $result->id }}"
-                             data-street-name="{{ $result->street_name }}"
-                             data-number="{{ $result->street_number }}"
-                             data-locality="{{ $result->locality }}"
-                             data-sub-locality="{{ $result->sub_locality }}"
-                             data-country-code="{{ $result->country_code }}"
-                             data-country-name="{{ $result->country_name }}"
-                             data-provider="{{ $result->provider }}"
-                             data-latitude="{{ $result->latitude }}"
-                             data-longitude="{{ $result->longitude }}"
-                             data-relevance="{{ $result->relevance }}"></div>
-                    @endforeach
-                </div>
-            </div>
         @endif
+
+        <div class="row">
+            @foreach ($results as $result)
+                <div class="col-lg-4 col-md-12">
+                    <div class="card" style="margin-bottom: 10px">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ $result->street_name }}</h4>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ $result->provider }}</h6>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item list-group-item-{{ $result->relevance > 0? 'default' : 'danger' }}">
+                                <a href="{{ route('map', ['selected_id' => $result->id, 'search_id' => $search->id ]) }}" class="card-link">
+                                    Ver no mapa
+                                </a>
+                            </li>
+                            <li class="list-group-item list-group-item-{{ $result->relevance > 0? 'default' : 'danger' }}">
+                                Relevância: {{ $result->relevance }}%
+                                <a href="#info-{{ $result->id }}" class="card-link" style="float: right"
+                                   data-toggle="collapse" aria-expanded="false" aria-controls="info-{{ $result->id }}">
+                                    Mais
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="collapse" id="info-{{ $result->id }}">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Número: {{ $result->street_number }}</li>
+                                <li class="list-group-item">Localidade: {{ $result->locality }}</li>
+                                <li class="list-group-item">Sub-localidade: {{ $result->sub_locality }}</li>
+                                <li class="list-group-item">País: ({{ $result->country_code }}
+                                    ) {{ $result->country_name }}</li>
+                                <li class="list-group-item">Latitude: {{ $result->latitude }}</li>
+                                <li class="list-group-item">Longitude: {{ $result->longitude }}</li>
+                                <li class="list-group-item">CEP: {{ $result->postal_code }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
 
 @endsection
 
 @section('scripts')
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
     <script type="text/javascript">
         $('.collapse').collapse({toggle: false});
     </script>
