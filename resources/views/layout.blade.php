@@ -10,9 +10,7 @@
     <title>GeoLV</title>
 </head>
 <body>
-    <div class="container">
-        @yield('content')
-    </div>
+    @yield('content')
 
     <script type="text/javascript" src="{{ mix('js/app.js') }}"></script>
     @yield('scripts')
