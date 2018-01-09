@@ -25,6 +25,7 @@ export default class PreloadView extends View {
                 complete: (results, file) => this.onCompletedParsing(results, file)
             }
         });
+        this.get('exampleContainer').hide();
     }
 
     beforeParsing(file) {
@@ -60,6 +61,21 @@ export default class PreloadView extends View {
         return addresses;
     }
 
+    getCepAddresses(selectedIdxList) {
+        let addresses = [];
+        for (let i in this.results) {
+            let address = {
+                cep: this.getParsedAddress(i, selectedIdxList['cep'])
+            };
+            addresses.push([
+                address.cep,
+                View.render(GeocodeBtnView, {address}).container,
+            ]);
+        }
+
+        return addresses;
+    }
+
     onParsingError(err, file, reason) {
         console.log(err, file, reason);
     }
@@ -69,11 +85,17 @@ export default class PreloadView extends View {
         let locality = this.getParsedAddress(0, selectedIdxList['locality']);
         let cep = this.getParsedAddress(0, selectedIdxList['cep']);
 
-        if ((address.length > 0 && locality.length > 0) || cep.length > 0) {
+        if (address.length > 0 && locality.length > 0) {
             this.get('exampleContainer').fadeIn();
             View.render(TableView, this.get('exampleTable'), {
                 data: this.getAddresses(selectedIdxList),
                 header: ['Endereço', 'Cidade', 'CEP', 'Resultado']
+            });
+        } else if (address.length == 0 && locality.length == 0 && cep.length > 0) {
+            this.get('exampleContainer').fadeIn();
+            View.render(TableView, this.get('exampleTable'), {
+                data: this.getCepAddresses(selectedIdxList),
+                header: ['CEP', 'Resultado']
             });
         } else {
             this.get('exampleContainer').fadeOut();
