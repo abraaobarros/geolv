@@ -6,7 +6,7 @@
         <div class="row justify-content-center" style="margin: {{ $results->count() == 0? 200: 50 }}px 0 0 0">
             <div class="col-lg-8 col-md-10 col-xs-12">
                 <h1>GeoLV</h1>
-                <form action="{{ url('/geocode') }}" method="get">
+                <form action="{{ route('geocode') }}" method="get">
                     <div class="row text-center">
                         <div class="input-group">
                             <input type="text" class="form-control form-control-danger col-md-7" name="street_name"
@@ -24,10 +24,16 @@
                         @endif
                     </div>
                     <div class="row justify-content-center" style="margin-top: 20px">
-                        <button type="submit" class="btn btn-outline-primary" tabindex="4">
-                            <span class="hidden-sm-up">Pesquisar</span>
-                            <span class="fa fa-search"></span>
-                        </button>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-outline-primary" tabindex="4">
+                                <span class="hidden-sm-up">Pesquisar</span>
+                                <span class="fa fa-search"></span>
+                            </button>
+                            <a href="{{ route('geocode.file') }}" class="btn btn-outline-secondary" tabindex="4">
+                                <span class="hidden-sm-up">Geolocalizar arquivo</span>
+                                <span class="fa fa-file"></span>
+                            </a>
+                        </div>
                     </div>
                 </form>
             </div>

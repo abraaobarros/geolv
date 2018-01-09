@@ -21,14 +21,24 @@ export default class View {
         return this.container.find(selector)
     }
 
-    initialize () {
+    // noinspection JSUnusedGlobalSymbols
+    onCreate () {
         throw new Error('Unimplemented method')
     }
 
     static render(component, selector, properties) {
-        const element = (selector instanceof Object)? new component(undefined, selector) : new component(jQuery(selector), properties);
-        $(document).ready(() => element.initialize());
+        let element;
+
+        if (selector instanceof jQuery)
+            element = new component(selector, properties);
+        else if (selector instanceof Object)
+            element = new component(jQuery('<div></div>'), selector);
+        else
+            element = new component(jQuery(selector), properties);
+
+        $(document).ready(() => element.onCreate());
 
         return element;
     }
+
 }

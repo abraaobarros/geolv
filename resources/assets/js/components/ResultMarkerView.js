@@ -2,7 +2,7 @@ import View from "./View";
 
 export default class ResultMarkerView extends View {
 
-    initialize() {
+    onCreate() {
         this.container.html(`
             <div class="card" style="margin-bottom: 10px">
                 <div class="card-body">
@@ -26,4 +26,5 @@ export default class ResultMarkerView extends View {
             </div>
         `)
     }
+
 }

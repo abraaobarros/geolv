@@ -1,8 +1,6 @@
 
 window._ = require('lodash');
 
-window.Popper = require('popper.js/dist/umd/popper');
-
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -10,10 +8,15 @@ window.Popper = require('popper.js/dist/umd/popper');
  */
 
 try {
-    window.$ = window.jQuery = require('jquery/dist/jquery.slim');
+    window.$ = window.jQuery = require('jquery');
+    window.Popper = require('popper.js/dist/umd/popper.js').default;
 
     require('bootstrap');
-} catch (e) {}
+
+    window.Papa = require('papaparse');
+} catch (e) {
+    console.error(e);
+}
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests

@@ -47,4 +47,11 @@ class GeocodingController extends Controller
 
         return view('map', compact('results', 'selected'));
     }
+
+    public function preload()
+    {
+        return view('preload');
+    }
+
+
 }

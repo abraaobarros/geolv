@@ -1,7 +1,7 @@
 import View from "./View";
 import ResultMarkerView from "./ResultMarkerView";
 
-class GeoLVMap extends View {
+export default class GeoLVMap extends View {
 
     get center() {
         let center = this.get('map').data('center').split(',');
@@ -30,11 +30,12 @@ class GeoLVMap extends View {
         return addresses;
     }
 
-    initialize() {
+    onCreate() {
         let map = new google.maps.Map(this.get('map').get(0), {
             center: this.center,
             zoom: this.zoom,
             disableDefaultUI: true,
+            //<editor-fold defaultstate="collapsed" desc="styles: [...]">
             styles: [
                 {
                     "featureType": "administrative",
@@ -115,6 +116,7 @@ class GeoLVMap extends View {
                     ]
                 }
             ]
+            //</editor-fold>
         });
 
         let bounds = new google.maps.LatLngBounds();
@@ -149,12 +151,3 @@ class GeoLVMap extends View {
     }
 
 }
-
-window.initMap = function () {
-
-    View.render(GeoLVMap, '#geolv-container', {
-        map: '.geolv-map',
-        result: '.geolv-result'
-    });
-
-};
