@@ -33,7 +33,13 @@ export default class GeocodeBtnView extends View {
     }
 
     onGeocodeError(error) {
-        console.log(error);
-        this.container.html(error.message);
+        if (error.response.status == 422) {
+            this.container.html('');
+            for (let message of _.values(error.response.data.errors)) {
+                this.container.append(`<span class="text-danger">${message}</span>`);
+            }
+        } else {
+            this.container.html(error.message);
+        }
     }
 }
