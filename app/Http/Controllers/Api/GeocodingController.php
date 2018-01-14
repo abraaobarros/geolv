@@ -28,7 +28,6 @@ class GeocodingController extends Controller
 
         $results = $this->geocoder
             ->geocode($text, $locality, $postalCode)
-            ->get()
             ->map(function (Address $address) {
                 return array_except($address->toArray(), ['id', 'created_at', 'updated_at', 'text']);
             });
