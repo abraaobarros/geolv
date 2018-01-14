@@ -2,5 +2,7 @@
 !levenshtein.sql
 !dictionary.csv
 !shapefiles/
+!shapefiles/brazil/
+!shapefiles/brazil/*
 !public/
 !.gitignore
