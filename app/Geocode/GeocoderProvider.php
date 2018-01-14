@@ -7,6 +7,7 @@ use Geocoder\Provider\ArcGISOnline\ArcGISOnline;
 use Geocoder\Provider\GoogleMaps\GoogleMaps;
 use Geocoder\ProviderAggregator;
 use Geocoder\Query\GeocodeQuery;
+use GeoLV\Address;
 use GeoLV\Search;
 use Http\Adapter\Guzzle6\Client;
 
@@ -57,7 +58,7 @@ class GeocoderProvider
             if (empty($result->getStreetName()))
                 continue;
 
-            $search->addresses()->firstOrCreate([
+            $address = Address::firstOrCreate([
                 'street_name' => $result->getStreetName(),
                 'street_number' => $result->getStreetNumber(),
                 'locality' => $result->getLocality(),
@@ -69,6 +70,8 @@ class GeocoderProvider
                 'longitude' => $result->getCoordinates()->getLongitude(),
                 'provider' => $result->getProvidedBy(),
             ]);
+
+            $search->addresses()->attach($address->id);
         }
 
         return $search;
