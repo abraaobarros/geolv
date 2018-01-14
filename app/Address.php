@@ -2,14 +2,24 @@
 
 namespace GeoLV;
 
+use GeoLV\Geocode\Scoring\AddressRelevanceCalculator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Location\Coordinate;
 
 /**
  * Class Address
  * @package GeoLV
  * @method static Search|Model firstOrCreate(array $data)
- * @property int $relevance
+ * @property string street_name
+ * @property string street_number
+ * @property string postal_code
+ * @property string locality
+ * @property string sub_locality
+ * @property string country_code
+ * @property string country_name
+ * @property int relevance
+ * @property int total_relevance
  * @property double latitude
  * @property double longitude
  * @property double rad_latitude
@@ -17,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property double x
  * @property double y
  * @property double z
+ * @property int search_id
+ * @property-read Coordinate coordinate
  */
 class Address extends Model
 {
@@ -73,16 +85,28 @@ class Address extends Model
         return sin($this->rad_latitude);
     }
 
-    public function getHashCode()
+    public function getCoordinateAttribute()
     {
-        $data = array_except($this->attributesToArray(), ['id', 'relevance', 'text', 'created_at', 'updated_at', 'search_id']);
-        return md5(json_encode($data));
+        return new Coordinate($this->latitude, $this->longitude);
     }
 
-    public function newCollection(array $models = [])
+    public function getAlgorithmAttribute()
     {
-        return new AddressCollection($models);
+        return array_only($this->toArray(), [
+            'match_last_search',
+            'levenshtein_match_text',
+            'levenshtein_match_street_name',
+            'contains_street_number',
+            'contains_sub_locality',
+            'match_postal_code',
+            'match_locality',
+            'has_all_attributes',
+        ]);
     }
 
+    public function getFieldsAttribute()
+    {
+        return array_only($this->toArray(), $this->fillable);
+    }
 
 }

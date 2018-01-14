@@ -1,7 +1,7 @@
 export default class Geocode {
 
-    static get(street_name, locality, cep) {
-        return axios.get('/api/geocode', { params: {street_name, locality, cep} })
+    static get(text, locality, postal_code) {
+        return axios.get('/api/geocode', { params: {text, locality, postal_code} })
     }
 
 }

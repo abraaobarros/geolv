@@ -2,59 +2,77 @@
 
 namespace GeoLV\Geocode;
 
-use Geocoder\Model\AddressCollection;
+use Geocoder\Location;
 use Geocoder\Provider\ArcGISOnline\ArcGISOnline;
 use Geocoder\Provider\GoogleMaps\GoogleMaps;
-use Geocoder\Provider\Nominatim\Nominatim;
 use Geocoder\ProviderAggregator;
 use Geocoder\Query\GeocodeQuery;
-use GeoLV\Address;
+use GeoLV\Search;
 use Http\Adapter\Guzzle6\Client;
-use Illuminate\Support\Collection;
-use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;
-use TomLingham\Searchy\SearchDrivers\SimpleSearchDriver;
 
 class GeocoderProvider
 {
-    protected $aggregator;
-    protected $limit;
-    protected $results;
-    protected $adapter;
-    protected $searchDriver;
+    private $provider;
+    private $adapter;
+    private $searchDriver;
 
     public function __construct()
     {
-        $this->results = new AddressCollection();
-        $this->aggregator = new ProviderAggregator();
+        $this->provider = new ProviderAggregator();
         $this->adapter = Client::createWithConfig(['verify' => false]);
-        $this->searchDriver = new GeoLVSearchDriver();
+        $this->searchDriver = new GeoLVSearch();
 
-        $this->aggregator->registerProviders([
-            new SearchResults($this->searchDriver,
-                new GroupResults([
-                    new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
-                    new ArcGISOnline($this->adapter, 'BRA'),
-                    new HereGeocoder($this->adapter, env('HERE_GEOCODER_ID'), env('HERE_GEOCODER_CODE'))
-                ])
-            )
+        $this->provider->registerProviders([
+            new GroupResults([
+                new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
+                new ArcGISOnline($this->adapter, 'BRA'),
+                new HereGeocoder($this->adapter, env('HERE_GEOCODER_ID'), env('HERE_GEOCODER_CODE'))
+            ])
         ]);
     }
 
-    public function get() : Collection
+    public function geocode($text, $locality, $postalCode)
     {
-        return Address::hydrate($this->results->all());
+        $search = $this->getSearch($text, $locality, $postalCode);
+        return $this->get($search);
     }
 
-    public function geocodeQuery(GeocodeQuery $query) : self
+    public function get(Search $search)
     {
-        $this->results = $this->aggregator->geocodeQuery($query);
-        return $this;
+        return $this->searchDriver->search($search);
     }
 
-    public function geocode(string $value) : self
+    private function getSearch($text, $locality, $postalCode): Search
     {
-        $this->results = $this->aggregator->geocode($value);
-        return $this;
+        $query = GeocodeQuery::create(trim(join(" ", [$text, $locality, $postalCode])));
+        $results = $this->provider->geocodeQuery($query);
+        $search = Search::firstOrCreate([
+            'text' => filled($text)? $text : null,
+            'locality' => filled($locality)? $locality : null,
+            'postal_code' => filled($postalCode)? $postalCode : null
+        ]);
+
+        /** @var Location $result */
+        foreach ($results as $result) {
+            if (empty($result->getStreetName()))
+                continue;
+
+            $search->addresses()->firstOrCreate([
+                'street_name' => $result->getStreetName(),
+                'street_number' => $result->getStreetNumber(),
+                'locality' => $result->getLocality(),
+                'postal_code' => $result->getPostalCode(),
+                'sub_locality' => $result->getSubLocality(),
+                'country_code' => $result->getCountry()->getCode(),
+                'country_name' => $result->getCountry()->getName(),
+                'latitude' => $result->getCoordinates()->getLatitude(),
+                'longitude' => $result->getCoordinates()->getLongitude(),
+                'provider' => $result->getProvidedBy(),
+            ]);
+        }
+
+        return $search;
     }
+
 
 }

@@ -24,9 +24,9 @@ class GeocodingRequest extends FormRequest
     public function rules()
     {
         return [
-            'street_name' => ['required_without:cep'],
+            'text' => ['required_without:postal_code'],
             'locality' => ['required_with:street_name'],
-            'cep' => ['required_without:street_name', 'nullable', 'regex:/(\d{5}\-\d{2})|\d{7}/'],
+            'postal_code' => ['required_without:text', 'nullable', 'regex:/(\d{5}\-\d{2})|\d{7}/'],
         ];
     }
 }

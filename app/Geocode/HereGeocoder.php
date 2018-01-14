@@ -27,7 +27,7 @@ class HereGeocoder extends AbstractHttpProvider implements Provider
     private $appCode;
     private $host = 'https://geocoder.cit.api.here.com/6.2/';
 
-    public function __construct(HttpClient $client, string $appId, string $appCode)
+    public function __construct(HttpClient $client, string $appId, string $appCode, string $country = null)
     {
         parent::__construct($client);
         $this->appId = $appId;

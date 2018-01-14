@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddLevenshteinFunction extends Migration
+class CreateLevenshteinFunction extends Migration
 {
     /**
      * Run the migrations.
@@ -24,6 +24,6 @@ class AddLevenshteinFunction extends Migration
      */
     public function down()
     {
-        \DB::unprepared('DROP IF EXISTS FUNCTION levenshtein;');
+        \DB::unprepared('DROP FUNCTION levenshtein;');
     }
 }

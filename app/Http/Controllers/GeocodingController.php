@@ -5,6 +5,7 @@ namespace GeoLV\Http\Controllers;
 use GeoLV\Address;
 use GeoLV\Geocode\Dictionary;
 use GeoLV\Http\Requests\GeocodingRequest;
+use GeoLV\Locality;
 use GeoLV\Search;
 use Illuminate\Http\Request;
 
@@ -24,26 +25,28 @@ class GeocodingController extends Controller
     {
         $results = collect();
         $match = null;
+        $localities = Locality::all();
 
-        return view('geocode', compact('results', 'match'));
+        return view('geocode', compact('results', 'match', 'localities'));
     }
 
     public function geocode(GeocodingRequest $request)
     {
-        $dictionary = new Dictionary();
-        $address = join(" ", $request->only(['street_name', 'locality', 'cep']));
-        $match = $dictionary->getMatchingQuery($address);
-        $results = $this->geocoder->geocode($match)->get();
-        $search = Search::findFromText($match);
+        $text = ucwords((new Dictionary())->getMatchingQuery($request->get('text')));
+        $locality = $request->get('locality');
+        $postalCode = $request->get('postal_code');
+        $localities = Locality::all();
 
-        return view('geocode', compact('results', 'search'))->with($request->all());
+        $results = $this->geocoder->geocode($text, $locality, $postalCode);
+
+        return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities'));
     }
 
     public function map(Request $request)
     {
         $search = Search::findOrFail($request->get('search_id'));
         $selected = Address::findOrFail($request->get('selected_id'));
-        $results = $this->geocoder->geocode($search->text)->get();
+        $results = $this->geocoder->get($search);
 
         return view('map', compact('results', 'selected'));
     }

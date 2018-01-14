@@ -5,55 +5,30 @@ namespace GeoLV;
 use Geocoder\Query\GeocodeQuery;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Search
  * @package GeoLV
  * @method static Search|Model firstOrCreate(array $data)
- * @property int $id
- * @property-read string $formatted_text
+ * @property int id
+ * @property string text
+ * @property string locality
+ * @property string postal_code
+ * @property string locale
+ * @method static Builder geocodeQuery(GeocodeQuery $geocodeQuery)
  */
 class Search extends Model
 {
     protected $fillable = [
         'text',
-        'locale',
+        'locality',
+        'postal_code',
     ];
 
-    public function addresses(): HasMany
+    public function addresses(): BelongsToMany
     {
-        return $this->hasMany(Address::class);
+        return $this->belongsToMany(Address::class);
     }
-
-    public function getFormattedTextAttribute()
-    {
-        return preg_replace('/\s+/', ' ', str_replace(["-", ","], " ", $this->text));
-    }
-
-    /**
-     * @param GeocodeQuery $query
-     * @return Search|null
-     */
-    public static function findFromQuery(GeocodeQuery $query)
-    {
-        return static::findFromText($query->getText());
-    }
-
-    /**
-     * @param $queryString
-     * @return Search|null
-     * @internal param GeocodeQuery $query
-     */
-    public static function findFromText($queryString)
-    {
-        return static::whereText($queryString)->first();
-    }
-
-    public static function exists(GeocodeQuery $query): bool
-    {
-        return static::findFromQuery($query) != null;
-    }
-
 
 }

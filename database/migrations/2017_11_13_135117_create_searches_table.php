@@ -15,8 +15,9 @@ class CreateSearchesTable extends Migration
     {
         Schema::create('searches', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('text');
-            $table->string('locale')->nullable();
+            $table->string('text')->nullable();
+            $table->string('locality')->nullable();
+            $table->string('postal_code')->nullable();
             $table->timestamps();
         });
     }

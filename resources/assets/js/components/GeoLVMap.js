@@ -4,11 +4,13 @@ import ResultMarkerView from "./ResultMarkerView";
 export default class GeoLVMap extends View {
 
     get center() {
-        let center = this.get('map').data('center').split(',');
-        if (center.length)
+        let center = this.get('map').data('center');
+        if (center) {
+            center = center.split(',');
             return {lat: parseFloat(center[0]), lng: parseFloat(center[1])};
-        else
-            return undefined;
+        } else {
+            return {lat: 0, lng: 0};
+        }
     }
 
     get zoom() {

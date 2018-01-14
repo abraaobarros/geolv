@@ -117,8 +117,26 @@ return [
     */
 
     'attributes' => [
-        'street_name' => 'logradouro',
-        'cep' => 'CEP'
+        'street_name' => 'Logradouro',
+        'postal_code' => 'CEP',
+        'id' => 'ID',
+        'street_number' => 'Número',
+        'locality' => 'Cidade',
+        'sub_locality' => 'Bairro',
+        'country_code' => 'Código do País',
+        'country_name' => 'País',
+        'provider' => 'Provedor',
+        'latitude' => 'Latitude',
+        'longitude' => 'Longitude',
+        'match_last_search' => 'Match com Resultado de Buca',
+        'levenshtein_match_search_text' => 'Distancia Levenshtein com Logradouro da Busca',
+        'levenshtein_match_search_locality' => 'Distancia Levenshtein com Município da Busca',
+        'levenshtein_match_street_name' => 'Distancia Levenshtein com Logradouro',
+        'contains_street_number' => 'Contém o Número da Rua',
+        'contains_sub_locality' => 'Contém o Bairro',
+        'match_postal_code' => 'Match com Código Postal',
+        'match_locality' => 'Match Município',
+        'has_all_attributes' => 'Contém todos os atributos',
     ],
 
 ];
