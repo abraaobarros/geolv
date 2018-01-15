@@ -3,6 +3,7 @@
 namespace GeoLV\Geocode\Scoring\Calculators;
 
 
+use GeoLV\Address;
 use GeoLV\Geocode\Scoring\IRelevanceCalculator;
 use GeoLV\Search;
 

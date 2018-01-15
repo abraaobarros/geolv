@@ -77,11 +77,11 @@
                             <h6 class="card-subtitle mb-2 text-muted">{{ $result->provider }}</h6>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item list-group-item-{{ $result->relevance > 0? 'default' : 'danger' }}">
-                                Relevância Média: {{ number_format($result->total_relevance, 1) }}%
+                            <li class="list-group-item list-group-item-default">
+                                Classificação: {{ $loop->iteration }}º
                                 <a href="#info-algorithm-{{ $result->id }}" class="card-link" style="float: right"
                                    data-toggle="collapse" aria-expanded="false" aria-controls="info-algorithm-{{ $result->id }}">
-                                    Mais
+                                    <i class="fa fa-tasks"></i>
                                 </a>
                             </li>
                         </ul>

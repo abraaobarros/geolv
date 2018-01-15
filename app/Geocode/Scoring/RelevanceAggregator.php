@@ -30,8 +30,8 @@ class RelevanceAggregator implements IRelevanceCalculator
         }
 
         $totalRelevance = $sum / count($this->calculators);
-
         $address->{$this->getName()} = $totalRelevance * 100;
+
         return $totalRelevance;
     }
 
