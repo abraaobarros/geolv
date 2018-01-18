@@ -2,7 +2,6 @@
 
 namespace GeoLV;
 
-use GeoLV\Geocode\Scoring\AddressRelevanceCalculator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Location\Coordinate;
@@ -18,7 +17,6 @@ use Location\Coordinate;
  * @property string sub_locality
  * @property string country_code
  * @property string country_name
- * @property int relevance
  * @property int total_relevance
  * @property double latitude
  * @property double longitude
@@ -28,6 +26,7 @@ use Location\Coordinate;
  * @property double y
  * @property double z
  * @property int search_id
+ * @property-read array algorithm
  * @property-read Coordinate coordinate
  */
 class Address extends Model

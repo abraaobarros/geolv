@@ -26,7 +26,7 @@ export default class GeocodeBtnView extends View {
 
     onGeocodeResult(response) {
         console.log(response);
-        if (response.size > 0)
+        if (response.data.length > 0)
             this.container.html('<code>' + JSON.stringify(response.data[0], null, 4) + '</code>');
         else
             this.container.html('Nenhum resultado encontrado.');

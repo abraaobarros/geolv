@@ -1136,16 +1136,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.5.28",
+            "version": "v5.5.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "cfafae1f2043208390a7c984e3070696f4969605"
+                "reference": "a47b50a5981c0cf0139939dfaea4191784b65acb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/cfafae1f2043208390a7c984e3070696f4969605",
-                "reference": "cfafae1f2043208390a7c984e3070696f4969605",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/a47b50a5981c0cf0139939dfaea4191784b65acb",
+                "reference": "a47b50a5981c0cf0139939dfaea4191784b65acb",
                 "shasum": ""
             },
             "require": {
@@ -1266,7 +1266,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-12-26 16:24:40"
+            "time": "2018-01-16 15:39:45"
         },
         {
             "name": "laravel/tinker",
@@ -3489,16 +3489,16 @@
         },
         {
             "name": "toin0u/geocoder-laravel",
-            "version": "4.0.4",
+            "version": "4.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geocoder-php/GeocoderLaravel.git",
-                "reference": "2cebf12c554d470520a4fd74bd2ce96ce540fddb"
+                "reference": "1da707448510dbcfea30c41c1d521b28271cb72c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geocoder-php/GeocoderLaravel/zipball/2cebf12c554d470520a4fd74bd2ce96ce540fddb",
-                "reference": "2cebf12c554d470520a4fd74bd2ce96ce540fddb",
+                "url": "https://api.github.com/repos/geocoder-php/GeocoderLaravel/zipball/1da707448510dbcfea30c41c1d521b28271cb72c",
+                "reference": "1da707448510dbcfea30c41c1d521b28271cb72c",
                 "shasum": ""
             },
             "require": {
@@ -3513,15 +3513,20 @@
                 "willdurand/geocoder": "^4.0"
             },
             "require-dev": {
-                "codedungeon/phpunit-result-printer": "^0.4.4",
+                "codedungeon/phpunit-result-printer": "*",
                 "doctrine/dbal": "^2.5",
                 "fzaninotto/faker": "~1.4",
                 "geocoder-php/bing-maps-provider": "^4.0",
+                "geocoder-php/geoip2-provider": "^4.0",
                 "geocoder-php/maxmind-binary-provider": "^4.0",
                 "laravel/laravel": "5.5.*",
                 "mockery/mockery": "0.9.*",
-                "php-coveralls/php-coveralls": "^2.0",
-                "phpunit/phpunit": "~5.0",
+                "orchestra/database": "^3.5",
+                "orchestra/testbench": "^3.5",
+                "orchestra/testbench-browser-kit": "^3.5",
+                "orchestra/testbench-dusk": "3.5.x-dev@dev",
+                "php-coveralls/php-coveralls": "*",
+                "phpunit/phpunit": "*",
                 "sebastian/phpcpd": "*"
             },
             "type": "library",
@@ -3562,7 +3567,7 @@
                 "geocoding",
                 "laravel"
             ],
-            "time": "2017-12-27 21:00:33"
+            "time": "2018-01-14 22:27:45"
         },
         {
             "name": "tom-lingham/searchy",

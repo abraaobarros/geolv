@@ -40,4 +40,9 @@ class Dictionary
 
         return $queryText;
     }
+
+    public static function address($text)
+    {
+        return ucwords((new static())->getMatchingQuery($text));
+    }
 }

@@ -32,7 +32,7 @@ class GeocodingController extends Controller
 
     public function geocode(GeocodingRequest $request)
     {
-        $text = ucwords((new Dictionary())->getMatchingQuery($request->get('text')));
+        $text = Dictionary::address($request->get('text'));
         $locality = $request->get('locality');
         $postalCode = $request->get('postal_code');
         $localities = Locality::all();

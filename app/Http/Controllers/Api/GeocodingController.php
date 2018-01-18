@@ -2,11 +2,10 @@
 
 namespace GeoLV\Http\Controllers\Api;
 
-use GeoLV\Address;
 use GeoLV\Geocode\Dictionary;
-use GeoLV\Http\Requests\GeocodingRequest;
-use Illuminate\Http\Request;
 use GeoLV\Http\Controllers\Controller;
+use GeoLV\Http\Requests\GeocodingRequest;
+use GeoLV\Http\Resources\Address as AddressResource;
 
 class GeocodingController extends Controller
 {
@@ -22,16 +21,11 @@ class GeocodingController extends Controller
 
     public function geocode(GeocodingRequest $request)
     {
-        $text = ucwords((new Dictionary())->getMatchingQuery($request->get('text')));
+        $text = Dictionary::address($request->get('text'));
         $locality = $request->get('locality');
         $postalCode = $request->get('postal_code');
+        $results = $this->geocoder->geocode($text, $locality, $postalCode);
 
-        $results = $this->geocoder
-            ->geocode($text, $locality, $postalCode)
-            ->map(function (Address $address) {
-                return array_except($address->toArray(), ['id', 'created_at', 'updated_at', 'text']);
-            });
-
-        return $this->api($results);
+        return AddressResource::collection($results);
     }
 }
