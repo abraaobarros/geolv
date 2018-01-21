@@ -4,7 +4,9 @@ namespace GeoLV\Http\Controllers;
 
 use GeoLV\Address;
 use GeoLV\Geocode\Dictionary;
+use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\GeocodingRequest;
+use GeoLV\Jobs\ProcessGeocodingFile;
 use GeoLV\Locality;
 use GeoLV\Search;
 use Illuminate\Http\Request;
@@ -56,5 +58,18 @@ class GeocodingController extends Controller
         return view('preload');
     }
 
+    public function upload(Request $request)
+    {
+        $path = $request->file('file')->store('pre-processing', 'local');
+        $file = GeocodingFile::create([
+            'path' => $path,
+            'email' => $request->get('email'),
+            'indexes' => $request->get('indexes')
+        ]);
+
+        $this->dispatch(new ProcessGeocodingFile($file));
+
+        return redirect()->back()->with('upload', true);
+    }
 
 }

@@ -12,6 +12,7 @@
         "geocoder-php/cache-provider": "^4.0",
         "geocoder-php/google-maps-provider": "^4.1",
         "geocoder-php/nominatim-provider": "^4.0",
+        "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "league/csv": "^9.1",

@@ -28,7 +28,18 @@
                             <div class="form-control-feedback text-danger">{{ $errors->first() }}</div>
                         @endif
                     </div>
+
+                    <div class="row text-center">
+                        <input type="submit" value="" class="btn btn-outline-primary" value="Enviar"/>
+                    </div>
+
                 </form>
+
+                @if (session()->has('upload'))
+                    <div class="alert alert-success" role="alert">
+                        Seu arquivo está sendo processado. Enviaremos um email quando concluído.
+                    </div>
+                @endif
             </div>
         </div>
         <div class="row preview-container" style="display: none">
