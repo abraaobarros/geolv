@@ -45,13 +45,13 @@ class GeocoderProvider
 
     private function getSearch($text, $locality, $postalCode): Search
     {
-        $query = GeocodeQuery::create(trim(join(" ", [$text, $locality, $postalCode])));
-        $results = $this->provider->geocodeQuery($query);
         $search = Search::firstOrCreate([
             'text' => filled($text)? $text : null,
             'locality' => filled($locality)? $locality : null,
             'postal_code' => filled($postalCode)? $postalCode : null
         ]);
+        $query = GeocodeQuery::create($search->address);
+        $results = $this->provider->geocodeQuery($query);
 
         /** @var Location $result */
         foreach ($results as $result) {

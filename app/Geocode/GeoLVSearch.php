@@ -22,7 +22,6 @@ class GeoLVSearch
         'street_name::street_number::sub_locality',
         'street_name::street_number',
         'street_name',
-        'street_number',
         'postal_code',
         'search_text',
         'search_postal_code',
@@ -65,7 +64,9 @@ class GeoLVSearch
      */
     private function searchResults(Search $search): Collection
     {
-        return Address::hydrate($this->searchDriver->query($search->text)->get()->toArray());
+        return Address::hydrate(
+            $this->searchDriver->query($search->address)->get()->toArray()
+        );
     }
 
     private function getRelevanceCalculator(Search $search): IRelevanceCalculator

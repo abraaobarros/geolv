@@ -10,13 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * Class Search
  * @package GeoLV
- * @method static Search|Model firstOrCreate(array $data)
  * @property int id
  * @property string text
  * @property string locality
  * @property string postal_code
  * @property string locale
+ * @property-read string address
  * @method static Builder geocodeQuery(GeocodeQuery $geocodeQuery)
+ * @method static Search|Model firstOrCreate(array $data)
  */
 class Search extends Model
 {
@@ -29,6 +30,11 @@ class Search extends Model
     public function addresses(): BelongsToMany
     {
         return $this->belongsToMany(Address::class);
+    }
+
+    public function getAddressAttribute()
+    {
+        return trim(implode(" ", [$this->text, $this->locality, $this->postal_code]));
     }
 
 }

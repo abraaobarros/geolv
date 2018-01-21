@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreateAddressesViewTable extends Migration
 {
@@ -22,8 +22,7 @@ class CreateAddressesViewTable extends Migration
                 s.locality AS search_locality
               FROM address_search AS ads
               JOIN addresses AS a ON a.id = ads.address_id
-              JOIN searches AS s ON s.id = ads.search_id
-        ');
+              JOIN searches AS s ON s.id = ads.search_id');
     }
 
     /**
