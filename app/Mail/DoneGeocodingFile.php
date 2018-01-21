@@ -11,30 +11,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class DoneGeocodingFile extends Mailable
 {
     use Queueable, SerializesModels;
-    /**
-     * @var GeocodingFile
-     */
+
     private $file;
 
-    /**
-     * Create a new message instance.
-     *
-     * @param GeocodingFile $file
-     */
     public function __construct(GeocodingFile $file)
     {
         $this->file = $file;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
         return $this
             ->markdown('emails.done')
+            ->to($this->file->email)
+            ->subject('CSV Pronto!')
             ->attach(storage_path($this->file->path), [
                 'as' => 'result.csv',
                 'mime' => 'text/csv',

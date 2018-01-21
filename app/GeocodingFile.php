@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int[] locality_indexes
  * @property-read int[] postal_code_indexes
  * @property string path
+ * @property string email
  * @property array indexes
  * @method static GeocodingFile|Model create($data)
  */

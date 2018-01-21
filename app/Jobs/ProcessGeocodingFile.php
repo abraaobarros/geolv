@@ -56,8 +56,7 @@ class ProcessGeocodingFile implements ShouldQueue
         if (count($records) > 0)
             $this->chain([new ProcessGeocodingFile($this->file)])->dispatch();
         else
-            \Mail::to($this->file->email)
-                ->send(new DoneGeocodingFile($this->file));
+            \Mail::send(new DoneGeocodingFile($this->file));
     }
 
     private function processRow($row)
