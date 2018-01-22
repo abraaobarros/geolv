@@ -48,14 +48,6 @@ class ProcessGeocodingFile implements ShouldQueue
     }
 
     /**
-     * @return \League\Csv\AbstractCsv|Writer
-     */
-    private function output()
-    {
-        return Writer::createFromPath(storage_path("app/{$this->file->output_path}"), 'a');
-    }
-
-    /**
      * @return \League\Csv\ResultSet|array
      */
     private function records()
@@ -66,8 +58,8 @@ class ProcessGeocodingFile implements ShouldQueue
 
     public function handle()
     {
-        $output = $this->output();
         $records = $this->records();
+        $output = Writer::createFromPath(storage_path("app/{$this->file->output_path}"), 'a');
 
         foreach ($records as $record)
             $this->processRow($record, $output);
