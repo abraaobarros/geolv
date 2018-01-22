@@ -68,7 +68,7 @@
             </div>
         @endif
 
-        @if (filled($outside))
+        @if (isset($outside) && filled($outside))
             <div class="row text-center mt-4">
                 <div class="col-md-12 text-center">
                     <span class="text-muted">
