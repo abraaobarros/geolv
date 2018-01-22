@@ -19,7 +19,7 @@ export default class GeocodeBtnView extends View {
         this.container.html('<i class="fa fa-spinner fa-pulse fa-fw text-success"></i>');
 
         Geocode
-            .get(this.props.address.street_name, this.props.address.locality, this.props.address.cep)
+            .get(this.props.address.text, this.props.address.locality, this.props.address.postal_code)
             .then((response) => this.onGeocodeResult(response.data))
             .catch((e) => this.onGeocodeError(e));
     }

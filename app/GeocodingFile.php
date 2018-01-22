@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int[] locality_indexes
  * @property-read int[] postal_code_indexes
  * @property string path
+ * @property string output_path
  * @property string email
  * @property array indexes
  * @method static GeocodingFile|Model create($data)
@@ -25,7 +26,7 @@ class GeocodingFile extends Model
     ];
 
     protected $casts = [
-        'indexes' => 'json'
+        'indexes' => 'array'
     ];
 
     public function getAddressIndexesAttribute()
@@ -41,6 +42,11 @@ class GeocodingFile extends Model
     public function getPostalCodeIndexesAttribute()
     {
         return $this->indexes['postal_code'];
+    }
+
+    public function getOutputPathAttribute()
+    {
+        return "post-processing/{$this->id}.csv";
     }
 
 }

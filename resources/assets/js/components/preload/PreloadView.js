@@ -46,14 +46,14 @@ export default class PreloadView extends View {
         let addresses = [];
         for (let i in this.results) {
             let address = {
-                street_name: this.getParsedAddress(i, selectedIdxList['street_name']),
+                text: this.getParsedAddress(i, selectedIdxList['text']),
                 locality: this.getParsedAddress(i, selectedIdxList['locality']),
-                cep: this.getParsedAddress(i, selectedIdxList['cep'])
+                postal_code: this.getParsedAddress(i, selectedIdxList['postal_code'])
             };
             addresses.push([
-                address.street_name,
+                address.text,
                 address.locality,
-                address.cep,
+                address.postal_code,
                 View.render(GeocodeBtnView, {address}).container,
             ]);
         }
@@ -65,10 +65,10 @@ export default class PreloadView extends View {
         let addresses = [];
         for (let i in this.results) {
             let address = {
-                cep: this.getParsedAddress(i, selectedIdxList['cep'])
+                postal_code: this.getParsedAddress(i, selectedIdxList['postal_code'])
             };
             addresses.push([
-                address.cep,
+                address.postal_code,
                 View.render(GeocodeBtnView, {address}).container,
             ]);
         }
@@ -81,9 +81,11 @@ export default class PreloadView extends View {
     }
 
     onAddressUpdated(selectedIdxList) {
-        let address = this.getParsedAddress(0, selectedIdxList['street_name']);
+        let address = this.getParsedAddress(0, selectedIdxList['text']);
         let locality = this.getParsedAddress(0, selectedIdxList['locality']);
-        let cep = this.getParsedAddress(0, selectedIdxList['cep']);
+        let postal_code = this.getParsedAddress(0, selectedIdxList['postal_code']);
+
+        this.get('indexes').val(JSON.stringify(selectedIdxList))
 
         if (address.length > 0 && locality.length > 0) {
             this.get('exampleContainer').fadeIn();
@@ -91,7 +93,7 @@ export default class PreloadView extends View {
                 data: this.getAddresses(selectedIdxList),
                 header: ['Endereço', 'Cidade', 'CEP', 'Resultado']
             });
-        } else if (address.length == 0 && locality.length == 0 && cep.length > 0) {
+        } else if (address.length == 0 && locality.length == 0 && postal_code.length > 0) {
             this.get('exampleContainer').fadeIn();
             View.render(TableView, this.get('exampleTable'), {
                 data: this.getCepAddresses(selectedIdxList),
@@ -105,14 +107,14 @@ export default class PreloadView extends View {
     updateMode() {
         let address = this.get('radioAddress').prop('checked');
         let locality = this.get('radioLocality').prop('checked');
-        let cep = this.get('radioCEP').prop('checked');
+        let postal_code = this.get('radioCEP').prop('checked');
 
         if (address)
-            this.previewTable.setMode('street_name');
+            this.previewTable.setMode('text');
         else if (locality)
             this.previewTable.setMode('locality');
-        else if (cep)
-            this.previewTable.setMode('cep');
+        else if (postal_code)
+            this.previewTable.setMode('postal_code');
     }
 
     onCompletedParsing(results) {

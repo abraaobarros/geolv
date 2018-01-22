@@ -2,8 +2,8 @@
 
 namespace GeoLV\Jobs;
 
+use GeoLV\Address;
 use GeoLV\Geocode\Dictionary;
-use GeoLV\Geocode\GeocoderProvider;
 use GeoLV\GeocodingFile;
 use GeoLV\Mail\DoneGeocodingFile;
 use Illuminate\Bus\Queueable;
@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use League\Csv\Reader;
 use League\Csv\Statement;
 use League\Csv\Writer;
@@ -20,53 +20,80 @@ class ProcessGeocodingFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /** @var GeocoderProvider */
-    private $geocoder;
     /** @var GeocodingFile */
     private $file;
-    /** @var \League\Csv\Reader */
-    private $input;
-    /** @var \League\Csv\Writer */
-    private $output;
+
+    private $limit;
 
     public function __construct(GeocodingFile $file)
     {
         $this->file = $file;
-        $this->geocoder = app('geocoder');
-        $this->input = Reader::createFromPath(storage_path($this->file->path), 'r');
-        $this->output = Writer::createFromPath(storage_path("post-processing/{$this->file->id}.csv"));
+        $this->limit = 10;
+    }
+
+    /**
+     * @return \Illuminate\Filesystem\Filesystem
+     */
+    private function storage()
+    {
+        return Storage::disk('local');
+    }
+
+    /**
+     * @return \League\Csv\AbstractCsv|Reader
+     */
+    private function input()
+    {
+        return Reader::createFromPath(storage_path("app/{$this->file->path}"));
+    }
+
+    /**
+     * @return \League\Csv\AbstractCsv|Writer
+     */
+    private function output()
+    {
+        return Writer::createFromPath(storage_path("app/{$this->file->output_path}"), 'a');
+    }
+
+    /**
+     * @return \League\Csv\ResultSet|array
+     */
+    private function records()
+    {
+        $statement = (new Statement())->offset($this->file->offset)->limit($this->limit);
+        return $statement->process($this->input());
     }
 
     public function handle()
     {
-        $offset = $this->file->offset;
-        $limit = 100;
-        $statement = (new Statement())->offset($offset)->limit($limit);
-        $records = $statement->process($this->input);
+        $output = $this->output();
+        $records = $this->records();
 
-        DB::transaction(function () use ($records, $offset, $limit) {
+        foreach ($records as $record)
+            $this->processRow($record, $output);
 
-            for ($i = $offset; $i < $limit; $i++)
-                $this->processRow($records[$i]);
+        $this->file->update(['offset' => $this->file->offset + $this->limit]);
 
-            $this->file->update(['offset' => $offset + $limit]);
-
-        });
+        $output = null;
 
         if (count($records) > 0)
-            $this->chain([new ProcessGeocodingFile($this->file)])->dispatch();
-        else
-            \Mail::send(new DoneGeocodingFile($this->file));
+            dispatch(new ProcessGeocodingFile($this->file));
+        else {
+            \Mail::to($this->file->email)->send(new DoneGeocodingFile($this->file));
+            $this->storage()->delete($this->file->path);
+        }
     }
 
-    private function processRow($row)
+    private function processRow($row, Writer $output)
     {
         $text = Dictionary::address($this->get($row, 'address'));
         $locality = $this->get($row, 'locality');
         $postalCode = $this->get($row, 'postal_code');
-        $results = $this->geocoder->geocode($text, $locality, $postalCode);
+        /** @var Address $result */
+        $result = app('geocoder')->geocode($text, $locality, $postalCode)->first();
 
-        $this->output->insertOne(array_values($results->first()->fields));
+        $data = array_merge($row, [$result->latitude, $result->longitude]);
+        $output->insertOne($data);
     }
 
     private function get($row, $type)

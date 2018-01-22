@@ -14,29 +14,36 @@
                     </a>
                 </h1>
 
-                <form action="{{ route('geocode.file') }}" method="post">
+                <form action="{{ route('geocode.file') }}" method="post" enctype="multipart/form-data">
 
                     <div class="custom-file">
-                        <input type="file" name="geocode-file" class="custom-file-input"
-                               accept="application/gzip|text/csv" id="customFile">
-                        <label class="custom-file-label form-control-file" for="customFile">Selecione um
+                        <input type="file" name="geocode_file" class="custom-file-input"
+                               accept="application/gzip|text/csv" id="geocode_file">
+                        <label class="custom-file-label form-control-file" for="geocode_file">Selecione um
                             arquivo...</label>
                     </div>
 
-                    <div class="row text-center">
+                    <div class="input-group mt-2">
+                        <input type="text" name="email" id="email" value="{{ old('email') }}" class="form-control" placeholder="Digite seu email">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fa fa-send-o mr-2"></i> Enviar
+                            </button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="indexes" value="">
+
+                    <div class="text-center">
                         @if($errors->any())
                             <div class="form-control-feedback text-danger">{{ $errors->first() }}</div>
                         @endif
                     </div>
 
-                    <div class="row text-center">
-                        <input type="submit" value="" class="btn btn-outline-primary" value="Enviar"/>
-                    </div>
-
                 </form>
 
                 @if (session()->has('upload'))
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-success mt-2" role="alert">
                         Seu arquivo está sendo processado. Enviaremos um email quando concluído.
                     </div>
                 @endif

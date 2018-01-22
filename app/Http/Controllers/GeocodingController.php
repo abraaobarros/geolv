@@ -6,6 +6,7 @@ use GeoLV\Address;
 use GeoLV\Geocode\Dictionary;
 use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\GeocodingRequest;
+use GeoLV\Http\Requests\UploadRequest;
 use GeoLV\Jobs\ProcessGeocodingFile;
 use GeoLV\Locality;
 use GeoLV\Search;
@@ -58,13 +59,13 @@ class GeocodingController extends Controller
         return view('preload');
     }
 
-    public function upload(Request $request)
+    public function upload(UploadRequest $request)
     {
-        $path = $request->file('file')->store('pre-processing', 'local');
+        $path = $request->file('geocode_file')->store('pre-processing');
         $file = GeocodingFile::create([
             'path' => $path,
             'email' => $request->get('email'),
-            'indexes' => $request->get('indexes')
+            'indexes' => json_decode($request->get('indexes'), true)
         ]);
 
         $this->dispatch(new ProcessGeocodingFile($file));

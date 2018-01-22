@@ -18,5 +18,5 @@ Route::get('/', 'GeocodingController@index')->name('index');
 Route::get('/geocode', 'GeocodingController@geocode')->name('geocode');
 Route::get('/geocode/map', 'GeocodingController@map')->name('map');
 Route::get('/geocode/file', 'GeocodingController@preload')->name('preload');
-Route::post('/geocode/file', 'GeocodingController@map')->name('geocode.file');
+Route::post('/geocode/file', 'GeocodingController@upload')->name('geocode.file');
 

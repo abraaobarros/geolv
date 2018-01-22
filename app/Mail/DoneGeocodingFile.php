@@ -23,9 +23,8 @@ class DoneGeocodingFile extends Mailable
     {
         return $this
             ->markdown('emails.done')
-            ->to($this->file->email)
             ->subject('CSV Pronto!')
-            ->attach(storage_path($this->file->path), [
+            ->attach($this->file->output_path, [
                 'as' => 'result.csv',
                 'mime' => 'text/csv',
             ]);
