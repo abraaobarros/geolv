@@ -5,7 +5,7 @@
     <a href="javascript:history.back()" class="btn btn-outline-primary" style="position: fixed; top: 10px; left: 10px; z-index: 20">Voltar</a>
 
     <div id="geolv-container" style="position: fixed; width: 100%; height: 100%">
-        <div class="geolv-map" style="width: 100%; height: 100%">
+        <div class="geolv-map" style="width: 100%; height: 100%" data-locality="{{ implode('|', $search->findLocality()->getRect()) }}">
         </div>
 
         @foreach ($results as $result)

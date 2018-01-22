@@ -84,6 +84,27 @@ class Address extends Model
         return sin($this->rad_latitude);
     }
 
+    /**
+     * @return Model|Locality|null
+     */
+    public function findLocality()
+    {
+        return Locality::query()
+            ->where('min_lat', '<=', $this->latitude)
+            ->where('min_lng', '<=', $this->longitude)
+            ->where('max_lat', '>=', $this->latitude)
+            ->where('max_lng', '>=', $this->longitude)
+            ->first();
+    }
+
+    public function getLocalityAttribute($value)
+    {
+        if (blank($value))
+            return optional($this->findLocality())->name;
+        else
+            return $value;
+    }
+
     public function getCoordinateAttribute()
     {
         return new Coordinate($this->latitude, $this->longitude);

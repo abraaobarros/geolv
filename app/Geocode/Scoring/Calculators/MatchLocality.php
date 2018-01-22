@@ -14,10 +14,10 @@ class MatchLocality extends SearchRelevanceCalculator
     public function calculate(Address $address): float
     {
         /** @var Locality $locality */
-        $locality = Locality::whereName($this->search->locality)->first();
+        $locality = $this->search->findLocality();
 
         if (blank($locality))
-            return 1;
+            return 0;
 
         return $locality->isInsideBounds($address->coordinate)? 1 : 0;
     }

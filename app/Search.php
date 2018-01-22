@@ -37,4 +37,12 @@ class Search extends Model
         return trim(implode(" ", [$this->text, $this->locality, $this->postal_code]));
     }
 
+    /**
+     * @return Locality|null
+     */
+    public function findLocality()
+    {
+        return Locality::whereName($this->locality)->first();
+    }
+
 }

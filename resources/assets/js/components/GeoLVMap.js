@@ -14,7 +14,17 @@ export default class GeoLVMap extends View {
     }
 
     get zoom() {
-        return this.data.zoom || 8
+        return this.get('map').data('zoom') || 8
+    }
+
+    get locality() {
+        let values = this.get('map').data('locality');
+        if (values) {
+            values = values.split('|').map((i) => parseFloat(i));
+            return {min_lat: values[0], min_lng: values[1], max_lat: values[2], max_lng: values[3]}
+        } else {
+            return null
+        }
     }
 
     get results() {
@@ -121,6 +131,29 @@ export default class GeoLVMap extends View {
             //</editor-fold>
         });
 
+        this.drawLocality(map);
+        this.drawMarkers(map);
+    }
+
+    drawLocality(map) {
+        let bounds = this.locality;
+        if (bounds) {
+            new google.maps.Rectangle({
+                strokeColor: '#003366',
+                strokeOpacity: 0.6,
+                strokeWeight: 2,
+                fillColor: '#006699',
+                fillOpacity: 0.1,
+                map: map,
+                bounds: new google.maps.LatLngBounds(
+                    new google.maps.LatLng(bounds.min_lat, bounds.min_lng),
+                    new google.maps.LatLng(bounds.max_lat, bounds.max_lng)
+                )
+            });
+        }
+    }
+
+    drawMarkers(map) {
         let bounds = new google.maps.LatLngBounds();
         let results = this.results;
 
@@ -151,5 +184,4 @@ export default class GeoLVMap extends View {
 
         map.fitBounds(bounds);
     }
-
 }

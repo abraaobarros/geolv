@@ -42,4 +42,14 @@ class Locality extends Model
         return $coordinate->getLat() >= $this->min_lat && $coordinate->getLat() <= $this->max_lat &&
             $coordinate->getLng() >= $this->min_lng && $coordinate->getLng() <= $this->max_lng;
     }
+
+    public function getRect(): array
+    {
+        return [
+            $this->min_lat,
+            $this->min_lng,
+            $this->max_lat,
+            $this->max_lng
+        ];
+    }
 }

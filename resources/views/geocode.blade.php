@@ -97,9 +97,6 @@
                                                     <label class="custom-control-label" for="customCheck1">
                                                         <small>
                                                             {{ trans("validation.attributes.$key") }}
-                                                            @if($key == "match_locality")
-                                                                ({{ $result->locality }})
-                                                            @endif
                                                         </small>
                                                     </label>
                                                 </div>

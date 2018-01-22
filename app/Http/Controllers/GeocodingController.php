@@ -51,7 +51,7 @@ class GeocodingController extends Controller
         $selected = Address::findOrFail($request->get('selected_id'));
         $results = $this->geocoder->get($search);
 
-        return view('map', compact('results', 'selected'));
+        return view('map', compact('results', 'selected', 'search'));
     }
 
     public function preload()
