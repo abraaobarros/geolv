@@ -68,7 +68,7 @@
             </div>
         @endif
 
-        @if ($outside->count() > 0)
+        @if (filled($outside))
             <div class="row text-center mt-4">
                 <div class="col-md-12 text-center">
                     <span class="text-muted">
@@ -77,7 +77,6 @@
                 </div>
             </div>
         @endif
-
 
         <div class="row">
 
