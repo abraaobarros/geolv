@@ -68,7 +68,19 @@
             </div>
         @endif
 
+        @if ($outside->count() > 0)
+            <div class="row text-center mt-4">
+                <div class="col-md-12 text-center">
+                    <span class="text-muted">
+                        Encontramos <b>{{ $outside->count() }}</b> resultados fora do município.
+                    </span>
+                </div>
+            </div>
+        @endif
+
+
         <div class="row">
+
             @foreach ($results as $result)
                 <div class="col-lg-4 col-md-12">
                     <div class="card" style="margin-bottom: 10px">
