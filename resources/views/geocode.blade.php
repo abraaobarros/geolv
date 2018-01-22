@@ -129,6 +129,9 @@
                                         <li class="list-group-item">
                                             <span class="badge mr-1">{{ trans("validation.attributes.$key") }}:</span>
                                             {{ $value }}
+                                            @if($key == 'match_locality')
+                                                ({{ $result->locality }})
+                                            @endif
                                         </li>
                                     @endif
                                 @endforeach
