@@ -95,7 +95,12 @@
                                                     <input type="checkbox" class="custom-control-input"
                                                            id="customCheck1" {{ ($value > 0? 'checked': '') }} disabled>
                                                     <label class="custom-control-label" for="customCheck1">
-                                                        <small>{{ trans("validation.attributes.$key") }}</small>
+                                                        <small>
+                                                            {{ trans("validation.attributes.$key") }}
+                                                            @if($key == "match_locality")
+                                                                ({{ $result->locality }})
+                                                            @endif
+                                                        </small>
                                                     </label>
                                                 </div>
                                             @else
@@ -129,9 +134,6 @@
                                         <li class="list-group-item">
                                             <span class="badge mr-1">{{ trans("validation.attributes.$key") }}:</span>
                                             {{ $value }}
-                                            @if($key == 'match_locality')
-                                                ({{ $result->locality }})
-                                            @endif
                                         </li>
                                     @endif
                                 @endforeach
