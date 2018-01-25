@@ -19,6 +19,7 @@ class Kernel extends HttpKernel
         \GeoLV\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \GeoLV\Http\Middleware\TrustProxies::class,
+        \GeoLV\Http\Middleware\SecureMiddleware::class,
     ];
 
     /**
