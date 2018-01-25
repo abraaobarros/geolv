@@ -36,7 +36,7 @@
                                 <span class="hidden-sm-up">Pesquisar</span>
                                 <span class="fa fa-search"></span>
                             </button>
-                            <a href="{{ route('geocode.file') }}" class="btn btn-outline-secondary" tabindex="4">
+                            <a href="{{ route('files.create') }}" class="btn btn-outline-secondary" tabindex="4">
                                 <span class="hidden-sm-up">Geolocalizar arquivo</span>
                                 <span class="fa fa-file"></span>
                             </a>

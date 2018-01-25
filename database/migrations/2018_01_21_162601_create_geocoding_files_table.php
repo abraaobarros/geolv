@@ -18,6 +18,7 @@ class CreateGeocodingFilesTable extends Migration
             $table->string('path');
             $table->string('email');
             $table->integer('offset')->default(0);
+            $table->boolean('done')->default(false);
             $table->json('indexes');
             $table->timestamps();
         });

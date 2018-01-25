@@ -14,7 +14,7 @@
                     </a>
                 </h1>
 
-                <form action="{{ route('geocode.file') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('files.store') }}" method="post" enctype="multipart/form-data">
 
                     <div class="custom-file">
                         <input type="file" name="geocode_file" class="custom-file-input"
@@ -44,6 +44,7 @@
 
                 @if (session()->has('upload'))
                     <div class="alert alert-success mt-2" role="alert">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                         Seu arquivo está sendo processado. Enviaremos um email quando concluído.
                     </div>
                 @endif

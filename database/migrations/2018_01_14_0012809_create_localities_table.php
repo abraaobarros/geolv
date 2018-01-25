@@ -23,6 +23,7 @@ class CreateLocalitiesTable extends Migration
             $table->double('min_lng');
             $table->double('max_lat');
             $table->double('max_lng');
+            $table->index('name');
             $table->timestamps();
         });
     }

@@ -1,7 +1,11 @@
 @component('mail::message')
 # CSV Pronto!
 
-Segue em anexo o seu arquivo processado.
+O seu arquivo foi processo com sucesso!
+
+@component('mail::button', ['url' => route('files.show', $file->id)])
+    Clique para baixar
+@endcomponent
 
 Atenciosamente,<br>
 {{ config('app.name') }}

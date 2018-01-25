@@ -2,6 +2,7 @@
 
 namespace GeoLV\Providers;
 
+use GeoLV\GeocodingFile;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -23,7 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->model('files', GeocodingFile::class);
 
         parent::boot();
     }

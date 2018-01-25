@@ -20,31 +20,13 @@ class ProcessGeocodingFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /** @var GeocodingFile */
-    private $file;
+    public $file;
+    public $chunkSize;
 
-    private $limit;
-
-    public function __construct(GeocodingFile $file)
+    public function __construct(GeocodingFile $file, $chunkSize = 100)
     {
         $this->file = $file;
-        $this->limit = 10;
-    }
-
-    /**
-     * @return \Illuminate\Filesystem\Filesystem
-     */
-    private function storage()
-    {
-        return Storage::disk('local');
-    }
-
-    /**
-     * @return \League\Csv\AbstractCsv|Reader
-     */
-    private function input()
-    {
-        return Reader::createFromPath(storage_path("app/{$this->file->path}"));
+        $this->chunkSize = $chunkSize;
     }
 
     /**
@@ -52,31 +34,35 @@ class ProcessGeocodingFile implements ShouldQueue
      */
     private function records()
     {
-        $statement = (new Statement())->offset($this->file->offset)->limit($this->limit);
-        return $statement->process($this->input());
+        /** @var \League\Flysystem\AwsS3v3\AwsS3Adapter $adapter */
+        $adapter = Storage::disk('s3')->getAdapter();
+        $response = $adapter->readStream($this->file->path);
+        $reader = Reader::createFromStream($response['stream']);
+        $statement = (new Statement())->offset($this->file->offset)->limit($this->chunkSize);
+        return $statement->process($reader);
     }
 
     public function handle()
     {
         $records = $this->records();
-        $output = Writer::createFromPath(storage_path("app/{$this->file->output_path}"), 'a');
+        $output = Writer::createFromFileObject(new \SplTempFileObject());
+
+        if ($this->file->offset == 0)
+            $output->insertOne(['address', 'locality', 'postal_code', 'latitude', 'longitude']);
 
         foreach ($records as $record)
-            $this->processRow($record, $output);
+            $output->insertOne($this->processRow($record));
 
-        $this->file->update(['offset' => $this->file->offset + $this->limit]);
-
-        $output = null;
+        $this->updateFileOffset(count($records));
+        $this->appendOutput($output);
 
         if (count($records) > 0)
             dispatch(new ProcessGeocodingFile($this->file));
-        else {
-            \Mail::to($this->file->email)->send(new DoneGeocodingFile($this->file));
-            $this->storage()->delete($this->file->path);
-        }
+        else
+            $this->notifyUser();
     }
 
-    private function processRow($row, Writer $output)
+    private function processRow($row): array
     {
         $text = Dictionary::address($this->get($row, 'address'));
         $locality = $this->get($row, 'locality');
@@ -84,8 +70,7 @@ class ProcessGeocodingFile implements ShouldQueue
         /** @var Address $result */
         $result = app('geocoder')->geocode($text, $locality, $postalCode)->first();
 
-        $data = array_merge($row, [$result->latitude, $result->longitude]);
-        $output->insertOne($data);
+        return [$text, $locality, $postalCode, $result->latitude, $result->longitude];
     }
 
     private function get($row, $type)
@@ -95,5 +80,22 @@ class ProcessGeocodingFile implements ShouldQueue
             array_push($value, $row[$index]);
 
         return trim(implode(" ", $value));
+    }
+
+    private function updateFileOffset($count)
+    {
+        $this->file->update(['offset' => $this->file->offset + $count]);
+    }
+
+    private function appendOutput(Writer $output)
+    {
+        Storage::disk('s3')->append($this->file->output_path, $output->getContent());
+    }
+
+    private function notifyUser()
+    {
+        $this->file->update(['done' => true]);
+        \Mail::to($this->file->email)
+            ->send(new DoneGeocodingFile($this->file));
     }
 }

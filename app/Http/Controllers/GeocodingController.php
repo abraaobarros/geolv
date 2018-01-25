@@ -64,23 +64,4 @@ class GeocodingController extends Controller
         return view('map', compact('results', 'outside', 'selected', 'search'));
     }
 
-    public function preload()
-    {
-        return view('preload');
-    }
-
-    public function upload(UploadRequest $request)
-    {
-        $path = $request->file('geocode_file')->store('pre-processing');
-        $file = GeocodingFile::create([
-            'path' => $path,
-            'email' => $request->get('email'),
-            'indexes' => json_decode($request->get('indexes'), true)
-        ]);
-
-        $this->dispatch(new ProcessGeocodingFile($file));
-
-        return redirect()->back()->with('upload', true);
-    }
-
 }

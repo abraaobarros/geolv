@@ -12,7 +12,7 @@ class DoneGeocodingFile extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private $file;
+    public $file;
 
     public function __construct(GeocodingFile $file)
     {
@@ -23,10 +23,6 @@ class DoneGeocodingFile extends Mailable
     {
         return $this
             ->markdown('emails.done')
-            ->subject('CSV Pronto!')
-            ->attach($this->file->output_path, [
-                'as' => 'result.csv',
-                'mime' => 'text/csv',
-            ]);
+            ->subject('CSV Pronto!');
     }
 }

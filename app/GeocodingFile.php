@@ -23,6 +23,7 @@ class GeocodingFile extends Model
         'email',
         'offset',
         'indexes',
+        'done'
     ];
 
     protected $casts = [
@@ -46,7 +47,8 @@ class GeocodingFile extends Model
 
     public function getOutputPathAttribute()
     {
-        return "post-processing/{$this->id}.csv";
+        $hashCode = sha1($this->created_at->toDateTimeString());
+        return "post-processing/{$hashCode}.csv";
     }
 
 }
