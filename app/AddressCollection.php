@@ -37,8 +37,8 @@ class AddressCollection extends Collection
 
         /** @var Address $address */
         foreach ($this as $address) {
-            $dispersion += pow($address->latitude - $latMed, 2);
-            $dispersion += pow($address->longitude - $lngMed, 2);
+            $dispersion += pow(($address->latitude - $latMed) * 100, 2);
+            $dispersion += pow(($address->longitude - $lngMed) * 100, 2);
         }
 
         return $dispersion;
