@@ -5,7 +5,7 @@ namespace GeoLV\Http\Controllers\Api;
 use GeoLV\Geocode\Dictionary;
 use GeoLV\Http\Controllers\Controller;
 use GeoLV\Http\Requests\GeocodingRequest;
-use GeoLV\Http\Resources\Address as AddressResource;
+use GeoLV\Http\Resources\AddressCollection as AddressCollectionResource;
 
 class GeocodingController extends Controller
 {
@@ -26,6 +26,6 @@ class GeocodingController extends Controller
         $postalCode = $request->get('postal_code');
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
 
-        return AddressResource::collection($results);
+        return new AddressCollectionResource($results);
     }
 }

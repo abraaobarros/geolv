@@ -47,9 +47,6 @@ class ProcessGeocodingFile implements ShouldQueue
         $records = $this->records();
         $output = Writer::createFromFileObject(new \SplTempFileObject());
 
-        if ($this->file->offset == 0)
-            $output->insertOne(['address', 'locality', 'postal_code', 'latitude', 'longitude']);
-
         foreach ($records as $record)
             $output->insertOne($this->processRow($record));
 
@@ -70,7 +67,7 @@ class ProcessGeocodingFile implements ShouldQueue
         /** @var Address $result */
         $result = app('geocoder')->geocode($text, $locality, $postalCode)->first();
 
-        return [$text, $locality, $postalCode, $result->latitude, $result->longitude];
+        return array_merge($row, [$result->latitude, $result->longitude]);
     }
 
     private function get($row, $type)

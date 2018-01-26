@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        @if ($results->count() > 0)
+        @if (filled($results))
             <hr>
 
             <div class="row">
@@ -63,6 +63,8 @@
                         @if(filled($postalCode))
                             CEP: <span class="badge badge-secondary">{{ $postalCode }}</span><br/>
                         @endif
+
+                        Dispersão: <span class="badge badge-secondary">{{ $dispersion }}</span>
                     </p>
                 </div>
             </div>

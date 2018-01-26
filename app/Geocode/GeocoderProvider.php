@@ -2,6 +2,7 @@
 
 namespace GeoLV\Geocode;
 
+use GeoLV\AddressCollection;
 use Geocoder\Location;
 use Geocoder\Provider\ArcGISOnline\ArcGISOnline;
 use Geocoder\Provider\GoogleMaps\GoogleMaps;
@@ -32,13 +33,13 @@ class GeocoderProvider
         ]);
     }
 
-    public function geocode($text, $locality, $postalCode)
+    public function geocode($text, $locality, $postalCode): AddressCollection
     {
         $search = $this->getSearch($text, $locality, $postalCode);
         return $this->get($search);
     }
 
-    public function get(Search $search)
+    public function get(Search $search): AddressCollection
     {
         return $this->searchDriver->search($search);
     }

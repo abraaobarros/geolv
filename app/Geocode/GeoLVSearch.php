@@ -3,6 +3,7 @@
 namespace GeoLV\Geocode;
 
 use GeoLV\Address;
+use GeoLV\AddressCollection;
 use GeoLV\Geocode\Scoring\AddressRelevanceCalculator;
 use GeoLV\Geocode\Scoring\IRelevanceCalculator;
 use GeoLV\Geocode\Scoring\PostalCodeRelevanceCalculator;
@@ -41,9 +42,9 @@ class GeoLVSearch
 
     /**
      * @param Search $search
-     * @return Collection
+     * @return AddressCollection
      */
-    public function search(Search $search): Collection
+    public function search(Search $search): AddressCollection
     {
         $relevanceCalculator = $this->getRelevanceCalculator($search);
 
@@ -60,9 +61,9 @@ class GeoLVSearch
 
     /**
      * @param Search $search
-     * @return Collection
+     * @return AddressCollection
      */
-    private function searchResults(Search $search): Collection
+    private function searchResults(Search $search): AddressCollection
     {
         return Address::hydrate(
             $this->searchDriver->query($search->address)->get()->toArray()

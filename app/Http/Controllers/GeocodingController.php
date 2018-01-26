@@ -4,6 +4,7 @@ namespace GeoLV\Http\Controllers;
 
 use GeoLV\Address;
 use GeoLV\Geocode\Dictionary;
+use GeoLV\Geocode\GeocoderProvider;
 use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\GeocodingRequest;
 use GeoLV\Http\Requests\UploadRequest;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 
 class GeocodingController extends Controller
 {
+    /** @var GeocoderProvider  */
     private $geocoder;
 
     /**
@@ -41,25 +43,18 @@ class GeocodingController extends Controller
         $localities = Locality::all();
 
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
-        $outside = collect();
+        $outside = $results->outsideLocality();
+        $results = $results->insideLocality();
+        $dispersion = $results->calculateDispersion();
 
-        $results = $results->filter(function (Address $address) use ($outside) {
-            if ($address->match_locality == 0)
-                $outside->push($address);
-
-            return $address->match_locality > 0;
-        });
-
-        return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities', 'outside'));
+        return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities', 'outside', 'dispersion'));
     }
 
     public function map(Request $request)
     {
         $search = Search::findOrFail($request->get('search_id'));
         $selected = Address::findOrFail($request->get('selected_id'));
-        $results = $this->geocoder->get($search)->filter(function (Address $address) {
-           return  $address->match_locality > 0;
-        });
+        $results = $this->geocoder->get($search)->insideLocality();
 
         return view('map', compact('results', 'outside', 'selected', 'search'));
     }

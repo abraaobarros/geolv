@@ -119,7 +119,6 @@ class Address extends Model
             'contains_street_number',
             'contains_sub_locality',
             'match_postal_code',
-            'match_locality',
             'has_all_attributes',
         ]);
     }
@@ -127,6 +126,11 @@ class Address extends Model
     public function getFieldsAttribute()
     {
         return array_only($this->toArray(), $this->fillable);
+    }
+
+    public function newCollection(array $models = [])
+    {
+        return new AddressCollection($models);
     }
 
 }
