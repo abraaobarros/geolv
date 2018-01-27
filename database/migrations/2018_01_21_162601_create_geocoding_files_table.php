@@ -16,10 +16,11 @@ class CreateGeocodingFilesTable extends Migration
         Schema::create('geocoding_files', function (Blueprint $table) {
             $table->increments('id');
             $table->string('path');
-            $table->string('email');
             $table->integer('offset')->default(0);
             $table->boolean('done')->default(false);
             $table->json('indexes');
+            $table->integer('user_id')->unsigned()->index();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

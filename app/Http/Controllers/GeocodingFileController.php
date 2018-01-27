@@ -6,11 +6,16 @@ use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\UploadRequest;
 use GeoLV\Jobs\ProcessGeocodingFile;
 use GeoLV\Mail\DoneGeocodingFile;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class GeocodingFileController extends Controller
 {
+    public function index()
+    {
+        $files = auth()->user()->files()->orderBy('updated_at', 'desc')->paginate(15);
+        return view('files.index', compact('files'));
+    }
+
     public function create()
     {
         return view('files.preload');
@@ -18,16 +23,20 @@ class GeocodingFileController extends Controller
 
     public function store(UploadRequest $request)
     {
-        $path = $request->file('geocode_file')->store('pre-processing', ['disk' => 's3']);
-        $file = GeocodingFile::create([
+        $indexes = json_decode($request->get('indexes'), true);
+        $path = $request
+            ->file('geocode_file')
+            ->store('pre-processing', ['disk' => 's3']);
+
+        /** @var GeocodingFile $file */
+        $file = auth()->user()->files()->create([
             'path' => $path,
-            'email' => $request->get('email'),
-            'indexes' => json_decode($request->get('indexes'), true)
+            'indexes' => $indexes
         ]);
 
         $this->dispatch(new ProcessGeocodingFile($file));
 
-        return redirect()->back()->with('upload', true);
+        return redirect()->route('files.index')->with('upload', true);
     }
 
     public function show(GeocodingFile $file)

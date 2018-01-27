@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('content')
 
@@ -31,16 +31,10 @@
                         @endif
                     </div>
                     <div class="row justify-content-center" style="margin-top: 20px">
-                        <div class="btn-group">
-                            <button type="submit" class="btn btn-outline-primary" tabindex="4">
-                                <span class="hidden-sm-up">Pesquisar</span>
-                                <span class="fa fa-search"></span>
-                            </button>
-                            <a href="{{ route('files.create') }}" class="btn btn-outline-secondary" tabindex="4">
-                                <span class="hidden-sm-up">Geolocalizar arquivo</span>
-                                <span class="fa fa-file"></span>
-                            </a>
-                        </div>
+                        <button type="submit" class="btn btn-outline-primary" tabindex="4">
+                            <span class="hidden-sm-up">Pesquisar</span>
+                            <span class="fa fa-search"></span>
+                        </button>
                     </div>
                 </form>
             </div>

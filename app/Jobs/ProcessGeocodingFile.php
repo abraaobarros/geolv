@@ -23,7 +23,7 @@ class ProcessGeocodingFile implements ShouldQueue
     public $file;
     public $chunkSize;
 
-    public function __construct(GeocodingFile $file, $chunkSize = 100)
+    public function __construct(GeocodingFile $file, $chunkSize = 50)
     {
         $this->file = $file;
         $this->chunkSize = $chunkSize;
@@ -92,7 +92,7 @@ class ProcessGeocodingFile implements ShouldQueue
     private function notifyUser()
     {
         $this->file->update(['done' => true]);
-        \Mail::to($this->file->email)
+        \Mail::to($this->file->user->email)
             ->send(new DoneGeocodingFile($this->file));
     }
 }

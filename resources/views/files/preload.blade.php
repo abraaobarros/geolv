@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('content')
 
@@ -8,7 +8,7 @@
                 <h1>
                     GeoLV
 
-                    <a href="{{ route('index') }}" class="btn btn-sm btn-outline-secondary ml-2" tabindex="4">
+                    <a href="{{ route('files.index') }}" class="btn btn-sm btn-outline-secondary ml-2" tabindex="4">
                         <span class="hidden-sm-up">Voltar</span>
                         <span class="fa fa-undo"></span>
                     </a>
@@ -23,13 +23,10 @@
                             arquivo...</label>
                     </div>
 
-                    <div class="input-group mt-2">
-                        <input type="text" name="email" id="email" value="{{ old('email') }}" class="form-control" placeholder="Digite seu email">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-outline-primary">
-                                <i class="fa fa-send-o mr-2"></i> Enviar
-                            </button>
-                        </div>
+                    <div class="text-center mt-2">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fa fa-send-o mr-2"></i> Enviar
+                        </button>
                     </div>
 
                     <input type="hidden" name="indexes" value="">
@@ -42,10 +39,10 @@
 
                 </form>
 
-                @if (session()->has('upload'))
+                @if(session()->has('upload'))
                     <div class="alert alert-success mt-2" role="alert">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        Seu arquivo está sendo processado. Enviaremos um email quando concluído.
+                        Seu arquivo está sendo processado. Enviaremos um email para {{ auth()->user()->email }} quando concluído.
                     </div>
                 @endif
             </div>

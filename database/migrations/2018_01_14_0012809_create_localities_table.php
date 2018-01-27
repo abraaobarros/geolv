@@ -15,7 +15,7 @@ class CreateLocalitiesTable extends Migration
     {
         Schema::create('localities', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->index();
             $table->string('state');
             $table->integer('state_id');
             $table->string('ibge_code');
@@ -23,7 +23,6 @@ class CreateLocalitiesTable extends Migration
             $table->double('min_lng');
             $table->double('max_lat');
             $table->double('max_lng');
-            $table->index('name');
             $table->timestamps();
         });
     }

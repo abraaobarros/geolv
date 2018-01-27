@@ -25,7 +25,6 @@ class UploadRequest extends FormRequest
     {
         return [
             'geocode_file' => 'required|file|mimes:csv,txt',
-            'email' => 'required|email',
             'indexes' => 'required|json'
         ];
     }

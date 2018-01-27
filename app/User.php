@@ -5,6 +5,14 @@ namespace GeoLV;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Class User
+ * @package GeoLV
+ * @property string name
+ * @property string email
+ * @property string password
+ * @property \Illuminate\Support\Collection|GeocodingFile[] files
+ */
 class User extends Authenticatable
 {
     use Notifiable;
@@ -26,4 +34,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function files()
+    {
+        return $this->hasMany(GeocodingFile::class);
+    }
 }

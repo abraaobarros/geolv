@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class GeocodingFile
  * @package GeoLV
- * @property-read int[] address_indexes
- * @property-read int[] locality_indexes
- * @property-read int[] postal_code_indexes
+ * @property int[] address_indexes
+ * @property int[] locality_indexes
+ * @property int[] postal_code_indexes
  * @property string path
  * @property string output_path
  * @property string email
  * @property array indexes
+ * @property User|Model user
  * @method static GeocodingFile|Model create($data)
  */
 class GeocodingFile extends Model
@@ -23,12 +24,18 @@ class GeocodingFile extends Model
         'email',
         'offset',
         'indexes',
-        'done'
+        'done',
+        'stopped'
     ];
 
     protected $casts = [
         'indexes' => 'array'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function getAddressIndexesAttribute()
     {
@@ -49,6 +56,11 @@ class GeocodingFile extends Model
     {
         $hashCode = sha1($this->created_at->toDateTimeString());
         return "post-processing/{$hashCode}.csv";
+    }
+
+    public function getInitializingAttribute()
+    {
+        return !\Storage::disk('s3')->exists($this->output_path);
     }
 
 }

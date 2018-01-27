@@ -1,0 +1,26 @@
+.custom-file-control:lang(en)::before {
+  content: "Search";
+}
+
+.custom-file-control:lang(pt)::before {
+  content: "Procurar";
+}
+
+td.active {
+  background-color: $table-active-bg;
+  cursor: pointer;
+}
+
+td.selected {
+  background-color: lighten($success, 50%) !important;
+}
+
+td {
+  position: relative;
+}
+
+td .badge-selected {
+  position: absolute;
+  top: -20px;
+  font-size: 18px;
+}
