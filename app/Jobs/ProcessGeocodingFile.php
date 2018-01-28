@@ -3,6 +3,7 @@
 namespace GeoLV\Jobs;
 
 use GeoLV\Address;
+use GeoLV\AddressCollection;
 use GeoLV\Geocode\Dictionary;
 use GeoLV\GeocodingFile;
 use GeoLV\Mail\DoneGeocodingFile;
@@ -64,10 +65,13 @@ class ProcessGeocodingFile implements ShouldQueue
         $text = Dictionary::address($this->get($row, 'address'));
         $locality = $this->get($row, 'locality');
         $postalCode = $this->get($row, 'postal_code');
-        /** @var Address $result */
-        $result = app('geocoder')->geocode($text, $locality, $postalCode)->first();
 
-        return array_merge($row, [$result->latitude, $result->longitude]);
+        /** @var AddressCollection $results */
+        $results = app('geocoder')->geocode($text, $locality, $postalCode);
+        /** @var Address $result */
+        $result = $results->first();
+
+        return array_merge($row, [$result->latitude, $result->longitude, $results->calculateDispersion()]);
     }
 
     private function get($row, $type)
