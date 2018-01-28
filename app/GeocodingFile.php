@@ -63,4 +63,13 @@ class GeocodingFile extends Model
         return !\Storage::disk('s3')->exists($this->output_path);
     }
 
+    public function getVelocityAttribute()
+    {
+        try {
+            return $this->offset / $file->updated_at->diffInSeconds($file->created_at);
+        } catch (\DivisionByZeroError $e) {
+            return 0;
+        }
+    }
+
 }

@@ -37,7 +37,7 @@
                         <td>{{ $file->offset }}</td>
                         <td>{{ $file->created_at->diffForHumans() }}</td>
                         <td>
-                            {{ number_format($file->offset / $file->updated_at->diffInSeconds($file->created_at), 2) }}
+                            {{ number_format($file->velocity, 2) }}
                         </td>
                         <td>{{ $file->updated_at->diffForHumans($file->created_at) }}</td>
                         <td>
