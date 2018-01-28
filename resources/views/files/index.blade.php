@@ -25,6 +25,12 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @if(blank($files))
+                        <tr>
+                            <td colspan="7">Nenhum arquivo processado.</td>
+                        </tr>
+                    @endif
+
                     @foreach($files as $file)
                     <tr>
                         <td><span class="badge badge-default">{{ $file->path }}</span></td>
