@@ -1,2 +1,2 @@
 web: vendor/bin/heroku-php-apache2 public/ 
-queue: php artisan queue:work --tries=3
+queue: php artisan queue:work --sleep=3 --tries=3

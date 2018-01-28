@@ -44,6 +44,12 @@ class GeocodingFileController extends Controller
         return Storage::disk('s3')->download($file->output_path);
     }
 
+    public function destroy(GeocodingFile $file)
+    {
+        $file->delete();
+        return redirect()->back();
+    }
+
     public function email(GeocodingFile $file)
     {
         return new DoneGeocodingFile($file);
