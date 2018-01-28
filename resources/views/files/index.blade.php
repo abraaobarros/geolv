@@ -19,7 +19,7 @@
                         <th>Linhas Processadas</th>
                         <th>Criado</th>
                         <th>Velocidade <span data-toggle="tooltip" data-title="endereços / segundo">(end./s)</span></th>
-                        <th>Tempo processamento</th>
+                        <th>Tempo de processamento</th>
                         <th>Ações</th>
                     </tr>
                     </thead>
