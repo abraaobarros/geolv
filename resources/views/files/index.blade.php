@@ -22,7 +22,7 @@
                         <th>Arquivo</th>
                         <th>Linhas Processadas</th>
                         <th>Criado</th>
-                        <th>Velocidade <span data-toggle="tooltip" data-title="endereços / segundo">(end./s)</span></th>
+                        <th data-toggle="tooltip" data-title="endereços / segundo">Velocidade <small>(end./s)</small></th>
                         <th>Tempo de processamento</th>
                         <th>Ações</th>
                         <th>Remover</th>
