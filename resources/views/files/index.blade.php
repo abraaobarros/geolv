@@ -31,7 +31,7 @@
                         <th>Linhas Processadas</th>
                         <th>Criado</th>
                         <th data-toggle="tooltip" data-title="endereços / segundo">Velocidade <small>(end./s)</small></th>
-                        <th>Tempo de processamento</th>
+                        <th>Tempo total de processamento</th>
                         <th>Ações</th>
                         <th>Remover</th>
                     </tr>
@@ -49,9 +49,11 @@
                         <td>{{ $file->offset }}</td>
                         <td>{{ $file->created_at->diffForHumans() }}</td>
                         <td>
-                            {{ number_format($file->velocity, 2) }}
+                            {{ $file->initializing? '-' : number_format($file->velocity, 2) }}
                         </td>
-                        <td>{{ $file->done? $file->updated_at->diffForHumans($file->created_at): '-' }}</td>
+                        <td>
+                            {{ $file->initializing? '-' : $file->updated_at->diffForHumans($file->created_at) }}
+                        </td>
                         <td>
                             @if($file->initializing)
                                 <i class="fa fa-spinner fa-pulse fa-fw text-success mr-2"></i>
