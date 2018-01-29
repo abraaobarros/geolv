@@ -74,14 +74,6 @@
                     </div>
 
                 </form>
-
-                @if(session()->has('upload'))
-                    <div class="alert alert-success mt-2" role="alert">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        Seu arquivo está sendo processado. Enviaremos um email para {{ auth()->user()->email }} quando
-                        concluído.
-                    </div>
-                @endif
             </div>
         </div>
         <div class="row preview-container" style="display: none">

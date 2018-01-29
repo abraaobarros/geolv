@@ -16,6 +16,14 @@
                     <i class="fa fa-refresh mr-2"></i> Atualizar
                 </a>
 
+                @if(session()->has('upload'))
+                    <div class="alert alert-success mt-2" role="alert">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        Seu arquivo está sendo processado. Enviaremos um email para {{ auth()->user()->email }} quando
+                        concluído.
+                    </div>
+                @endif
+
                 <table class="table table-hover table-bordered mt-4">
                     <thead>
                     <tr>
