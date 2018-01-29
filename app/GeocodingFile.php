@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string path
  * @property string output_path
  * @property string email
+ * @property boolean header
  * @property array indexes
+ * @property array fields
  * @property User|Model user
  * @method static GeocodingFile|Model create($data)
  */
@@ -23,33 +25,21 @@ class GeocodingFile extends Model
         'path',
         'email',
         'offset',
-        'indexes',
         'done',
-        'stopped'
+        'header',
+        'indexes',
+        'fields'
     ];
 
     protected $casts = [
-        'indexes' => 'array'
+        'header' => 'bool',
+        'indexes' => 'array',
+        'fields' => 'array'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function getAddressIndexesAttribute()
-    {
-        return $this->indexes['text'];
-    }
-
-    public function getLocalityIndexesAttribute()
-    {
-        return $this->indexes['locality'];
-    }
-
-    public function getPostalCodeIndexesAttribute()
-    {
-        return $this->indexes['postal_code'];
     }
 
     public function getOutputPathAttribute()
@@ -66,10 +56,15 @@ class GeocodingFile extends Model
     public function getVelocityAttribute()
     {
         try {
-            return $this->offset / $file->updated_at->diffInSeconds($file->created_at);
-        } catch (\DivisionByZeroError $e) {
+            return $this->offset / $this->updated_at->diffInSeconds($this->created_at);
+        } catch (\ErrorException $e) {
             return 0;
         }
+    }
+
+    public function getFileNameAttribute()
+    {
+        return str_replace('pre-processing/', '', $this->path);
     }
 
 }

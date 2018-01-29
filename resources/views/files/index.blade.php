@@ -12,6 +12,10 @@
                     Geolocalizar novo arquivo
                 </a>
 
+                <a href="{{ request()->url() }}" class="pull-right btn btn-outline-success">
+                    <i class="fa fa-refresh mr-2"></i> Atualizar
+                </a>
+
                 <table class="table table-hover table-bordered mt-4">
                     <thead>
                     <tr>
@@ -33,7 +37,7 @@
 
                     @foreach($files as $file)
                     <tr>
-                        <td><span class="badge badge-default">{{ $file->path }}</span></td>
+                        <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
                         <td>{{ $file->offset }}</td>
                         <td>{{ $file->created_at->diffForHumans() }}</td>
                         <td>

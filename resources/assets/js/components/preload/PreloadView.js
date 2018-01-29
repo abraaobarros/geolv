@@ -5,12 +5,17 @@ import GeocodeBtnView from "./GeocodeBtnView";
 
 export default class PreloadView extends View {
 
+    get header() {
+        return this.get('header').prop('checked');
+    }
+
     onCreate() {
         this.results = [];
         this.get('input').change(() => this.parse());
         this.get('radioAddress').click(() => this.updateMode());
         this.get('radioLocality').click(() => this.updateMode());
         this.get('radioCEP').click(() => this.updateMode());
+        this.get('header').change(() => this.displayResults());
     }
 
     parse() {
@@ -19,9 +24,11 @@ export default class PreloadView extends View {
             before: (file) => this.beforeParsing(file),
             error: (err, file, inputElem, reason) => this.onParsingError(err, file, reason),
             config: {
-                preview: 5,
+                preview: 6,
                 skipEmptyLines: true,
                 quote: true,
+                header: false,
+                skip: this.get('header').prop('checked'),
                 complete: (results, file) => this.onCompletedParsing(results, file)
             }
         });
@@ -119,8 +126,16 @@ export default class PreloadView extends View {
 
     onCompletedParsing(results) {
         this.results = results.data;
+        this.displayResults();
+    }
+
+    displayResults() {
+        let start = (this.header)? 1: 0;
+        let end = this.results.length - ((this.header)? 0: 1);
+        let header = (this.header)? this.results[0] : [];
         this.previewTable = View.render(PreviewTableView, this.get('table'), {
-            data: this.results,
+            data: this.results.slice(start, end),
+            header: header,
             selected: (list) => this.onAddressUpdated(list)
         });
         this.updateMode();

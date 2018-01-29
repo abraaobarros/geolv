@@ -4,36 +4,72 @@
 
     <div class="container" id="preload-container">
         <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10 col-xs-12 mt-5">
-                <h1>
-                    GeoLV
+            <div class="col-lg-8 col-md-10 col-xs-12 mt-2">
+                <h2>
+                    Geolocalizar Arquivo
 
                     <a href="{{ route('files.index') }}" class="btn btn-sm btn-outline-secondary ml-2" tabindex="4">
                         <span class="hidden-sm-up">Voltar</span>
                         <span class="fa fa-undo"></span>
                     </a>
-                </h1>
+                </h2>
 
                 <form action="{{ route('files.store') }}" method="post" enctype="multipart/form-data">
 
-                    <div class="custom-file">
-                        <input type="file" name="geocode_file" class="custom-file-input"
-                               accept="application/gzip|text/csv" id="geocode_file">
-                        <label class="custom-file-label form-control-file" for="geocode_file">Selecione um
-                            arquivo...</label>
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <input type="file" name="geocode_file" class="custom-file-input"
+                                   accept="application/gzip|text/csv" id="geocode_file">
+                            <label class="custom-file-label form-control-file" for="geocode_file">Selecione um
+                                arquivo...</label>
+                        </div>
                     </div>
 
-                    <div class="text-center mt-2">
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" name="header" value="1" class="custom-control-input"
+                                   id="headerCheck" {{ old('header') ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="headerCheck">Possui cabeçalho</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="card">
+                            <div class="card-header">
+                                Campos para adicionar ao final de cada linha
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    @foreach ($fields as $field)
+                                        <div class="col-md-3">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" name="fields[]" class="custom-control-input"
+                                                       value="{{ $field }}"
+                                                       id="{{ $field }}_check"
+                                                        {{ in_array($field, $default) ? 'checked' : '' }}>
+                                                <label class="custom-control-label" for="{{ $field }}_check">
+                                                    {{ trans("validation.attributes.$field") }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <input type="hidden" name="indexes" value="">
                         <button type="submit" class="btn btn-outline-primary">
                             <i class="fa fa-send-o mr-2"></i> Enviar
                         </button>
                     </div>
 
-                    <input type="hidden" name="indexes" value="">
-
-                    <div class="text-center">
+                    <div class="form-group text-center">
                         @if($errors->any())
-                            <div class="form-control-feedback text-danger">{{ $errors->first() }}</div>
+                            <div class="form-control-feedback text-danger">
+                                {{ $errors->first() }}
+                            </div>
                         @endif
                     </div>
 
@@ -42,7 +78,8 @@
                 @if(session()->has('upload'))
                     <div class="alert alert-success mt-2" role="alert">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        Seu arquivo está sendo processado. Enviaremos um email para {{ auth()->user()->email }} quando concluído.
+                        Seu arquivo está sendo processado. Enviaremos um email para {{ auth()->user()->email }} quando
+                        concluído.
                     </div>
                 @endif
             </div>

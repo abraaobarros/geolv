@@ -48,8 +48,12 @@ class ProcessGeocodingFile implements ShouldQueue
         $records = $this->records();
         $output = Writer::createFromFileObject(new \SplTempFileObject());
 
-        foreach ($records as $record)
-            $output->insertOne($this->processRow($record));
+        foreach ($records as $i => $record) {
+            if ($i == 0 && $this->file->header)
+                $output->insertOne($this->processHeader($record));
+            else
+                $output->insertOne($this->processRow($record));
+        }
 
         $this->updateFileOffset(count($records));
         $this->appendOutput($output);
@@ -60,9 +64,14 @@ class ProcessGeocodingFile implements ShouldQueue
             $this->notifyUser();
     }
 
+    private function processHeader($row): array
+    {
+        return array_merge($row, $this->file->fields);
+    }
+
     private function processRow($row): array
     {
-        $text = Dictionary::address($this->get($row, 'address'));
+        $text = Dictionary::address($this->get($row, 'text'));
         $locality = $this->get($row, 'locality');
         $postalCode = $this->get($row, 'postal_code');
 
@@ -70,14 +79,24 @@ class ProcessGeocodingFile implements ShouldQueue
         $results = app('geocoder')->geocode($text, $locality, $postalCode);
         /** @var Address $result */
         $result = $results->first();
+        $data = $row;
 
-        return array_merge($row, [$result->latitude, $result->longitude, $results->calculateDispersion()]);
+        foreach ($this->file->fields as $field) {
+            if ($field == 'dispersion')
+                $value = $results->calculateDispersion();
+            else
+                $value = $result->{$field};
+
+            array_push($data, $value);
+        }
+
+        return $data;
     }
 
     private function get($row, $type)
     {
         $value = [];
-        foreach ($this->file->{"{$type}_indexes"} as $index)
+        foreach ($this->file->indexes[$type] as $index)
             array_push($value, $row[$index]);
 
         return trim(implode(" ", $value));

@@ -18,7 +18,27 @@ class GeocodingFileController extends Controller
 
     public function create()
     {
-        return view('files.preload');
+        $fields = [
+            'street_name',
+            'street_number',
+            'locality',
+            'postal_code',
+            'sub_locality',
+            'country_code',
+            'country_name',
+            'provider',
+            'latitude',
+            'longitude',
+            'dispersion'
+        ];
+
+        $default = [
+            'latitude',
+            'longitude',
+            'dispersion'
+        ];
+
+        return view('files.preload', compact('fields', 'default'));
     }
 
     public function store(UploadRequest $request)
@@ -31,6 +51,8 @@ class GeocodingFileController extends Controller
         /** @var GeocodingFile $file */
         $file = auth()->user()->files()->create([
             'path' => $path,
+            'header' => $request->has('header'),
+            'fields' => $request->get('fields'),
             'indexes' => $indexes
         ]);
 

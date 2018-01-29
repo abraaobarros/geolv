@@ -7,7 +7,7 @@ export default class PreviewTableView extends TableView {
         this.modes = new Map([
             ['text', ['info', 'Endereço']],
             ['locality', ['success', 'Cidade']],
-            ['postal_code', ['warning', 'postal_code']],
+            ['postal_code', ['warning', 'CEP']],
         ]);
         this.selectedIdxList = {
             'text': [],
@@ -30,7 +30,10 @@ export default class PreviewTableView extends TableView {
     }
 
     getFirstCell(index) {
-        return this.find(`tr:first > td:nth-child(${index})`);
+        if (this.hasHeader())
+            return this.find(`th:nth-child(${index})`);
+        else
+            return this.find(`tr:first > td:nth-child(${index})`);
     }
 
     getCol(index) {
@@ -64,7 +67,7 @@ export default class PreviewTableView extends TableView {
     }
 
     updateSelectedCells() {
-        this.find('td > span').remove();
+        this.find('td > span, th > span').remove();
         this.find('td').removeClass('selected');
 
         for (let [modeKey, mode] of this.modes) {

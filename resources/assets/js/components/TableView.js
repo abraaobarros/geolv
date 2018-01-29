@@ -42,6 +42,10 @@ export default class TableView extends View {
         }
     }
 
+    hasHeader() {
+        return this.props.header && this.props.header.length > 0;
+    }
+
     onBuildCell(cell, row, i, j) {
         //
     }
