@@ -49,7 +49,7 @@ class ProcessGeocodingFile implements ShouldQueue
         $output = Writer::createFromFileObject(new \SplTempFileObject());
 
         foreach ($records as $i => $record) {
-            if ($i == 0 && $this->file->header)
+            if ($i == 0 && $this->file->offset == 0 && $this->file->header)
                 $output->insertOne($this->processHeader($record));
             else
                 $output->insertOne($this->processRow($record));
