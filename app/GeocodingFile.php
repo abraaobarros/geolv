@@ -50,7 +50,7 @@ class GeocodingFile extends Model
 
     public function getInitializingAttribute()
     {
-        return !\Storage::disk('s3')->exists($this->output_path);
+        return $this->offset == 0;
     }
 
     public function getVelocityAttribute()
