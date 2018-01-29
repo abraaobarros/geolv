@@ -51,7 +51,7 @@
                         <td>
                             {{ number_format($file->velocity, 2) }}
                         </td>
-                        <td>{{ $file->updated_at->diffForHumans($file->created_at) }}</td>
+                        <td>{{ $file->done? $file->updated_at->diffForHumans($file->created_at): '-' }}</td>
                         <td>
                             @if($file->initializing)
                                 <i class="fa fa-spinner fa-pulse fa-fw text-success mr-2"></i>
