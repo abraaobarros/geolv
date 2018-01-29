@@ -81,13 +81,15 @@ class ProcessGeocodingFile implements ShouldQueue
         $result = $results->first();
         $data = $row;
 
-        foreach ($this->file->fields as $field) {
-            if ($field == 'dispersion')
-                $value = $results->calculateDispersion();
-            else
-                $value = $result->{$field};
+        if ($result) {
+            foreach ($this->file->fields as $field) {
+                if ($field == 'dispersion')
+                    $value = $results->calculateDispersion();
+                else
+                    $value = $result->{$field};
 
-            array_push($data, $value);
+                array_push($data, $value);
+            }
         }
 
         return $data;
