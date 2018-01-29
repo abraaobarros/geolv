@@ -30,7 +30,9 @@
                         <th>Arquivo</th>
                         <th>Linhas Processadas</th>
                         <th>Criado</th>
-                        <th data-toggle="tooltip" data-title="endereços / segundo">Velocidade <small>(end./s)</small></th>
+                        <th data-toggle="tooltip" data-title="endereços / segundo">Velocidade
+                            <small>(end./s)</small>
+                        </th>
                         <th>Tempo total de processamento</th>
                         <th>Ações</th>
                         <th>Remover</th>
@@ -44,41 +46,48 @@
                     @endif
 
                     @foreach($files as $file)
-                    <tr>
-                        <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
-                        <td>{{ $file->offset }}</td>
-                        <td>{{ $file->created_at->diffForHumans() }}</td>
-                        <td>
-                            {{ $file->initializing? '-' : number_format($file->velocity, 2) }}
-                        </td>
-                        <td>
-                            {{ $file->initializing? '-' : $file->updated_at->diffForHumans($file->created_at) }}
-                        </td>
-                        <td>
+                        <tr>
+                            <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
+                            <td>{{ $file->offset }}</td>
+                            <td>{{ $file->created_at->diffForHumans() }}</td>
+                            <td>
+                                {{ $file->initializing? '-' : number_format($file->velocity, 2) }}
+                            </td>
+                            <td>
+                                {{ $file->initializing? '-' : $file->updated_at->diffForHumans($file->created_at) }}
+                            </td>
+
                             @if($file->initializing)
-                                <i class="fa fa-spinner fa-pulse fa-fw text-success mr-2"></i>
-                                Processando...
+                                <td width="162px">
+                                    Processando
+                                    <a href="{{ request()->url() }}" class="btn btn-sm btn-outline-success ml-2">
+                                        <i class="fa fa-refresh"></i>
+                                    </a>
+                                </td>
                             @elseif($file->done)
-                                <a href="{{ route('files.show', $file->id) }}" class="btn btn-outline-success">
-                                    <i class="fa fa-download mr-2"></i>
-                                    Baixar
-                                </a>
+                                <td>
+                                    <a href="{{ route('files.show', $file->id) }}" class="btn btn-outline-success">
+                                        <i class="fa fa-download mr-2"></i>
+                                        Baixar
+                                    </a>
+                                </td>
                             @else
-                                <a href="{{ route('files.show', $file->id) }}" class="btn btn-outline-warning">
-                                    <i class="fa fa-spinner fa-pulse fa-fw text-warning mr-2"></i>
-                                    Baixar <b>parcial</b>
-                                </a>
+                                <td>
+                                    <a href="{{ route('files.show', $file->id) }}" class="btn btn-outline-warning">
+                                        <i class="fa fa-download mr-2"></i>
+                                        Baixar <b>parcial</b>
+                                    </a>
+                                </td>
                             @endif
-                        </td>
-                        <td>
-                            <form action="{{ route('files.destroy', $file->id) }}" method="post">
-                                <input type="hidden" name="_method" value="DELETE"/>
-                                <button type="submit" class="btn btn-outline-danger">
-                                    <i class="fa fa-close"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+                            <td>
+                                <form action="{{ route('files.destroy', $file->id) }}" method="post">
+                                    <input type="hidden" name="_method" value="DELETE"/>
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                     @endforeach
                     </tbody>
                 </table>
