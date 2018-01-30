@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('content')
+@section('body')
 
     <a href="javascript:history.back()" class="btn btn-outline-primary" style="position: fixed; top: 10px; left: 10px; z-index: 20">Voltar</a>
 

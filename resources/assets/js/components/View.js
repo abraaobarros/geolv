@@ -5,6 +5,10 @@ export default class View {
         this.props = properties;
     }
 
+    get exists() {
+        return this.dom != null;
+    }
+
     get dom() {
         return this.container.get(0)
     }
@@ -36,7 +40,10 @@ export default class View {
         else
             element = new component(jQuery(selector), properties);
 
-        $(document).ready(() => element.onCreate());
+        $(document).ready(() => {
+            if (element.exists)
+                element.onCreate();
+        });
 
         return element;
     }

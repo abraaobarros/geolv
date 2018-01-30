@@ -149,3 +149,11 @@
     </div>
 
 @endsection
+
+@section('scripts')
+    <script>
+        $(function () {
+            initPreload();
+        });
+    </script>
+@endsection

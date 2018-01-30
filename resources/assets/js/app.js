@@ -13,20 +13,25 @@ window.initMap = function () {
 
 };
 
+window.initPreload = function () {
 
-View.render(PreloadView, '#preload-container', {
-    input: 'input[name=geocode_file]',
-    indexes: 'input[name=indexes]',
-    header: 'input[name=header]',
-    label: '.form-control-file',
-    table: '.result-table',
-    price: '.price-value',
-    time: '.time-value',
-    preview: '.preview-container',
-    exampleContainer: '.example-container',
-    exampleTable: '.example-table',
-    radioAddress: '#modeRadioAddress',
-    radioLocality: '#modeRadioLocality',
-    radioCEP: '#modeRadioCEP',
-    geocodeExamplesBtn: '#geocodeExamples'
-});
+    View.render(PreloadView, '#preload-container', {
+        input: 'input[name=geocode_file]',
+        indexes: 'input[name=indexes]',
+        header: 'input[name=header]',
+        label: '.form-control-file',
+        table: '.result-table',
+        price: '.price-value',
+        time: '.time-value',
+        preview: '.preview-container',
+        exampleContainer: '.example-container',
+        exampleTable: '.example-table',
+        radioAddress: '#modeRadioAddress',
+        radioLocality: '#modeRadioLocality',
+        radioCEP: '#modeRadioCEP',
+        geocodeExamplesBtn: '#geocodeExamples'
+    });
+
+};
+
+
