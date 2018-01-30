@@ -19,7 +19,6 @@ class CreateAddressSearchTable extends Migration
             $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade');
             $table->integer('search_id')->unsigned()->index();
             $table->foreign('search_id')->references('id')->on('searches')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
