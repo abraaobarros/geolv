@@ -24,7 +24,7 @@ class ProcessGeocodingFile implements ShouldQueue
     public $file;
     public $chunkSize;
 
-    public function __construct(GeocodingFile $file, $chunkSize = 50)
+    public function __construct(GeocodingFile $file, $chunkSize = 20)
     {
         $this->file = $file;
         $this->chunkSize = $chunkSize;
