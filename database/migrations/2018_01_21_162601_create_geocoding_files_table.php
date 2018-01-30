@@ -19,8 +19,8 @@ class CreateGeocodingFilesTable extends Migration
             $table->integer('offset')->default(0);
             $table->boolean('done')->default(false);
             $table->boolean('header')->default(false);
-            $table->json('indexes');
-            $table->json('fields');
+            $table->text('indexes');
+            $table->text('fields');
             $table->integer('user_id')->unsigned()->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
