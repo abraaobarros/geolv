@@ -20,6 +20,8 @@ View.render(PreloadView, '#preload-container', {
     header: 'input[name=header]',
     label: '.form-control-file',
     table: '.result-table',
+    price: '.price-value',
+    time: '.time-value',
     preview: '.preview-container',
     exampleContainer: '.example-container',
     exampleTable: '.example-table',

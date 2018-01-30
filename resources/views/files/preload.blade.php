@@ -76,11 +76,13 @@
                 </form>
             </div>
         </div>
-        <div class="row preview-container" style="display: none">
+
+        <div class="row preview-container mt-2" style="display: none">
             <div class="col-md-12">
-                <div class="card mt-5">
+                <div class="card">
                     <div class="card-header">Pre-visualização</div>
                     <div class="card-body">
+
 
                         <div class="card example-container mb-2" style="display: none">
                             <div class="card-body">
@@ -122,6 +124,26 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+
+        <div class="row preview-container mt-2" style="display: none">
+            <div class="col-md-12">
+                <div class="card mb-2">
+                    <div class="card-header">
+                        Informações
+                    </div>
+                    <div class="card-body">
+                        <small>Preço:</small>
+                        <h4>
+                            US$ <span class="price-value">0.00</span><br/>
+                            <small class="text-muted">US$ (0.50 / 1,000) x 2 provedores</small>
+                        </h4>
+                        <hr>
+                        <small>Tempo estimado para conclusão: </small>
+                        <h4><span class="time-value">-</span> minutos</h4>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

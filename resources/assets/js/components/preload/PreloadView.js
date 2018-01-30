@@ -11,6 +11,7 @@ export default class PreloadView extends View {
 
     onCreate() {
         this.results = [];
+        this.count = 0;
         this.get('input').change(() => this.parse());
         this.get('radioAddress').click(() => this.updateMode());
         this.get('radioLocality').click(() => this.updateMode());
@@ -33,6 +34,30 @@ export default class PreloadView extends View {
             }
         });
         this.get('exampleContainer').hide();
+    }
+
+    countLines() {
+        this.count = 0;
+        this.displayCount();
+        this.get('input').parse({
+            config: {
+                chunk: (results) => {
+                    this.count += results.data.length;
+                    this.displayCount();
+                }
+            }
+        });
+    }
+
+    displayCount() {
+        let price = this.count / 1000;
+        this.get('price').html(price.toFixed(2));
+
+        let time = Math.ceil(this.count / 60);
+        if (time == 0)
+            this.get('time').html('-');
+        else
+            this.get('time').html(time);
     }
 
     beforeParsing(file) {
@@ -127,6 +152,7 @@ export default class PreloadView extends View {
     onCompletedParsing(results) {
         this.results = results.data;
         this.displayResults();
+        this.countLines();
     }
 
     displayResults() {
