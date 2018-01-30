@@ -22,8 +22,8 @@ class AddressRelevanceCalculator extends RelevanceAggregator
         parent::__construct([
             new MatchLastSearch($search),
             new LevenshteinMatchToken($search, 'search_text'),
-            new LevenshteinMatchToken($search, 'search_locality'),
             new LevenshteinMatchToken($search, 'street_name'),
+            new LevenshteinMatchToken($search, 'locality', 'locality'),
             new ContainsToken($search, 'street_number'),
             new ContainsToken($search, 'sub_locality'),
             new MatchPostalCode($search),

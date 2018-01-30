@@ -116,6 +116,7 @@ class Address extends Model
             'match_last_search',
             'levenshtein_match_text',
             'levenshtein_match_street_name',
+            'levenshtein_match_locality',
             'contains_street_number',
             'contains_sub_locality',
             'match_postal_code',

@@ -9,11 +9,15 @@ use GeoLV\Search;
 class LevenshteinMatchToken extends SearchRelevanceCalculator
 {
     private $token;
+    private $searchFieldText;
+    private $searchFieldLength;
 
-    public function __construct(Search $search, string $token)
+    public function __construct(Search $search, string $token, string $searchToken = 'text')
     {
         parent::__construct($search);
         $this->token = $token;
+        $this->searchFieldText = $this->clear($this->search->{$searchToken});
+        $this->searchFieldLength = strlen($this->searchFieldText);
     }
 
     public function calculate(Address $address): float
@@ -22,11 +26,9 @@ class LevenshteinMatchToken extends SearchRelevanceCalculator
             return 0;
 
         $addressField = $this->clear($address->{$this->token});
-        $searchText = $this->clear($this->search->text);
-        $size = strlen($searchText);
-        $match = $size - levenshtein($addressField, $searchText);
+        $match = $this->searchFieldLength - levenshtein($addressField, $this->searchFieldText);
 
-        return $match / $size;
+        return $match / $this->searchFieldLength;
     }
 
     public function getName(): string
