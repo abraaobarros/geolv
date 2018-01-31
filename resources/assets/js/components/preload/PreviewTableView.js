@@ -9,12 +9,7 @@ export default class PreviewTableView extends TableView {
             ['locality', ['success', 'Cidade']],
             ['postal_code', ['warning', 'CEP']],
         ]);
-        this.selectedIdxList = {
-            'text': [],
-            'locality': [],
-            'postal_code': []
-        };
-
+        this.selectedIdxList = this.props.indexes;
         let view = this;
         this.find('td')
             .hover(function () {
@@ -81,7 +76,7 @@ export default class PreviewTableView extends TableView {
             }
         }
 
-        this.props.selected(this.selectedIdxList);
+        this.props.selected();
     }
 
 }

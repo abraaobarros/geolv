@@ -70,10 +70,10 @@ export default class PreloadView extends View {
         return {action: "continue"};
     }
 
-    getParsedAddress(row, selectedIdxList) {
+    getParsedAddress(row, indexes) {
         try {
             let fields = [];
-            for (let idx of selectedIdxList) {
+            for (let idx of indexes) {
                 fields.push(this.results[row][idx]);
             }
 
@@ -83,13 +83,15 @@ export default class PreloadView extends View {
         }
     }
 
-    getAddresses(selectedIdxList) {
+    getAddresses() {
         let addresses = [];
         for (let i in this.results) {
+            if (this.hasHeader && i == 0) continue;
+
             let address = {
-                text: this.getParsedAddress(i, selectedIdxList['text']),
-                locality: this.getParsedAddress(i, selectedIdxList['locality']),
-                postal_code: this.getParsedAddress(i, selectedIdxList['postal_code'])
+                text: this.getParsedAddress(i, this.indexes['text']),
+                locality: this.getParsedAddress(i, this.indexes['locality']),
+                postal_code: this.getParsedAddress(i, this.indexes['postal_code'])
             };
             addresses.push([
                 address.text,
@@ -102,11 +104,13 @@ export default class PreloadView extends View {
         return addresses;
     }
 
-    getCepAddresses(selectedIdxList) {
+    getCepAddresses() {
         let addresses = [];
         for (let i in this.results) {
+            if (this.hasHeader && i == 0) continue;
+
             let address = {
-                postal_code: this.getParsedAddress(i, selectedIdxList['postal_code'])
+                postal_code: this.getParsedAddress(i, this.indexes['postal_code'])
             };
             addresses.push([
                 address.postal_code,
@@ -121,24 +125,23 @@ export default class PreloadView extends View {
         console.log(err, file, reason);
     }
 
-    onAddressUpdated(selectedIdxList) {
-        let address = this.getParsedAddress(0, selectedIdxList.text);
-        let locality = this.getParsedAddress(0, selectedIdxList.locality);
-        let postal_code = this.getParsedAddress(0, selectedIdxList.postal_code);
+    onAddressUpdated() {
+        let address = this.getParsedAddress(0, this.indexes.text);
+        let locality = this.getParsedAddress(0, this.indexes.locality);
+        let postal_code = this.getParsedAddress(0, this.indexes.postal_code);
 
-        this.indexes = selectedIdxList;
         this.input('indexes').val(JSON.stringify(this.indexes));
 
         if (address.length > 0 && locality.length > 0) {
             this.get('exampleContainer').fadeIn();
             View.render(TableView, this.get('exampleTable'), {
-                data: this.getAddresses(selectedIdxList),
+                data: this.getAddresses(),
                 header: ['Endereço', 'Cidade', 'CEP', 'Resultado']
             });
         } else if (address.length == 0 && locality.length == 0 && postal_code.length > 0) {
             this.get('exampleContainer').fadeIn();
             View.render(TableView, this.get('exampleTable'), {
-                data: this.getCepAddresses(selectedIdxList),
+                data: this.getCepAddresses(),
                 header: ['CEP', 'Resultado']
             });
         } else {
@@ -172,9 +175,10 @@ export default class PreloadView extends View {
         this.previewTable = View.render(PreviewTableView, this.get('table'), {
             data: this.results.slice(start, end),
             header: header,
-            selected: (list) => this.onAddressUpdated(list)
+            indexes: this.indexes,
+            selected: () => this.onAddressUpdated()
         });
-        this.onAddressUpdated(this.indexes);
+        this.onAddressUpdated();
         this.updateMode();
     }
 }
