@@ -3,6 +3,7 @@
 namespace GeoLV\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UploadRequest extends FormRequest
 {
@@ -24,16 +25,19 @@ class UploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'geocode_file' => 'required|file|mimes:csv,txt',
-            'indexes' => 'required|json',
-            'fields' => 'required'
+            'geocode_file' => ['required', 'file', 'mimes:csv,txt'],
+            'indexes' => ['required', 'json'],
+            'fields' => ['required'],
+            'count' => ['required', 'integer', 'min:1'],
+            'delimiter' => ['required', Rule::in([',', ';'])]
         ];
     }
 
     public function messages()
     {
         return [
-            'indexes.required' => 'Selecione as colunas com Endereço, Cidade e CEP'
+            'indexes.required' => 'Selecione as colunas com Endereço, Cidade e CEP',
+            'fields.required' => 'Selecione ao menos uma coluna de resultado'
         ];
     }
 

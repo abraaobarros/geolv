@@ -9,14 +9,16 @@ class AddressCollection extends Collection
     public function insideLocality()
     {
         return $this->filter(function (Address $address) {
-            return $address->match_locality > 0;
+            return $address->match_locality > 0
+                && $address->levenshtein_match_locality >= 70;
         });
     }
 
     public function outsideLocality()
     {
         return $this->filter(function (Address $address) {
-            return $address->match_locality == 0;
+            return $address->match_locality == 0
+                && $address->levenshtein_match_locality < 70;
         });
     }
 

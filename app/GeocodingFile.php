@@ -25,6 +25,8 @@ class GeocodingFile extends Model
         'path',
         'email',
         'offset',
+        'count',
+        'delimiter',
         'done',
         'header',
         'indexes',
@@ -65,6 +67,11 @@ class GeocodingFile extends Model
     public function getFileNameAttribute()
     {
         return str_replace('pre-processing/', '', $this->path);
+    }
+
+    public function getProgressAttribute()
+    {
+        return ($this->offset / $this->count) * 100;
     }
 
 }

@@ -16,9 +16,6 @@ window.initMap = function () {
 window.initPreload = function () {
 
     View.render(PreloadView, '#preload-container', {
-        input: 'input[name=geocode_file]',
-        indexes: 'input[name=indexes]',
-        header: 'input[name=header]',
         label: '.form-control-file',
         table: '.result-table',
         price: '.price-value',

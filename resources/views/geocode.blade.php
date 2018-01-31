@@ -12,20 +12,20 @@
                             <input type="text" class="form-control form-control-danger col-md-7" name="text"
                                    placeholder="Endereço"
                                    value="{{ old('text') ?? $text ?? "" }}" tabindex="1" autocomplete="off" autofocus>
-                            <input type="text" class="form-control form-control-danger col-md-2" name="locality"
+                            <input type="text" class="form-control form-control-danger col-md-3" name="locality"
                                    placeholder="Cidade"
                                    value="{{ old('locality') ?? $locality ?? "" }}" tabindex="2" list="localities">
-                            <input type="text" class="form-control form-control-danger col-md-3" name="postal_code"
+                            <input type="text" class="form-control form-control-danger col-md-2" name="postal_code"
                                    placeholder="CEP"
                                    value="{{ old('postal_code') ?? $postalCode ?? "" }}" tabindex="3" autocomplete="off">
-
-                            <datalist id="localities">
-                                @foreach ($localities as $local)
-                                    <option value="{{ $local->name }}">
-                                @endforeach
-                            </datalist>
-
                         </div>
+
+                        <datalist id="localities">
+                            @foreach ($localities as $local)
+                                <option value="{{ $local->name }}">
+                            @endforeach
+                        </datalist>
+
                         @if($errors->any())
                             <div class="form-control-feedback text-danger">{{ $errors->first() }}</div>
                         @endif

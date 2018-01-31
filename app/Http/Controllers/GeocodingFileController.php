@@ -53,6 +53,8 @@ class GeocodingFileController extends Controller
             'path' => $path,
             'header' => $request->has('header'),
             'fields' => $request->get('fields'),
+            'count' => $request->get('count'),
+            'delimiter' => $request->get('delimiter'),
             'indexes' => $indexes
         ]);
 

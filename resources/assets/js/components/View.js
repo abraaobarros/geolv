@@ -25,6 +25,10 @@ export default class View {
         return this.container.find(selector)
     }
 
+    input (name) {
+        return this.find(`input[name=${name}],select[name=${name}]`)
+    }
+
     // noinspection JSUnusedGlobalSymbols
     onCreate () {
         throw new Error('Unimplemented method')

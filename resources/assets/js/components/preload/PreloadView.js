@@ -5,23 +5,24 @@ import GeocodeBtnView from "./GeocodeBtnView";
 
 export default class PreloadView extends View {
 
-    get header() {
-        return this.get('header').prop('checked');
+    get hasHeader() {
+        return this.input('header').prop('checked');
     }
 
     onCreate() {
         this.results = [];
         this.count = 0;
-        this.get('input').change(() => this.parse());
+        this.input('geocode_file').change(() => this.parse());
+        this.input('delimiter').change(() => this.parse());
+        this.input('header').change(() => this.displayResults());
         this.get('radioAddress').click(() => this.updateMode());
         this.get('radioLocality').click(() => this.updateMode());
         this.get('radioCEP').click(() => this.updateMode());
-        this.get('header').change(() => this.displayResults());
     }
 
     parse() {
-        this.get('preview').fadeIn('slow');
-        this.get('input').parse({
+        this.get('preview').toggle('slow');
+        this.input('geocode_file').parse({
             before: (file) => this.beforeParsing(file),
             error: (err, file, inputElem, reason) => this.onParsingError(err, file, reason),
             config: {
@@ -29,7 +30,8 @@ export default class PreloadView extends View {
                 skipEmptyLines: true,
                 quote: true,
                 header: false,
-                skip: this.get('header').prop('checked'),
+                skip: this.hasHeader ? 1 : 0,
+                delimiter: this.input('delimiter').val(),
                 complete: (results, file) => this.onCompletedParsing(results, file)
             }
         });
@@ -39,7 +41,7 @@ export default class PreloadView extends View {
     countLines() {
         this.count = 0;
         this.displayCount();
-        this.get('input').parse({
+        this.input('geocode_file').parse({
             config: {
                 chunk: (results) => {
                     this.count += results.data.length;
@@ -52,6 +54,7 @@ export default class PreloadView extends View {
     displayCount() {
         let price = this.count / 1000;
         this.get('price').html(price.toFixed(2));
+        this.input('count').val(this.count);
 
         let time = Math.ceil(this.count / 60);
         if (time == 0)
@@ -117,7 +120,7 @@ export default class PreloadView extends View {
         let locality = this.getParsedAddress(0, selectedIdxList['locality']);
         let postal_code = this.getParsedAddress(0, selectedIdxList['postal_code']);
 
-        this.get('indexes').val(JSON.stringify(selectedIdxList))
+        this.input('indexes').val(JSON.stringify(selectedIdxList));
 
         if (address.length > 0 && locality.length > 0) {
             this.get('exampleContainer').fadeIn();
@@ -156,9 +159,9 @@ export default class PreloadView extends View {
     }
 
     displayResults() {
-        let start = (this.header)? 1: 0;
-        let end = this.results.length - ((this.header)? 0: 1);
-        let header = (this.header)? this.results[0] : [];
+        let start = (this.hasHeader)? 1: 0;
+        let end = this.results.length - ((this.hasHeader)? 0: 1);
+        let header = (this.hasHeader)? this.results[0] : [];
         this.previewTable = View.render(PreviewTableView, this.get('table'), {
             data: this.results.slice(start, end),
             header: header,
