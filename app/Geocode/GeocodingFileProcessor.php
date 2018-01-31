@@ -124,7 +124,8 @@ class GeocodingFileProcessor
 
     private function uploadOutput()
     {
-        $this->storage->append($this->file->output_path, $this->output->getContent());
+        $output = substr($this->output->getContent(), 0, -1); // removes the last \n
+        $this->storage->append($this->file->output_path, $output);
     }
 
     public function __destruct()
