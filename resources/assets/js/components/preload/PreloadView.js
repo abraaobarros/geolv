@@ -117,9 +117,9 @@ export default class PreloadView extends View {
     }
 
     onAddressUpdated(selectedIdxList) {
-        let address = this.getParsedAddress(0, selectedIdxList['text']);
-        let locality = this.getParsedAddress(0, selectedIdxList['locality']);
-        let postal_code = this.getParsedAddress(0, selectedIdxList['postal_code']);
+        let address = this.getParsedAddress(0, selectedIdxList.text);
+        let locality = this.getParsedAddress(0, selectedIdxList.locality);
+        let postal_code = this.getParsedAddress(0, selectedIdxList.postal_code);
 
         this.input('indexes').val(JSON.stringify(selectedIdxList));
 
@@ -168,6 +168,7 @@ export default class PreloadView extends View {
             header: header,
             selected: (list) => this.onAddressUpdated(list)
         });
+        this.onAddressUpdated({});
         this.updateMode();
     }
 }
