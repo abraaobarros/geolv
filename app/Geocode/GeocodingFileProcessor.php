@@ -90,7 +90,7 @@ class GeocodingFileProcessor
         $text = Dictionary::address($this->get($row, 'text'));
         $locality = $this->get($row, 'locality');
         $postalCode = $this->get($row, 'postal_code');
-        $results = $this->geocoder->geocode($text, $locality, $postalCode);
+        $results = $this->geocoder->geocode($text, $locality, $postalCode)->insideLocality();
         $result = $results->first();
         $data = $row;
 
