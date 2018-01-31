@@ -21,6 +21,7 @@ window.initPreload = function () {
         price: '.price-value',
         time: '.time-value',
         preview: '.preview-container',
+        preview_hide: '.preview-container-hide',
         exampleContainer: '.example-container',
         exampleTable: '.example-table',
         radioAddress: '#modeRadioAddress',

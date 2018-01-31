@@ -119,7 +119,7 @@
                     <div class="card">
                         <div class="card-header">Pré-visualização</div>
                         <div class="card-body">
-                            <div class="preview-container">
+                            <div class="preview-container-hide">
                                 Selecione um arquivo CSV
                             </div>
 

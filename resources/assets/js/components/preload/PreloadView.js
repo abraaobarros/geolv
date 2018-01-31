@@ -21,7 +21,8 @@ export default class PreloadView extends View {
     }
 
     parse() {
-        this.get('preview').toggle('slow');
+        this.get('preview').fadeIn('slow');
+        this.get('preview_hide').hide();
         this.input('geocode_file').parse({
             before: (file) => this.beforeParsing(file),
             error: (err, file, inputElem, reason) => this.onParsingError(err, file, reason),
