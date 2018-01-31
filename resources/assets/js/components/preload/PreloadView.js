@@ -12,6 +12,7 @@ export default class PreloadView extends View {
     onCreate() {
         this.results = [];
         this.count = 0;
+        this.indexes = {'text': [], 'locality': [], 'postal_code': []};
         this.input('geocode_file').change(() => this.parse());
         this.input('delimiter').change(() => this.parse());
         this.input('header').change(() => this.displayResults());
@@ -70,12 +71,16 @@ export default class PreloadView extends View {
     }
 
     getParsedAddress(row, selectedIdxList) {
-        let fields = [];
-        for (let idx of selectedIdxList) {
-            fields.push(this.results[row][idx]);
-        }
+        try {
+            let fields = [];
+            for (let idx of selectedIdxList) {
+                fields.push(this.results[row][idx]);
+            }
 
-        return fields.join(', ').trim();
+            return fields.join(', ').trim();
+        } catch (e) {
+            return '';
+        }
     }
 
     getAddresses(selectedIdxList) {
@@ -121,7 +126,8 @@ export default class PreloadView extends View {
         let locality = this.getParsedAddress(0, selectedIdxList.locality);
         let postal_code = this.getParsedAddress(0, selectedIdxList.postal_code);
 
-        this.input('indexes').val(JSON.stringify(selectedIdxList));
+        this.indexes = selectedIdxList;
+        this.input('indexes').val(JSON.stringify(this.indexes));
 
         if (address.length > 0 && locality.length > 0) {
             this.get('exampleContainer').fadeIn();
@@ -168,7 +174,7 @@ export default class PreloadView extends View {
             header: header,
             selected: (list) => this.onAddressUpdated(list)
         });
-        this.onAddressUpdated({});
+        this.onAddressUpdated(this.indexes);
         this.updateMode();
     }
 }
