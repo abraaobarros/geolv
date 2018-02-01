@@ -50,7 +50,7 @@
                                 @if($file->initializing)
                                     <td>Inicializando...</td>
                                     <td>
-                                        <a href="{{ request()->url() }}" class="btn btn-sm btn-outline-success ml-2">
+                                        <a href="{{ request()->url() }}" class="btn btn-block btn-outline-success ml-2">
                                             Atualizar <i class="fa fa-refresh"></i>
                                         </a>
                                     </td>
@@ -70,7 +70,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <a href="{{ route('files.show', $file->id) }}" class="btn btn-sm btn-block btn-outline-warning">
+                                        <a href="{{ route('files.show', $file->id) }}" class="btn btn-block btn-outline-warning">
                                             <i class="fa fa-download mr-2"></i>
                                             Baixar <b>parcial</b>
                                         </a>
@@ -79,7 +79,7 @@
                                 <td>
                                     <form action="{{ route('files.destroy', $file->id) }}" method="post">
                                         <input type="hidden" name="_method" value="DELETE"/>
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <button type="submit" class="btn btn-outline-danger">
                                             <i class="fa fa-close"></i>
                                         </button>
                                     </form>
