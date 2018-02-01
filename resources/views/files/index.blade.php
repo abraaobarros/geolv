@@ -50,7 +50,7 @@
                                 @if($file->initializing)
                                     <td>Inicializando...</td>
                                     <td>
-                                        <a href="{{ request()->url() }}" class="btn btn-block btn-outline-success ml-2">
+                                        <a href="{{ request()->url() }}" class="btn btn-block btn-outline-success">
                                             Atualizar <i class="fa fa-refresh"></i>
                                         </a>
                                     </td>
