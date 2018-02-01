@@ -30,7 +30,7 @@
                         <tr>
                             <th>Arquivo</th>
                             <th>Criado</th>
-                            <th>Status</th>
+                            <th width="300px">Status</th>
                             <th>Ações</th>
                             <th>Remover</th>
                         </tr>
@@ -63,7 +63,7 @@
                                         </a>
                                     </td>
                                 @else
-                                    <td width="300px">
+                                    <td>
                                         <small>Processando: {{ number_format($file->progress, 1) }}%</small>
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" style="width: {{ $file->progress }}%"></div>
