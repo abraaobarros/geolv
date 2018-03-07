@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "bdelespierre/php-kmeans": "dev-master",
         "fideloper/proxy": "~3.3",
         "gasparesganga/php-shapefile": "^2.4",
         "geocoder-php/arcgis-online-provider": "^4.0",

@@ -43,7 +43,7 @@ export default class GeoLVMap extends View {
     }
 
     onCreate() {
-        let map = new google.maps.Map(this.get('map').get(0), {
+        this.map = new google.maps.Map(this.get('map').get(0), {
             center: this.center,
             zoom: this.zoom,
             disableDefaultUI: true,
@@ -131,11 +131,19 @@ export default class GeoLVMap extends View {
             //</editor-fold>
         });
 
-        this.drawLocality(map);
-        this.drawMarkers(map);
+        this.colors = {
+            'far': '006699',
+            'near': '009900',
+            'A': 'FFFF00',
+            'B': '009933',
+            'C': '006699',
+        };
+
+        this.drawLocality();
+        this.drawMarkers();
     }
 
-    drawLocality(map) {
+    drawLocality() {
         let bounds = this.locality;
         if (bounds) {
             new google.maps.Rectangle({
@@ -144,7 +152,7 @@ export default class GeoLVMap extends View {
                 strokeWeight: 2,
                 fillColor: '#006699',
                 fillOpacity: 0.1,
-                map: map,
+                map: this.map,
                 bounds: new google.maps.LatLngBounds(
                     new google.maps.LatLng(bounds.min_lat, bounds.min_lng),
                     new google.maps.LatLng(bounds.max_lat, bounds.max_lng)
@@ -153,17 +161,20 @@ export default class GeoLVMap extends View {
         }
     }
 
-    drawMarkers(map) {
+    drawMarkers() {
         let bounds = new google.maps.LatLngBounds();
         let results = this.results;
 
         for (let address of results) {
 
+            let color = this.colors[address.group];
+            let icon = new google.maps.MarkerImage(`http://www.googlemapsmarkers.com/v1/${color}/`);
             let marker = new google.maps.Marker({
-                map: map,
+                map: this.map,
+                icon: icon,
                 title: address.streetName,
                 position: address.position,
-                label: address.label
+                label: address.label,
             });
 
             let info = new google.maps.InfoWindow({
@@ -171,17 +182,17 @@ export default class GeoLVMap extends View {
             });
 
             marker.addListener('click', () => {
-                info.open(map, marker);
+                info.open(this.map, marker);
             });
 
             bounds.extend(address.position);
 
             if (address.isFocus) {
-                map.setCenter(address.position);
-                info.open(map, marker);
+                this.map.setCenter(address.position);
+                info.open(this.map, marker);
             }
         }
 
-        map.fitBounds(bounds);
+        this.map.fitBounds(bounds);
     }
 }

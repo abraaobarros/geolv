@@ -21,7 +21,8 @@
                  data-provider="{{ $result->provider }}"
                  data-latitude="{{ $result->latitude }}"
                  data-longitude="{{ $result->longitude }}"
-                 data-relevance="{{ $result->relevance }}"></div>
+                 data-relevance="{{ $result->relevance }}"
+                 data-group="{{ $result->group }}"></div>
         @endforeach
     </div>
 

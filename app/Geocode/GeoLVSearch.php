@@ -4,11 +4,7 @@ namespace GeoLV\Geocode;
 
 use GeoLV\Address;
 use GeoLV\AddressCollection;
-use GeoLV\Geocode\Scoring\AddressRelevanceCalculator;
-use GeoLV\Geocode\Scoring\IRelevanceCalculator;
-use GeoLV\Geocode\Scoring\PostalCodeRelevanceCalculator;
 use GeoLV\Search;
-use Illuminate\Database\Eloquent\Collection;
 use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;
 
 class GeoLVSearch
@@ -46,17 +42,15 @@ class GeoLVSearch
      */
     public function search(Search $search): AddressCollection
     {
-        $relevanceCalculator = $this->getRelevanceCalculator($search);
+        $results = $this->searchResults($search);
+        $sorter = new SortByRelevance($search);
+        $groupper = new GroupByAverage();
+        //$groupper = new GroupByKMeans(3);
 
-        return $this->searchResults($search)
-            ->sortByDesc(function (Address $address) use ($relevanceCalculator) {
-                return $relevanceCalculator->calculate($address);
-            })
-            ->groupBy('id')
-            ->map(function (Collection $addresses) {
-                return $addresses->first();
-            })
-            ->values();
+        $results = $sorter->apply($results);
+        $results = $groupper->apply($results);
+
+        return $results->values();
     }
 
     /**
@@ -68,14 +62,6 @@ class GeoLVSearch
         return Address::hydrate(
             $this->searchDriver->query($search->address)->get()->toArray()
         );
-    }
-
-    private function getRelevanceCalculator(Search $search): IRelevanceCalculator
-    {
-        if (blank($search->text))
-            return new PostalCodeRelevanceCalculator($search);
-        else
-            return new AddressRelevanceCalculator($search);
     }
 
 }
