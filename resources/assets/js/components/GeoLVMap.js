@@ -132,11 +132,11 @@ export default class GeoLVMap extends View {
         });
 
         this.colors = {
-            'far': '006699',
-            'near': '009900',
-            'A': 'FFFF00',
-            'B': '009933',
-            'C': '006699',
+            'A': 'FF9900',
+            'B': '006699',
+            'C': '333300',
+            'D': '003333',
+            'E': 'FF3333',
         };
 
         this.drawLocality();

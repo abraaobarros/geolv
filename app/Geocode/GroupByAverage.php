@@ -7,9 +7,6 @@ use GeoLV\AddressCollection;
 
 class GroupByAverage
 {
-    const GROUP_NEAR = 'near';
-    const GROUP_FAR = 'far';
-
     public function apply(AddressCollection $results): AddressCollection
     {
         foreach ($results as $i => $a) {
@@ -38,8 +35,8 @@ class GroupByAverage
     private function getGroup($avg, $minAvg)
     {
         if ($avg > $minAvg)
-            return static::GROUP_FAR;
+            return 'A';
         else
-            return static::GROUP_NEAR;
+            return 'B';
     }
 }
