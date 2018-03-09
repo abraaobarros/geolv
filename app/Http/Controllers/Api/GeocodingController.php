@@ -28,4 +28,5 @@ class GeocodingController extends Controller
 
         return new AddressCollectionResource($results);
     }
+
 }

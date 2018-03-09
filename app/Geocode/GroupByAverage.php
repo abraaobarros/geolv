@@ -19,7 +19,11 @@ class GroupByAverage
                 }
             }
 
-            $avg /= $results->count() - 1;
+            if ($results->count() > 1)
+                $avg /= $results->count() - 1;
+            else
+                $avg = 0;
+
             $a->average_dist = $avg;
         }
 
