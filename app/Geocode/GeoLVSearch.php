@@ -4,6 +4,9 @@ namespace GeoLV\Geocode;
 
 use GeoLV\Address;
 use GeoLV\AddressCollection;
+use GeoLV\Geocode\Clusters\ClusterByAverage;
+use GeoLV\Geocode\Clusters\ClusterWithKMeans;
+use GeoLV\Geocode\Clusters\ClusterWithScipy;
 use GeoLV\Search;
 use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;
 
@@ -43,12 +46,14 @@ class GeoLVSearch
     public function search(Search $search): AddressCollection
     {
         $results = $this->searchResults($search);
-        $sorter = new SortByRelevance($search);
-        $groupper = new GroupByAverage();
-        //$groupper = new GroupByKMeans(3);
 
+        $sorter = new SortByRelevance($search);
         $results = $sorter->apply($results);
-        $results = $groupper->apply($results);
+
+        $groupper = new ClusterWithScipy();
+        //$groupper = new ClusterByAverage();
+        //$groupper = new ClusterWithKMeans();
+        $groupper->apply($results);
 
         return $results->values();
     }

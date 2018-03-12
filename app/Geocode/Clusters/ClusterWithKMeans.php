@@ -1,6 +1,6 @@
 <?php
 
-namespace GeoLV\Geocode;
+namespace GeoLV\Geocode\Clusters;
 
 
 use GeoLV\AddressCollection;
@@ -8,14 +8,12 @@ use KMeans\Cluster;
 use KMeans\Point;
 use KMeans\Space;
 
-class GroupByKMeans
+class ClusterWithKMeans
 {
     /**
      * @var int
      */
     private $clusters;
-
-    private $alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /**
      * GroupByCluster constructor.
@@ -26,7 +24,7 @@ class GroupByKMeans
         $this->clusters = $clusters;
     }
 
-    public function apply(AddressCollection $results): AddressCollection
+    public function apply(AddressCollection $results)
     {
         $space = new Space(2);
 
@@ -36,15 +34,12 @@ class GroupByKMeans
 
         /** @var Cluster $cluster */
         foreach ($space->solve($this->clusters) as $i => $cluster) {
-            $group = substr($this->alphabet, $i, 1);
             /** @var Point $point */
             foreach ($cluster as $point) {
                 $p = $point->toArray();
-                $results->get($p['data']['key'])->group = $group;
+                $results->get($p['data']['key'])->group = $i;
             }
         }
-
-        return $results;
     }
 
 }

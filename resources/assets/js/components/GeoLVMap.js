@@ -43,6 +43,23 @@ export default class GeoLVMap extends View {
     }
 
     onCreate() {
+        //<editor-fold defaultstate="collapsed" desc="this.colors = [...]">
+        this.colors = [
+            'e6194b',
+            '3cb44b',
+            'ffe119',
+            '0082c8',
+            'f58231',
+            '911eb4',
+            '46f0f0',
+            'f032e6',
+            'd2f53c',
+            'fabebe',
+            '008080',
+            'aa6e28'
+        ];
+        //</editor-fold>
+
         this.map = new google.maps.Map(this.get('map').get(0), {
             center: this.center,
             zoom: this.zoom,
@@ -131,16 +148,12 @@ export default class GeoLVMap extends View {
             //</editor-fold>
         });
 
-        this.colors = {
-            'A': 'FF9900',
-            'B': '006699',
-            'C': '333300',
-            'D': '003333',
-            'E': 'FF3333',
-        };
-
         this.drawLocality();
         this.drawMarkers();
+    }
+
+    getColor(group) {
+        return this.colors[group - 1];
     }
 
     drawLocality() {
@@ -167,7 +180,7 @@ export default class GeoLVMap extends View {
 
         for (let address of results) {
 
-            let color = this.colors[address.group];
+            let color = this.getColor(address.group);
             let icon = new google.maps.MarkerImage(`http://www.googlemapsmarkers.com/v1/${color}/`);
             let marker = new google.maps.Marker({
                 map: this.map,

@@ -1,13 +1,13 @@
 <?php
 
-namespace GeoLV\Geocode;
+namespace GeoLV\Geocode\Clusters;
 
 
 use GeoLV\AddressCollection;
 
-class GroupByAverage
+class ClusterByAverage
 {
-    public function apply(AddressCollection $results): AddressCollection
+    public function apply(AddressCollection $results)
     {
         foreach ($results as $i => $a) {
             $avg = 0;
@@ -32,15 +32,13 @@ class GroupByAverage
         foreach ($results as $m) {
             $m->group = $this->getGroup($m->average_dist, $tot_avg);
         }
-
-        return $results;
     }
 
     private function getGroup($avg, $minAvg)
     {
         if ($avg > $minAvg)
-            return 'A';
+            return 1;
         else
-            return 'B';
+            return 2;
     }
 }
