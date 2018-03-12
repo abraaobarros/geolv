@@ -37,7 +37,7 @@ class ClusterWithKMeans
             /** @var Point $point */
             foreach ($cluster as $point) {
                 $p = $point->toArray();
-                $results->get($p['data']['key'])->group = $i;
+                $results->get($p['data']['key'])->cluster = $i;
             }
         }
     }

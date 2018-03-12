@@ -180,7 +180,7 @@ export default class GeoLVMap extends View {
 
         for (let address of results) {
 
-            let color = this.getColor(address.group);
+            let color = this.getColor(address.cluster);
             let icon = new google.maps.MarkerImage(`http://www.googlemapsmarkers.com/v1/${color}/`);
             let marker = new google.maps.Marker({
                 map: this.map,

@@ -30,7 +30,7 @@ class ClusterByAverage
         $tot_avg = $results->avg('average_dist');
 
         foreach ($results as $m) {
-            $m->group = $this->getGroup($m->average_dist, $tot_avg);
+            $m->cluster = $this->getGroup($m->average_dist, $tot_avg);
         }
     }
 

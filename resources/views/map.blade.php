@@ -22,7 +22,7 @@
                  data-latitude="{{ $result->latitude }}"
                  data-longitude="{{ $result->longitude }}"
                  data-relevance="{{ $result->relevance }}"
-                 data-group="{{ $result->group }}"></div>
+                 data-cluster="{{ $result->cluster }}"></div>
         @endforeach
     </div>
 

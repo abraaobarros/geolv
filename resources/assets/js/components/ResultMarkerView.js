@@ -7,7 +7,7 @@ export default class ResultMarkerView extends View {
             <div class="card" style="margin-bottom: 10px">
                 <div class="card-body">
                     <h4 class="card-title">${ this.props.streetName }</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">${ this.props.provider } <small>(Cluster: ${this.props.group})</small></h6>
+                    <h6 class="card-subtitle mb-2 text-muted">${ this.props.provider } <small>(Cluster: ${this.props.cluster})</small></h6>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">

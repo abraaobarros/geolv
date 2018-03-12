@@ -21,7 +21,7 @@ class ClusterWithScipy
         $clusters = $this->getClusters($collection, 0.003);
 
         foreach ($collection->values() as $i => $address)
-            $address->group = $clusters[$i];
+            $address->cluster = $clusters[$i];
     }
 
     private function getClusters(AddressCollection $collection, float $max_d)
@@ -37,9 +37,7 @@ class ClusterWithScipy
             ]
         ]);
 
-        $data = \GuzzleHttp\json_decode($response->getBody());
-
-        return $data;
+        return \GuzzleHttp\json_decode($response->getBody());
     }
 
 }
