@@ -4,8 +4,6 @@ namespace GeoLV\Geocode;
 
 use GeoLV\Address;
 use GeoLV\AddressCollection;
-use GeoLV\Geocode\Clusters\ClusterByAverage;
-use GeoLV\Geocode\Clusters\ClusterWithKMeans;
 use GeoLV\Geocode\Clusters\ClusterWithScipy;
 use GeoLV\Search;
 use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;

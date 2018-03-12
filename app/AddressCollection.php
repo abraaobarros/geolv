@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class AddressCollection extends Collection
 {
-    public function insideLocality()
+    public function insideLocality(): AddressCollection
     {
         return $this->filter(function (Address $address) {
             return $address->match_locality > 0
@@ -14,7 +14,7 @@ class AddressCollection extends Collection
         });
     }
 
-    public function outsideLocality()
+    public function outsideLocality(): AddressCollection
     {
         return $this->filter(function (Address $address) {
             return $address->match_locality == 0
@@ -22,7 +22,14 @@ class AddressCollection extends Collection
         });
     }
 
-    public function calculateDispersion()
+    public function inMainCluster(): AddressCollection
+    {
+        return $this->filter(function (Address $address) {
+            return $address->group == 1;
+        });
+    }
+
+    public function calculateDispersion(): float
     {
         if ($this->count() == 0)
             return 0;

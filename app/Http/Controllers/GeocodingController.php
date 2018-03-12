@@ -45,7 +45,7 @@ class GeocodingController extends Controller
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
         $outside = $results->outsideLocality();
         $results = $results->insideLocality();
-        $dispersion = $results->calculateDispersion();
+        $dispersion = $results->inMainCluster()->calculateDispersion();
 
         return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities', 'outside', 'dispersion'));
     }
