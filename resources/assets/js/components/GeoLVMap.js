@@ -56,7 +56,11 @@ export default class GeoLVMap extends View {
             'd2f53c',
             'fabebe',
             '008080',
-            'aa6e28'
+            'aa6e28',
+            'ACE5EE',
+            'DE5D83',
+            '66FF00',
+            'C32148'
         ];
         //</editor-fold>
 
