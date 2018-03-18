@@ -5,20 +5,23 @@ namespace GeoLV\Geocode\Clusters;
 
 use GeoLV\Address;
 use GeoLV\AddressCollection;
+use GeoLV\Search;
 use GuzzleHttp\Client;
 
 class ClusterWithScipy
 {
     private $client;
+    private $search;
 
-    public function __construct()
+    public function __construct(Search $search)
     {
         $this->client = new Client(['base_uri' => 'http://cepesp.io:89/']);
+        $this->search = $search;
     }
 
     public function apply(AddressCollection $collection)
     {
-        $clusters = $this->getClusters($collection, 0.003);
+        $clusters = $this->getClusters($collection, $this->search->max_d);
 
         foreach ($collection->values() as $i => $address)
             $address->cluster = $clusters[$i];

@@ -85,27 +85,30 @@ class GeocodingFileProcessor
         return array_merge($row, $this->file->fields);
     }
 
-    private function processRow($row): array
+    private function processRow(array $row): array
     {
         $text = Dictionary::address($this->get($row, 'text'));
         $locality = $this->get($row, 'locality');
         $postalCode = $this->get($row, 'postal_code');
-        $results = $this->geocoder->geocode($text, $locality, $postalCode)->insideLocality()->inMainCluster();
+        $results = $this->geocoder->geocode($text, $locality, $postalCode);
         $result = $results->first();
-        $data = $row;
 
         if ($result) {
             foreach ($this->file->fields as $field) {
                 if ($field == 'dispersion')
-                    $value = $results->calculateDispersion();
+                    $value = $results->insideLocality()->inMainCluster()->calculateDispersion();
+                else if ($field == 'clusters_count')
+                    $value = $results->getClustersCount();
+                else if ($field == 'providers_count')
+                    $value = $results->inMainCluster()->getProvidersCount();
                 else
                     $value = $result->{$field};
 
-                array_push($data, $value);
+                array_push($row, $value);
             }
         }
 
-        return $data;
+        return $row;
     }
 
     private function get($row, $type)

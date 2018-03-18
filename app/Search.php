@@ -15,12 +15,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string locality
  * @property string postal_code
  * @property string locale
+ * @property float max_d
  * @property-read string address
  * @method static Builder geocodeQuery(GeocodeQuery $geocodeQuery)
  * @method static Search|Model firstOrCreate(array $data)
  */
 class Search extends Model
 {
+    const DEFAULT_MAX_D = 0.003;
+
     protected $fillable = [
         'text',
         'locality',
@@ -37,12 +40,25 @@ class Search extends Model
         return trim(implode(" ", [$this->text, $this->locality, $this->postal_code]));
     }
 
+    public function getMaxDAttribute($value)
+    {
+        if (filled($value))
+            return $value;
+        else
+            return static::DEFAULT_MAX_D;
+    }
+
     /**
      * @return Locality|null
      */
     public function findLocality()
     {
         return Locality::whereName($this->locality)->first();
+    }
+
+    public function toRequestFormat()
+    {
+        return array_only($this->toArray(), $this->fillable);
     }
 
 }

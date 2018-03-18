@@ -137,7 +137,9 @@ return [
         'match_postal_code' => 'Match com Código Postal',
         'match_locality' => 'Match Município',
         'has_all_attributes' => 'Contém todos os atributos',
-        'dispersion' => 'Dispersão'
+        'dispersion' => 'Dispersão',
+        'clusters_count' => 'Quantidade de Clusters',
+        'providers_count' => 'Quantidade de Provedores no Cluster Principal'
     ],
 
 ];

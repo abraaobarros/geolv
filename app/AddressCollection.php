@@ -30,6 +30,16 @@ class AddressCollection extends Collection
         });
     }
 
+    public function getClustersCount(): int
+    {
+        return $this->groupBy('cluster')->count();
+    }
+
+    public function getProvidersCount(): int
+    {
+        return $this->groupBy('provider')->count();
+    }
+
     public function calculateDispersion(): float
     {
         if ($this->count() == 0)

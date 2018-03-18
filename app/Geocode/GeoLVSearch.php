@@ -48,7 +48,7 @@ class GeoLVSearch
         $sorter = new SortByRelevance($search);
         $results = $sorter->apply($results);
 
-        $groupper = new ClusterWithScipy();
+        $groupper = new ClusterWithScipy($search);
         //$groupper = new ClusterByAverage();
         //$groupper = new ClusterWithKMeans();
         $groupper->apply($results);

@@ -5,17 +5,14 @@ namespace GeoLV\Http\Controllers;
 use GeoLV\Address;
 use GeoLV\Geocode\Dictionary;
 use GeoLV\Geocode\GeocoderProvider;
-use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\GeocodingRequest;
-use GeoLV\Http\Requests\UploadRequest;
-use GeoLV\Jobs\ProcessGeocodingFile;
 use GeoLV\Locality;
 use GeoLV\Search;
 use Illuminate\Http\Request;
 
 class GeocodingController extends Controller
 {
-    /** @var GeocoderProvider  */
+    /** @var GeocoderProvider */
     private $geocoder;
 
     /**
@@ -44,16 +41,21 @@ class GeocodingController extends Controller
 
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
         $outside = $results->outsideLocality();
+        $clustersCount = $results->getClustersCount();
+        $providersCount = $results->inMainCluster()->getProvidersCount();
+
         $results = $results->insideLocality();
         $dispersion = $results->inMainCluster()->calculateDispersion();
 
-        return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities', 'outside', 'dispersion'));
+        return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities', 'outside', 'dispersion', 'clustersCount', 'providersCount'));
     }
 
     public function map(Request $request)
     {
         $search = Search::findOrFail($request->get('search_id'));
         $selected = Address::findOrFail($request->get('selected_id'));
+        $search->max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
+
         $results = $this->geocoder->get($search)->insideLocality();
 
         return view('map', compact('results', 'outside', 'selected', 'search'));

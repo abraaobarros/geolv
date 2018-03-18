@@ -29,7 +29,9 @@ class GeocodingFileController extends Controller
             'provider',
             'latitude',
             'longitude',
-            'dispersion'
+            'dispersion',
+            'clusters_count',
+            'providers_count'
         ];
 
         $default = [

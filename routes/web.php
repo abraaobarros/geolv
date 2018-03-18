@@ -11,9 +11,24 @@ $router->group(['middleware' => 'guest'], function (Router $router) {
 });
 
 $router->group(['middleware' => 'auth'], function (Router $router) {
-    $router->get('/home', 'GeocodingController@index')->name('home');
-    $router->get('/geocode', 'GeocodingController@geocode')->name('geocode');
-    $router->get('/geocode/map', 'GeocodingController@map')->name('map');
-    $router->resource('files', 'GeocodingFileController')->except(['edit', 'update']);
-    $router->get('files/{files}/email', 'GeocodingFileController@email');
+
+    $router
+        ->get('/home', 'GeocodingController@index')
+        ->name('home');
+
+    $router
+        ->get('/geocode', 'GeocodingController@geocode')
+        ->name('geocode');
+
+    $router
+        ->get('/geocode/map', 'GeocodingController@map')
+        ->name('map');
+
+    $router
+        ->resource('files', 'GeocodingFileController')
+        ->except(['edit', 'update']);
+
+    $router
+        ->get('files/{files}/email', 'GeocodingFileController@email');
+
 });

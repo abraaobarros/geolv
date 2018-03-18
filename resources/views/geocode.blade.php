@@ -44,21 +44,28 @@
             <hr>
 
             <div class="row">
-                <div class="col-md-12">
-                    <p>
+                <div class="col-md-6">
+                    <h5>Busca</h5>
+                    <p class="text-muted">
                         @if(filled($text))
-                            Endereço: <span class="badge badge-secondary">{{ $text }}</span><br/>
+                            Endereço: <b>{{ $text }}</b><br/>
                         @endif
 
                         @if(filled($locality))
-                            Cidade: <span class="badge badge-secondary">{{ $locality }}</span><br/>
+                            Cidade: <b>{{ $locality }}</b><br/>
                         @endif
 
                         @if(filled($postalCode))
-                            CEP: <span class="badge badge-secondary">{{ $postalCode }}</span><br/>
+                            CEP: <b>{{ $postalCode }}</b>
                         @endif
-
-                        Dispersão: <span class="badge badge-secondary">{{ $dispersion }}</span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Algoritmo</h5>
+                    <p class="text-muted">
+                        Dispersão: <b>{{ $dispersion }}</b><br/>
+                        Quantidade de Clusters: <b>{{ $clustersCount }}</b><br/>
+                        Quantidade de Provedores no Cluster Principal: <b>{{ $providersCount }}</b>
                     </p>
                 </div>
             </div>
