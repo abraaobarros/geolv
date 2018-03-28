@@ -21,10 +21,14 @@ class ClusterWithScipy
 
     public function apply(AddressCollection $collection)
     {
-        $clusters = $this->getClusters($collection, $this->search->max_d);
-
-        foreach ($collection->values() as $i => $address)
-            $address->cluster = $clusters[$i];
+        try {
+            $clusters = $this->getClusters($collection, $this->search->max_d);
+            foreach ($collection->values() as $i => $address)
+                $address->cluster = $clusters[$i];
+        } catch (\Exception $e) {
+            foreach ($collection->values() as $i => $address)
+                $address->cluster = 1;
+        }
     }
 
     private function getClusters(AddressCollection $collection, float $max_d)
