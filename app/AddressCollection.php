@@ -24,6 +24,9 @@ class AddressCollection extends Collection
 
     public function inMainCluster(): AddressCollection
     {
+        if ($this->count() == 0)
+            return $this;
+
         $main_cluster = $this->first()->cluster;
         return $this->filter(function (Address $address) use ($main_cluster) {
             return $address->cluster == $main_cluster;
