@@ -90,13 +90,13 @@ class GeocodingFileProcessor
         $text = Dictionary::address($this->get($row, 'text'));
         $locality = $this->get($row, 'locality');
         $postalCode = $this->get($row, 'postal_code');
-        $results = $this->geocoder->geocode($text, $locality, $postalCode);
+        $results = $this->geocoder->geocode($text, $locality, $postalCode)->insideLocality();
         $result = $results->first();
 
         if ($result) {
             foreach ($this->file->fields as $field) {
                 if ($field == 'dispersion')
-                    $value = $results->insideLocality()->inMainCluster()->calculateDispersion();
+                    $value = $results->inMainCluster()->calculateDispersion();
                 else if ($field == 'clusters_count')
                     $value = $results->getClustersCount();
                 else if ($field == 'providers_count')
