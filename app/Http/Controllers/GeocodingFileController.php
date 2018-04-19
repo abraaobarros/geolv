@@ -31,7 +31,8 @@ class GeocodingFileController extends Controller
             'longitude',
             'dispersion',
             'clusters_count',
-            'providers_count'
+            'providers_count',
+            'levenshtein_match_street_name'
         ];
 
         $default = [
