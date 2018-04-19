@@ -134,9 +134,4 @@ class Address extends Model
         return new AddressCollection($models);
     }
 
-    public function distanceTo(Address $b)
-    {
-        return pow($this->latitude, 2) + pow($this->longitude, 2);
-    }
-
 }

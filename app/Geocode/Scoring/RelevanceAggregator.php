@@ -24,13 +24,13 @@ class RelevanceAggregator implements IRelevanceCalculator
 
         foreach ($this->calculators as $calculator) {
             $progress = $calculator->calculate($address);
-            $address->{$calculator->getName()} = $progress * 100;
+            $address->{$calculator->getName()} = $progress;
 
             $sum += $progress;
         }
 
         $totalRelevance = $sum / count($this->calculators);
-        $address->{$this->getName()} = $totalRelevance * 100;
+        $address->{$this->getName()} = $totalRelevance;
 
         return $totalRelevance;
     }

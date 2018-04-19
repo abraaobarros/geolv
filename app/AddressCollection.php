@@ -10,7 +10,7 @@ class AddressCollection extends Collection
     {
         return $this->filter(function (Address $address) {
             return $address->match_locality > 0
-                && $address->levenshtein_match_locality >= 70;
+                && $address->levenshtein_match_locality >= 0.7;
         });
     }
 
@@ -18,7 +18,7 @@ class AddressCollection extends Collection
     {
         return $this->filter(function (Address $address) {
             return $address->match_locality == 0
-                && $address->levenshtein_match_locality < 70;
+                && $address->levenshtein_match_locality < 0.7;
         });
     }
 
