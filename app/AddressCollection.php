@@ -45,8 +45,8 @@ class AddressCollection extends Collection
 
     public function calculateDispersion(): float
     {
-        if ($this->count() == 0)
-            return 0;
+        if ($this->count() <= 1)
+            return -1;
 
         $dispersion = 0.0;
         $latMed = 0.0;
