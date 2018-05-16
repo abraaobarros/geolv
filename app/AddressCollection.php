@@ -67,6 +67,6 @@ class AddressCollection extends Collection
             $dispersion += pow(($address->longitude - $lngMed) * 100, 2);
         }
 
-        return $dispersion;
+        return sqrt($dispersion) * 11057;
     }
 }
