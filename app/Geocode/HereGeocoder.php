@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: luizg
- * Date: 17/11/2017
- * Time: 22:59
- */
 
 namespace GeoLV\Geocode;
 

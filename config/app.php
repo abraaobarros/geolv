@@ -176,7 +176,7 @@ return [
         // GeoLV\Providers\BroadcastServiceProvider::class,
         GeoLV\Providers\EventServiceProvider::class,
         GeoLV\Providers\RouteServiceProvider::class,
-        GeoLV\Providers\GeocoderService::class,
+        GeoLV\Providers\GeocoderServiceProvider::class,
 
     ],
 

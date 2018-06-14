@@ -68,6 +68,8 @@ export default class GeoLVMap extends View {
             center: this.center,
             zoom: this.zoom,
             disableDefaultUI: true,
+            zoomControl: true,
+            scaleControl: true,
             //<editor-fold defaultstate="collapsed" desc="styles: [...]">
             styles: [
                 {

@@ -13,7 +13,7 @@ use GeoLV\Geocode\GeocoderProvider;
 use Geocoder\Laravel\Facades\Geocoder;
 use Illuminate\Support\ServiceProvider;
 
-class GeocoderService extends ServiceProvider
+class GeocoderServiceProvider extends ServiceProvider
 {
     protected $defer = false;
 
