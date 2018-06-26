@@ -2,7 +2,6 @@
 
 namespace GeoLV\Http\Controllers;
 
-use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
 use GeoLV\Address;
 use GeoLV\Geocode\Dictionary;
 use GeoLV\Geocode\GeocoderProvider;
@@ -10,7 +9,6 @@ use GeoLV\Http\Requests\GeocodingRequest;
 use GeoLV\Locality;
 use GeoLV\Search;
 use Illuminate\Http\Request;
-use RuntimeException;
 
 class GeocodingController extends Controller
 {
