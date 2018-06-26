@@ -15,7 +15,7 @@ class ClusterWithScipy
 
     public function __construct(Search $search)
     {
-        $this->client = new Client(['base_uri' => 'http://cepesp.io:89/']);
+        $this->client = new Client(['base_uri' => 'http://apps.cepesp.io:89/']);
         $this->search = $search;
     }
 
