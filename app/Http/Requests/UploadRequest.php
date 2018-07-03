@@ -25,7 +25,7 @@ class UploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'geocode_file' => ['required', 'file', 'mimes:csv,txt'],
+            'geocode_file' => ['required', 'file', 'mimetypes:text/csv,text/plain'],
             'indexes' => ['required', 'json'],
             'fields' => ['required'],
             'count' => ['required', 'integer', 'min:1'],
