@@ -15,7 +15,7 @@ class ClusterWithScipy
 
     public function __construct(Search $search)
     {
-        $this->client = new Client(['base_uri' => 'http://apps.cepesp.io:89/']);
+        $this->client = new Client(['base_uri' => 'http://geolv-python.sa-east-1.elasticbeanstalk.com/']);
         $this->search = $search;
     }
 
