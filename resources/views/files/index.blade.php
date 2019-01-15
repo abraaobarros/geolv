@@ -78,6 +78,8 @@
                                 @endif
                                 <td>
                                     <form action="{{ route('files.destroy', $file->id) }}" method="post">
+                                        @csrf
+
                                         <input type="hidden" name="_method" value="DELETE"/>
                                         <button type="submit" class="btn btn-outline-danger">
                                             <i class="fa fa-close"></i>

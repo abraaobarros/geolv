@@ -2,6 +2,7 @@
 
 namespace GeoLV;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -13,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string password
  * @property \Illuminate\Support\Collection|GeocodingFile[] files
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 

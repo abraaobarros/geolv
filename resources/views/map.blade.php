@@ -1,6 +1,6 @@
-@extends('layouts.base')
+@extends('layouts.app', ['fullscreen' => true])
 
-@section('body')
+@section('content')
 
     <a href="{{ route('geocode', $search->toRequestFormat()) }}" class="btn btn-outline-primary" style="position: fixed; top: 10px; left: 10px; z-index: 20">
         Voltar

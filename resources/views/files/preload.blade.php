@@ -15,6 +15,7 @@
                 </h2>
 
                 <form action="{{ route('files.store') }}" method="post" enctype="multipart/form-data">
+                    @csrf
 
                     <div class="form-group">
                         <div class="custom-file">

@@ -4,7 +4,7 @@ use Illuminate\Routing\Router;
 
 /** @var Router $router */
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 $router->group(['middleware' => 'guest'], function (Router $router) {
     $router->get('/', 'Auth\LoginController@showLoginForm');

@@ -15,7 +15,7 @@ class ClusterWithScipy
 
     public function __construct(Search $search)
     {
-        $this->client = new Client(['base_uri' => 'http://geolv-python.sa-east-1.elasticbeanstalk.com/']);
+        $this->client = new Client(['base_uri' => config('services.cluster.url')]);
         $this->search = $search;
     }
 
@@ -37,7 +37,7 @@ class ClusterWithScipy
             return $address->latitude . ';' . $address->longitude;
         })->implode('|');
 
-        $response = $this->client->request('GET', '/', [
+        $response = $this->client->request('GET', '/clusters', [
             'query' => [
                 'max_d' => $max_d,
                 'points' => $points

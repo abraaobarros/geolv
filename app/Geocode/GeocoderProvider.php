@@ -2,6 +2,7 @@
 
 namespace GeoLV\Geocode;
 
+use Geocoder\Provider\BingMaps\BingMaps;
 use GeoLV\AddressCollection;
 use Geocoder\Location;
 use Geocoder\Provider\ArcGISOnline\ArcGISOnline;
@@ -28,7 +29,8 @@ class GeocoderProvider
             new GroupResults([
                 new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY')),
                 new ArcGISOnline($this->adapter, 'BRA'),
-                new HereGeocoder($this->adapter, env('HERE_GEOCODER_ID'), env('HERE_GEOCODER_CODE'))
+                new HereGeocoder($this->adapter, env('HERE_GEOCODER_ID'), env('HERE_GEOCODER_CODE')),
+                new BingMaps($this->adapter, env('BING_MAPS_API_KEY'))
             ])
         ]);
     }

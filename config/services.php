@@ -35,4 +35,8 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'cluster' => [
+        'url' => env('SCIPY_CLUSTER_URL')
+    ]
+
 ];
