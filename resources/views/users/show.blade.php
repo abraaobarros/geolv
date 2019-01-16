@@ -44,6 +44,7 @@
                                     <th>Arquivo</th>
                                     <th>Criado</th>
                                     <th width="300px">Status</th>
+                                    <th>Ações</th>
                                 </tr>
                                 </thead>
                                 <tbody>
