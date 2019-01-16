@@ -56,11 +56,11 @@
   "Verified": "Verificado",
   "Last update": "Última atualização",
   "Files of :name": "Arquivos de :name",
-  "On queue...": "Na fila...",
+  "On queue": "Na fila",
   "Finished": "Finalizado",
   "Refresh": "Atualizar",
   "Download": "Baixar",
-  "Processing": "Processand",
+  "Processing": "Processando",
   "partial": "parcial",
   "Increase priority": "Aumentar prioridade",
   "Decrease priority": "Diminuir prioridade",
@@ -68,5 +68,7 @@
   "File": "Arquivo",
   "Priority": "Prioridade",
   "Remove": "Remover",
-  "Files": "Arquivos"
+  "Files": "Arquivos",
+  "Paused (On queue)": "Pausado (em fila)",
+  "Initializing": "Inicializando"
 }

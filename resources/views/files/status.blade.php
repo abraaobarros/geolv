@@ -1,5 +1,5 @@
 @if($file->initializing)
-    <td>{{ __('On queue...') }}</td>
+    <td>{{ __(\GeoLV\Jobs\ProcessGeocodingFile::isProcessing($file) ? 'Initializing' : 'On queue') }}...</td>
     <td>
         <a href="{{ request()->url() }}" class="btn btn-block btn-outline-success">
             {{ __('Refresh') }} <i class="fa fa-refresh"></i>
@@ -15,7 +15,7 @@
     </td>
 @else
     <td>
-        <small>{{ __('Processing') }}: {{ number_format($file->progress, 1) }}%</small>
+        <small>{{ __(\GeoLV\Jobs\ProcessGeocodingFile::isProcessing($file) ? 'Processing' : 'Paused (On queue)') }}: {{ number_format($file->progress, 1) }}%</small>
         <div class="progress">
             <div class="progress-bar" role="progressbar" style="width: {{ $file->progress }}%"></div>
         </div>
