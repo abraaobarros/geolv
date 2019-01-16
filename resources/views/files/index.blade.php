@@ -28,14 +28,14 @@
                     <table class="table table-hover mt-4">
                         <thead>
                         <tr>
-                            <th>Arquivo</th>
+                            <th>{{ __('File') }}</th>
                             @can('view', GeoLV\User::class)
-                                <th>Autor</th>
+                                <th>{{ __('Autor') }}</th>
                             @endcan
-                            <th>Criado</th>
-                            <th width="300px">Status</th>
-                            <th style="min-width: 150px;">Ações</th>
-                            <th style="min-width: 150px;">Remover</th>
+                            <th>{{ __('Created at') }}</th>
+                            <th width="300px">{{ __('Status') }}</th>
+                            <th style="min-width: 150px;">{{ __('Priority') }}</th>
+                            <th style="min-width: 150px;">{{ __('Remove') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -55,29 +55,27 @@
                                 <td>{{ $file->created_at->diffForHumans() }}</td>
                                 @include('files.status')
                                 <td>
-                                    @can('prioritize', \GeoLV\GeocodingFile::class)
-                                        <form action="{{ route('files.prioritize', $file->id) }}" method="post"
-                                              class="d-inline-block">
-                                            @csrf
+                                    @if(!$file->done)
+                                        @can('prioritize', \GeoLV\GeocodingFile::class)
+                                            <form action="{{ route('files.prioritize', $file->id) }}" method="post"
+                                                  class="d-inline-block">
+                                                @csrf
 
-                                            <div class="btn-group btn-group-sm">
-                                                <button type="submit" name="priority" value="{{ $file->priority + 1 }}"
-                                                        class="btn btn-outline-warning btn-sm" data-toggle="tooltip"
-                                                        data-placement="right" title="{{ __('Increase priority') }}">
-                                                    <i class="fa fa-arrow-up"></i>
-                                                </button>
-
-                                                @if($file->priority > 0)
-                                                <button type="submit" name="priority" value="{{ $file->priority - 1 }}"
-                                                        class="btn btn-outline-warning btn-sm" data-toggle="tooltip"
-                                                        data-placement="right" title="{{ __('Decrease priority') }}">
-                                                    <i class="fa fa-arrow-down"></i>
-                                                </button>
-                                                @endif
-                                            </div>
-                                        </form>
-                                    @endcan
-
+                                                <div class="input-group input-group-sm mb-3">
+                                                    <input type="number" class="form-control" name="priority" value="{{ $file->priority }}" min="0" step="1"/>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-secondary" type="submit">
+                                                            <i class="fa fa-arrow-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        @endcan
+                                    @else
+                                        {{ $file->priority }}
+                                    @endif
+                                </td>
+                                <td>
                                     <form action="{{ route('files.destroy', $file->id) }}" method="post"
                                           class="d-inline-block">
                                         @csrf

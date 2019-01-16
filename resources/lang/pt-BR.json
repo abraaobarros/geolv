@@ -64,5 +64,8 @@
   "partial": "parcial",
   "Increase priority": "Aumentar prioridade",
   "Decrease priority": "Diminuir prioridade",
-  "Remove file": "Remover arquivo"
+  "Remove file": "Remover arquivo",
+  "File": "Arquivo",
+  "Priority": "Prioridade",
+  "Remove": "Remover"
 }
