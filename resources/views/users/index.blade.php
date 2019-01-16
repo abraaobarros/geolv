@@ -1,12 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center mt-md-5">
+    <div class="container-fluid mt-md-5">
+        <div class="row justify-content-center ">
             <div class="col-md-12">
 
+                <h2>{{ __('Users') }}</h2>
+
                 <div class="table-responsive">
-                    <table class="table table-hover mt-4">
+                    <table class="table table-hover">
                         <thead>
                         <tr>
                             <th>{{ __('Name') }}</th>
