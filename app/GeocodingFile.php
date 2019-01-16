@@ -18,6 +18,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property array fields
  * @property User|Model user
  * @property integer user_id
+ * @property int offset
+ * @property int count
+ * @property \Carbon\Carbon updated_at
+ * @property \Carbon\Carbon created_at
+ * @property int id
+ * @property string delimiter
+ * @property integer priority
  * @method static GeocodingFile|Model create($data)
  */
 class GeocodingFile extends Model
@@ -31,13 +38,15 @@ class GeocodingFile extends Model
         'done',
         'header',
         'indexes',
-        'fields'
+        'fields',
+        'priority'
     ];
 
     protected $casts = [
-        'header' => 'bool',
-        'indexes' => 'array',
-        'fields' => 'array'
+        'header'    => 'bool',
+        'indexes'   => 'array',
+        'fields'    => 'array',
+        'priority'  => 'int'
     ];
 
     public function user()
@@ -60,7 +69,7 @@ class GeocodingFile extends Model
     {
         try {
             return $this->offset / $this->updated_at->diffInSeconds($this->created_at);
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             return 0;
         }
     }

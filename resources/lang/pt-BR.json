@@ -55,5 +55,14 @@
   "Info about :name": "Informações sobre :name",
   "Verified": "Verificado",
   "Last update": "Última atualização",
-  "Files of :name": "Arquivos de :name"
+  "Files of :name": "Arquivos de :name",
+  "On queue...": "Na fila...",
+  "Finished": "Finalizado",
+  "Refresh": "Atualizar",
+  "Download": "Baixar",
+  "Processing": "Processand",
+  "partial": "parcial",
+  "Increase priority": "Aumentar prioridade",
+  "Decrease priority": "Diminuir prioridade",
+  "Remove file": "Remover arquivo"
 }

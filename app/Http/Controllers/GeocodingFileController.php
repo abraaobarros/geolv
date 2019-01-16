@@ -6,14 +6,20 @@ use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\UploadRequest;
 use GeoLV\Jobs\ProcessGeocodingFile;
 use GeoLV\Mail\DoneGeocodingFile;
+use GeoLV\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class GeocodingFileController extends Controller
 {
     public function index()
     {
-        $query = auth()->user()->isAdmin() ? GeocodingFile::with('user') : auth()->user()->files();
-        $files = $query->orderBy('updated_at', 'desc')->paginate();
+        $user = auth()->user();
+        $query = $user->can('view', User::class) ? GeocodingFile::with('user') : $user->files();
+        $files = $query
+            ->orderBy('priority', 'asc')
+            ->orderBy('updated_at', 'desc')
+            ->paginate();
 
         return view('files.index', compact('files'));
     }
@@ -54,7 +60,7 @@ class GeocodingFileController extends Controller
             ->store('pre-processing', ['disk' => 's3']);
 
         /** @var GeocodingFile $file */
-        $file = auth()->user()->files()->create([
+        auth()->user()->files()->create([
             'path' => $path,
             'header' => $request->has('header'),
             'fields' => $request->get('fields'),
@@ -63,9 +69,27 @@ class GeocodingFileController extends Controller
             'indexes' => $indexes
         ]);
 
-        $this->dispatch(new ProcessGeocodingFile($file));
+        $this->dispatch(new ProcessGeocodingFile());
 
         return redirect()->route('files.index')->with('upload', true);
+    }
+
+    /**
+     * @param Request $request
+     * @param GeocodingFile $file
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function prioritize(Request $request, GeocodingFile $file)
+    {
+        $this->validate($request, ['priority' => 'integer|min:0']);
+        $this->authorize('prioritize', $file);
+
+        $file->priority = $request->get('priority', 0);
+        $file->save();
+
+        return redirect()->route('files.index');
     }
 
     /**

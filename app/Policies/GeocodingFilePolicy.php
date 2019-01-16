@@ -22,6 +22,11 @@ class GeocodingFilePolicy
         return $geocodingFile->user_id == $user->id || $user->isAdmin();
     }
 
+    public function prioritize(User $user)
+    {
+        return $user->isAdmin();
+    }
+
     /**
      * Determine whether the user can delete the geocoding file.
      *

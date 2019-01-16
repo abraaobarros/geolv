@@ -53,41 +53,41 @@
                                 <td>{{ $file->user->name }}</td>
                                 @endcan
                                 <td>{{ $file->created_at->diffForHumans() }}</td>
-                                @if($file->initializing)
-                                    <td>Inicializando...</td>
-                                    <td>
-                                        <a href="{{ request()->url() }}" class="btn btn-block btn-outline-success">
-                                            Atualizar <i class="fa fa-refresh"></i>
-                                        </a>
-                                    </td>
-                                @elseif($file->done)
-                                    <td>Finalizado {{ $file->updated_at->diffForHumans($file->created_at) }}</td>
-                                    <td>
-                                        <a href="{{ route('files.show', $file->id) }}" class="btn btn-block btn-outline-success">
-                                            <i class="fa fa-download mr-2"></i>
-                                            Baixar
-                                        </a>
-                                    </td>
-                                @else
-                                    <td>
-                                        <small>Processando: {{ number_format($file->progress, 1) }}%</small>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: {{ $file->progress }}%"></div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('files.show', $file->id) }}" class="btn btn-block btn-outline-warning">
-                                            <i class="fa fa-download mr-2"></i>
-                                            Baixar <b>parcial</b>
-                                        </a>
-                                    </td>
-                                @endif
+                                @include('files.status')
                                 <td>
-                                    <form action="{{ route('files.destroy', $file->id) }}" method="post">
+                                    @can('prioritize', \GeoLV\GeocodingFile::class)
+                                        <form action="{{ route('files.prioritize', $file->id) }}" method="post" class="d-inline-block">
+                                            @csrf
+
+                                            <input type="hidden" name="_method" value="UPDATE"/>
+                                            <input type="hidden" name="priority" value="{{ $file->priority + 1 }}"/>
+                                            <button type="submit" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="right" title="{{ __('Increase priority') }}">
+                                                <i class="fa fa-arrow-up"></i>
+                                            </button>
+                                        </form>
+
+                                        @if ($file->priority > 0)
+                                        <form action="{{ route('files.prioritize', $file->id) }}" method="post" class="d-inline-block">
+                                            @csrf
+
+                                            <input type="hidden" name="_method" value="UPDATE"/>
+                                            <input type="hidden" name="priority" value="{{ $file->priority - 1 }}"/>
+                                            <button type="submit" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="right" title="{{ __('Decrease priority') }}">
+                                                <i class="fa fa-arrow-down"></i>
+                                            </button>
+                                        </form>
+                                        @else
+                                            <button class="btn btn-outline-warning disabled" disabled>
+                                                <i class="fa fa-arrow-down"></i>
+                                            </button>
+                                        @endif
+                                    @endcan
+
+                                    <form action="{{ route('files.destroy', $file->id) }}" method="post" class="d-inline-block">
                                         @csrf
 
                                         <input type="hidden" name="_method" value="DELETE"/>
-                                        <button type="submit" class="btn btn-outline-danger">
+                                        <button type="submit" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="right" title="{{ __('Remove file') }}">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
                                     </form>

@@ -22,7 +22,7 @@
                                 <td>
                                     {{ $user->email }}
                                     @if(!empty($user->email_verified_at))
-                                        <i class="fa fa-check-square-o ml-2 text-success"  data-toggle="tooltip" data-placement="right" title="{{ __('Email Verified') }}"></i>
+                                        <i class="fa fa-check-square-o ml-2 text-success" data-toggle="tooltip" data-placement="right" title="{{ __('Email Verified') }}"></i>
                                     @endif
                                 </td>
                                 <td>{{ $user->created_at->diffForHumans() }}</td>

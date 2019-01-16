@@ -29,7 +29,8 @@ $router->group(['middleware' => ['auth', 'verified']], function (Router $router)
         ->except(['edit', 'update']);
 
     $router
-        ->get('files/{files}/email', 'GeocodingFileController@email');
+        ->get('files/{files}/prioritize', 'GeocodingFileController@prioritize')
+        ->name('files.prioritize');
 
     $router
         ->resource('users', 'UsersController');
