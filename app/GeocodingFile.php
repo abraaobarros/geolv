@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int id
  * @property string delimiter
  * @property integer priority
+ * @property bool done
  * @method static GeocodingFile|Model create($data)
  */
 class GeocodingFile extends Model

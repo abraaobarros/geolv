@@ -37,7 +37,6 @@ class ProcessGeocodingFile implements ShouldQueue
 
     private function notifyUser()
     {
-        $this->file->update(['done' => true]);
         Mail::to($this->file->user->email)
             ->send(new DoneGeocodingFile($this->file));
     }

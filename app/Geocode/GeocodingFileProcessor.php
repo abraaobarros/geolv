@@ -117,7 +117,13 @@ class GeocodingFileProcessor
 
     private function updateFileOffset(GeocodingFile $file, $count)
     {
-        $file->update(['offset' => $file->offset + $count]);
+        $file->offset = $file->offset + $count;
+
+        if ($count == 0) {
+            $file->done = true;
+        }
+
+        $file->save();
     }
 
     private function uploadOutput(GeocodingFile $file)
