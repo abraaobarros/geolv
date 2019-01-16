@@ -47,7 +47,8 @@ class ProcessGeocodingFile implements ShouldQueue
      */
     public static function getNextQueueFile()
     {
-        return GeocodingFile::whereDone(false)
+        return GeocodingFile::query()
+            ->where('done', false)
             ->orderBy('priority', 'desc')
             ->orderBy('created_at', 'asc')
             ->first();
