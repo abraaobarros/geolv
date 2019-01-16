@@ -58,7 +58,7 @@ class GeocodingController extends Controller
 
         $results = $this->geocoder->get($search)->insideLocality();
 
-        return view('map', compact('results', 'outside', 'selected', 'search'));
+        return view('map', compact('results', 'selected', 'search'));
     }
 
 }
