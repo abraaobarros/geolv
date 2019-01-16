@@ -34,7 +34,7 @@
                             @endcan
                             <th>Criado</th>
                             <th width="300px">Status</th>
-                            <th>Ações</th>
+                            <th style="min-width: 150px;">Ações</th>
                             <th>Remover</th>
                         </tr>
                         </thead>
