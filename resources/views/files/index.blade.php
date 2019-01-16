@@ -37,7 +37,7 @@
                             @endcan
                             <th>{{ __('Created at') }}</th>
                             @can('prioritize', \GeoLV\GeocodingFile::class)
-                                <th style="max-width: 100px;">{{ __('Priority') }}</th>
+                                <th width="100px">{{ __('Priority') }}</th>
                             @endcan
                             <th width="300px">{{ __('Status') }}</th>
                             <th style="min-width: 160px;">{{ __('Actions') }}</th>
