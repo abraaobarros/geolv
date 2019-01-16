@@ -30,12 +30,12 @@
                         <tr>
                             <th>Arquivo</th>
                             @can('view', GeoLV\User::class)
-                            <th>Autor</th>
+                                <th>Autor</th>
                             @endcan
                             <th>Criado</th>
                             <th width="300px">Status</th>
                             <th style="min-width: 150px;">Ações</th>
-                            <th>Remover</th>
+                            <th style="min-width: 150px;">Remover</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -50,44 +50,41 @@
                             <tr>
                                 <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
                                 @can('view', GeoLV\User::class)
-                                <td>{{ $file->user->name }}</td>
+                                    <td>{{ $file->user->name }}</td>
                                 @endcan
                                 <td>{{ $file->created_at->diffForHumans() }}</td>
                                 @include('files.status')
                                 <td>
                                     @can('prioritize', \GeoLV\GeocodingFile::class)
-                                        <form action="{{ route('files.prioritize', $file->id) }}" method="post" class="d-inline-block">
+                                        <form action="{{ route('files.prioritize', $file->id) }}" method="post"
+                                              class="d-inline-block">
                                             @csrf
 
-                                            <input type="hidden" name="_method" value="UPDATE"/>
-                                            <input type="hidden" name="priority" value="{{ $file->priority + 1 }}"/>
-                                            <button type="submit" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="right" title="{{ __('Increase priority') }}">
-                                                <i class="fa fa-arrow-up"></i>
-                                            </button>
-                                        </form>
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="submit" name="priority" value="{{ $file->priority + 1 }}"
+                                                        class="btn btn-outline-warning btn-sm" data-toggle="tooltip"
+                                                        data-placement="right" title="{{ __('Increase priority') }}">
+                                                    <i class="fa fa-arrow-up"></i>
+                                                </button>
 
-                                        @if ($file->priority > 0)
-                                        <form action="{{ route('files.prioritize', $file->id) }}" method="post" class="d-inline-block">
-                                            @csrf
-
-                                            <input type="hidden" name="_method" value="UPDATE"/>
-                                            <input type="hidden" name="priority" value="{{ $file->priority - 1 }}"/>
-                                            <button type="submit" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="right" title="{{ __('Decrease priority') }}">
-                                                <i class="fa fa-arrow-down"></i>
-                                            </button>
+                                                @if($file->priority > 0)
+                                                <button type="submit" name="priority" value="{{ $file->priority - 1 }}"
+                                                        class="btn btn-outline-warning btn-sm" data-toggle="tooltip"
+                                                        data-placement="right" title="{{ __('Decrease priority') }}">
+                                                    <i class="fa fa-arrow-down"></i>
+                                                </button>
+                                                @endif
+                                            </div>
                                         </form>
-                                        @else
-                                            <button class="btn btn-outline-warning disabled" disabled>
-                                                <i class="fa fa-arrow-down"></i>
-                                            </button>
-                                        @endif
                                     @endcan
 
-                                    <form action="{{ route('files.destroy', $file->id) }}" method="post" class="d-inline-block">
+                                    <form action="{{ route('files.destroy', $file->id) }}" method="post"
+                                          class="d-inline-block">
                                         @csrf
 
                                         <input type="hidden" name="_method" value="DELETE"/>
-                                        <button type="submit" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="right" title="{{ __('Remove file') }}">
+                                        <button type="submit" class="btn btn-outline-danger" data-toggle="tooltip"
+                                                data-placement="right" title="{{ __('Remove file') }}">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
                                     </form>
