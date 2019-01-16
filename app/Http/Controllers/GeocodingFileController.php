@@ -12,7 +12,9 @@ class GeocodingFileController extends Controller
 {
     public function index()
     {
-        $files = auth()->user()->files()->orderBy('updated_at', 'desc')->paginate(15);
+        $query = auth()->user()->isAdmin() ? GeocodingFile::with('user') : auth()->user()->files();
+        $files = $query->orderBy('updated_at', 'desc')->paginate();
+
         return view('files.index', compact('files'));
     }
 
@@ -66,13 +68,28 @@ class GeocodingFileController extends Controller
         return redirect()->route('files.index')->with('upload', true);
     }
 
+    /**
+     * @param GeocodingFile $file
+     * @return mixed
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function show(GeocodingFile $file)
     {
+        $this->authorize('view', $file);
+
         return Storage::disk('s3')->download($file->output_path);
     }
 
+    /**
+     * @param GeocodingFile $file
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Exception
+     */
     public function destroy(GeocodingFile $file)
     {
+        $this->authorize('delete', $file);
+
         $file->delete();
         return redirect()->back();
     }

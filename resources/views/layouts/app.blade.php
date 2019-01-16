@@ -14,31 +14,47 @@
 
     <title>{{ config('app.name', 'GeoLV') }}</title>
 </head>
-<body>
+<body class="bg-white">
 @if(empty($fullscreen))
-<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-    <a href="/" class="h2 my-0 mr-md-4 font-weight-normal">{{ config('app.name') }}</a>
-    @auth
-        <nav class="my-2 my-md-0 mr-md-auto">
-            <a class="p-2 text-dark{{ request()->is('/')? ' active': '' }}" href="{{ route('home') }}">
-                {{ __('Geocode Address') }}
-            </a>
-            <a class="p-2 text-dark{{ request()->is('/files')? ' active': '' }}" href="{{ route('files.index') }}">
-                {{ __('Geocode File') }}
-            </a>
-        </nav>
-        <div class="my-2 my-md-0 mr-md-3">
-            {{ __('Hello, :NAME', auth()->user()->name) }}!
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand mb-0 h1" href="/">{{ config('app.name', 'GeoLV') }}</a>
+        @auth
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item{{ request()->is('/')? ' active': '' }}">
+                    <a class="nav-link" href="{{ route('home') }}">{{ __('Geocode Address') }}</a>
+                </li>
+                <li class="nav-item{{ request()->is('/files')? ' active': '' }}">
+                    <a class="nav-link" href="{{ route('files.index') }}">{{ __('Geocode File') }}</a>
+                </li>
+                @can('view', GeoLV\User::class)
+                <li class="nav-item{{ request()->is('/users')? ' active': '' }}">
+                    <a class="nav-link" href="{{ route('users.index') }}">{{ __('Users') }}</a>
+                </li>
+                @endcan
+            </ul>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-2">
+                    <span class="navbar-text">{{ __('Hello, :name', ['name' => auth()->user()->name]) }}!</span>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary btn-block" href="{{ route('logout') }}"
+                       onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }} <i class="fa fa-sign-out ml-2"></i>
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </li>
+            </ul>
         </div>
-        <a class="btn btn-outline-primary" href="{{ route('logout') }}"
-           onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-            {{ __('Logout') }} <i class="fa fa-sign-out ml-2"></i>
-        </a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
-        </form>
-    @endauth
-</div>
+        @endauth
+    </nav>
 @endif
 
 @yield('content')

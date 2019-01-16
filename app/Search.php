@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string locale
  * @property float max_d
  * @property-read string address
+ * @property-read string state
  * @method static Builder geocodeQuery(GeocodeQuery $geocodeQuery)
  * @method static Search|Model firstOrCreate(array $data)
  */
@@ -30,6 +31,10 @@ class Search extends Model
         'postal_code',
     ];
 
+    protected $appends = [
+        'state'
+    ];
+
     public function addresses(): BelongsToMany
     {
         return $this->belongsToMany(Address::class);
@@ -38,6 +43,29 @@ class Search extends Model
     public function getAddressAttribute()
     {
         return trim(implode(" ", [$this->text, $this->locality, $this->postal_code]));
+    }
+
+    public function getLocalityAttribute()
+    {
+        $locality = $this->attributes['locality'];
+
+        try {
+            $locality = trim(array_first(explode('-', $locality)));
+        } catch (\Exception $exception) {}
+
+        return $locality;
+    }
+
+    public function getStateAttribute()
+    {
+        $state = null;
+
+        try {
+            $locality = $this->attributes['locality'];
+            $state = trim(array_last(explode('-', $locality)));
+        } catch (\Exception $exception) {}
+
+        return $state;
     }
 
     public function getMaxDAttribute($value)
@@ -53,7 +81,14 @@ class Search extends Model
      */
     public function findLocality()
     {
-        return Locality::whereName($this->locality)->first();
+        return Locality::where(function (Builder $q) {
+            $q->whereRaw('lower(name) = ?', [mb_strtolower($this->locality)]);
+
+            if (!empty($state))
+                $q->whereRaw('upper(state) = ?', [mb_strtoupper($this->state)]);
+
+            return $q;
+        })->first();
     }
 
     public function toRequestFormat()

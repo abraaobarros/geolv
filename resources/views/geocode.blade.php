@@ -22,7 +22,7 @@
 
                         <datalist id="localities">
                             @foreach ($localities as $local)
-                                <option value="{{ $local->name }}">
+                                <option value="{{ $local->full_name }}"></option>
                             @endforeach
                         </datalist>
 

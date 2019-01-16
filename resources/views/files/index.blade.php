@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="container">
-        <div class="row justify-content-center mt-md-2">
+        <div class="row justify-content-center mt-md-5">
 
             <div class="col-md-12">
 
@@ -25,10 +25,13 @@
                 @endif
 
                 <div class="table-responsive">
-                    <table class="table table-hover table-bordered mt-4">
+                    <table class="table table-hover mt-4">
                         <thead>
                         <tr>
                             <th>Arquivo</th>
+                            @can('view', GeoLV\User::class)
+                            <th>Autor</th>
+                            @endcan
                             <th>Criado</th>
                             <th width="300px">Status</th>
                             <th>Ações</th>
@@ -46,6 +49,9 @@
                         @foreach($files as $file)
                             <tr>
                                 <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
+                                @can('view', GeoLV\User::class)
+                                <td>{{ $file->user->name }}</td>
+                                @endcan
                                 <td>{{ $file->created_at->diffForHumans() }}</td>
                                 @if($file->initializing)
                                     <td>Inicializando...</td>
@@ -82,7 +88,7 @@
 
                                         <input type="hidden" name="_method" value="DELETE"/>
                                         <button type="submit" class="btn btn-outline-danger">
-                                            <i class="fa fa-close"></i>
+                                            <i class="fa fa-trash-o"></i>
                                         </button>
                                     </form>
                                 </td>

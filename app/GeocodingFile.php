@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property array indexes
  * @property array fields
  * @property User|Model user
+ * @property integer user_id
  * @method static GeocodingFile|Model create($data)
  */
 class GeocodingFile extends Model

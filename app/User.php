@@ -13,10 +13,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string email
  * @property string password
  * @property \Illuminate\Support\Collection|GeocodingFile[] files
+ * @property string role
+ * @property int id
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
+
+    const ADMIN_ROLE = 'admin';
 
     /**
      * The attributes that are mass assignable.
@@ -39,5 +43,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function files()
     {
         return $this->hasMany(GeocodingFile::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->role == static::ADMIN_ROLE;
     }
 }

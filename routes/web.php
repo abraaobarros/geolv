@@ -10,7 +10,7 @@ $router->group(['middleware' => 'guest'], function (Router $router) {
     $router->get('/', 'Auth\LoginController@showLoginForm');
 });
 
-$router->group(['middleware' => 'auth'], function (Router $router) {
+$router->group(['middleware' => ['auth', 'verified']], function (Router $router) {
 
     $router
         ->get('/home', 'GeocodingController@index')
@@ -30,5 +30,8 @@ $router->group(['middleware' => 'auth'], function (Router $router) {
 
     $router
         ->get('files/{files}/email', 'GeocodingFileController@email');
+
+    $router
+        ->resource('users', 'UsersController');
 
 });

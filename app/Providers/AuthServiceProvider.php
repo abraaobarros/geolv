@@ -2,6 +2,10 @@
 
 namespace GeoLV\Providers;
 
+use GeoLV\GeocodingFile;
+use GeoLV\Policies\GeocodingFilePolicy;
+use GeoLV\Policies\UserPolicy;
+use GeoLV\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -13,7 +17,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'GeoLV\Model' => 'GeoLV\Policies\ModelPolicy',
+        User::class => UserPolicy::class,
+        GeocodingFile::class => GeocodingFilePolicy::class,
     ];
 
     /**

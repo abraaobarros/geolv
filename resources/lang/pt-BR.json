@@ -45,7 +45,15 @@
   "Whoops!": "Ops!",
   "Whoops, something went wrong on our servers.": "Ops, algo deu errado em nossos servidores.",
   "Go Back": "Voltar",
-  "Hello, :NAME": "Olá, :NAME",
+  "Hello, :name": "Olá, :name",
   "Geocode Address": "Geolocalizar Endereço",
-  "Geocode File": "Geolocalizar CSV"
+  "Geocode File": "Geolocalizar CSV",
+  "Users": "Usuários",
+  "Created at": "Criado em",
+  "Actions": "Ações",
+  "Email Verified": "E-mail Verificado",
+  "Info about :name": "Informações sobre :name",
+  "Verified": "Verificado",
+  "Last update": "Última atualização",
+  "Files of :name": "Arquivos de :name"
 }

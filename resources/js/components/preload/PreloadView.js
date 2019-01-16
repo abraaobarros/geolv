@@ -58,7 +58,7 @@ export default class PreloadView extends View {
         this.get('price').html(price.toFixed(2));
         this.input('count').val(this.count);
 
-        let time = Math.ceil(this.count / 60);
+        let time = Math.ceil(this.count / 20);
         if (time == 0)
             this.get('time').html('-');
         else

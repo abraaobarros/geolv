@@ -37,6 +37,11 @@ class Locality extends Model
         'state_id' => 'int'
     ];
 
+    public function getFullNameAttribute()
+    {
+        return $this->name . ' - ' . $this->state;
+    }
+
     public function isInsideBounds(Coordinate $coordinate): bool
     {
         return $coordinate->getLat() >= $this->min_lat && $coordinate->getLat() <= $this->max_lat &&
