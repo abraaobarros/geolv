@@ -90,6 +90,8 @@ class GeocodingFileController extends Controller
         $file->priority = $request->get('priority', 0);
         $file->save();
 
+        $this->dispatch(new ProcessGeocodingFile());
+
         return redirect()->route('files.index');
     }
 
