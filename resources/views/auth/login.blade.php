@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.app', ['fullscreen' => true])
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center mt-md-5">
         <div class="col-lg-4 col-md-6">
+            <h1 class="text-center">{{ config('app.name', 'GeoLV') }}</h1>
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
 
@@ -43,7 +44,7 @@
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary btn-block">
-                                {{ __('Login') }}
+                                <i class="fa fa-sign-in mr-2"></i>{{ __('Login') }}
                             </button>
                         </div>
                     </form>
