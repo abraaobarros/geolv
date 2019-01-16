@@ -33,8 +33,8 @@
                                 <th>{{ __('Autor') }}</th>
                             @endcan
                             <th>{{ __('Created at') }}</th>
-                            <th width="300px">{{ __('Status') }}</th>
                             <th style="min-width: 150px;">{{ __('Priority') }}</th>
+                            <th width="300px">{{ __('Status') }}</th>
                             <th style="min-width: 150px;">{{ __('Remove') }}</th>
                         </tr>
                         </thead>
@@ -53,7 +53,6 @@
                                     <td>{{ $file->user->name }}</td>
                                 @endcan
                                 <td>{{ $file->created_at->diffForHumans() }}</td>
-                                @include('files.status')
                                 <td>
                                     @if(!$file->done)
                                         @can('prioritize', \GeoLV\GeocodingFile::class)
@@ -75,6 +74,7 @@
                                         {{ $file->priority }}
                                     @endif
                                 </td>
+                                @include('files.status')
                                 <td>
                                     <form action="{{ route('files.destroy', $file->id) }}" method="post"
                                           class="d-inline-block">
