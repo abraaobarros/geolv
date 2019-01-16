@@ -17,7 +17,7 @@ class GeocodingFileController extends Controller
         $user = auth()->user();
         $query = $user->can('view', User::class) ? GeocodingFile::with('user') : $user->files();
         $files = $query
-            ->orderBy('priority', 'asc')
+            ->orderBy('priority', 'desc')
             ->orderBy('done', 'asc')
             ->orderBy('updated_at', 'desc')
             ->paginate();
