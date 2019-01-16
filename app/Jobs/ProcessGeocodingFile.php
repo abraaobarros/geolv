@@ -21,7 +21,7 @@ class ProcessGeocodingFile implements ShouldQueue
 
     public function __construct()
     {
-        $this->file = $this->getNextFile();
+        $this->file = static::getNextQueueFile();
     }
 
     public function handle(GeocodingFileProcessor $processor)
@@ -47,7 +47,10 @@ class ProcessGeocodingFile implements ShouldQueue
      */
     public static function getNextQueueFile()
     {
-        return GeocodingFile::whereDone(false)->orderBy('priority', 'desc')->first();
+        return GeocodingFile::whereDone(false)
+            ->orderBy('priority', 'desc')
+            ->orderBy('created_at', 'asc')
+            ->first();
     }
 
     public static function isProcessing(GeocodingFile $file)
