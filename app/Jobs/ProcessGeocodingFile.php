@@ -19,6 +19,8 @@ class ProcessGeocodingFile implements ShouldQueue
 
     public $file;
 
+    const CHUNK_SIZE = 5;
+
     public function __construct()
     {
         $this->file = static::getNextQueueFile();
@@ -29,7 +31,7 @@ class ProcessGeocodingFile implements ShouldQueue
         if (empty($this->file))
             return;
 
-        if ($processor->process($this->file, 10) == 0)
+        if ($processor->process($this->file, static::CHUNK_SIZE) == 0)
             $this->notifyUser();
 
         dispatch(new ProcessGeocodingFile());

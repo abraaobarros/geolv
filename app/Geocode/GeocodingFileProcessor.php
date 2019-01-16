@@ -31,7 +31,6 @@ class GeocodingFileProcessor
 
     /**
      * GeocodingFileProcessor constructor.
-     * @param GeocodingFile $file
      */
     public function __construct()
     {
