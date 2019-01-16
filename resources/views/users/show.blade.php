@@ -26,7 +26,7 @@
                             </dd>
 
                             <dt class="col-sm-3">{{ __('Created at') }}</dt>
-                            <dd class="col-sm-9">{{ $user->created_at->diffForHumans() }} ({{ __('Last update') }}: {{ $user->updated_at->diffForHumans() }})</dd>
+                            <dd class="col-sm-9">{{ $user->created_at->diffForHumans() }} ({{ __('Last update') }}: {{ $user->last_update->diffForHumans() }})</dd>
                         </dl>
                     </div>
                 </div>

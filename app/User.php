@@ -15,6 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property \Illuminate\Support\Collection|GeocodingFile[] files
  * @property string role
  * @property int id
+ * @property \Carbon\Carbon updated_at
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -39,6 +40,15 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getLastUpdateAttribute()
+    {
+        $last = $this->files()->orderBy('updated_at', 'desc')->first();
+        if (!empty($last))
+            return $last->updated_at;
+        else
+            return $this->updated_at;
+    }
 
     public function files()
     {
