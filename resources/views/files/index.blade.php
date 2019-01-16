@@ -28,14 +28,15 @@
                     <table class="table table-hover mt-4">
                         <thead>
                         <tr>
-                            <th>{{ __('File') }}</th>
+                            <th width="100px">{{ __('File') }}</th>
                             @can('view', GeoLV\User::class)
                                 <th>{{ __('Autor') }}</th>
                             @endcan
                             <th>{{ __('Created at') }}</th>
-                            <th style="min-width: 150px;">{{ __('Priority') }}</th>
+                            <th style="min-width: 100px;">{{ __('Priority') }}</th>
                             <th width="300px">{{ __('Status') }}</th>
-                            <th style="min-width: 150px;">{{ __('Remove') }}</th>
+                            <th style="min-width: 160px;">{{ __('Actions') }}</th>
+                            <th>{{ __('Remove') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -64,14 +65,21 @@
                                                     <input type="number" class="form-control" name="priority" value="{{ $file->priority }}" min="0" step="1"/>
                                                     <div class="input-group-append">
                                                         <button class="btn btn-outline-secondary" type="submit">
-                                                            <i class="fa fa-arrow-alt"></i>
+                                                            <i class="fa fa-arrows-v"></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </form>
                                         @endcan
                                     @else
-                                        {{ $file->priority }}
+                                        <div class="input-group input-group-sm mb-3">
+                                            <input type="number" class="form-control" name="priority" value="{{ $file->priority }}" min="0" step="1" readonly/>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary disabled" disabled>
+                                                    <i class="fa fa-arrows-v"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     @endif
                                 </td>
                                 @include('files.status')

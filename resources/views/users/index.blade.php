@@ -12,7 +12,7 @@
                             <th>{{ __('Name') }}</th>
                             <th>{{ __('E-Mail Address') }}</th>
                             <th>{{ __('Created at') }}</th>
-                            <th>{{ __('Actions') }}</th>
+                            <th style="min-width: 160px;">{{ __('Actions') }}</th>
                         </tr>
                         </thead>
                         <tbody>
