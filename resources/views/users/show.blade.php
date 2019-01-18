@@ -15,7 +15,12 @@
                     <div class="card-body">
                         <dl class="row">
                             <dt class="col-sm-3">{{ __('Name') }}</dt>
-                            <dd class="col-sm-9">{{ $user->name }}</dd>
+                            <dd class="col-sm-9">
+                                {{ $user->name }}
+                                @if ($user->role)
+                                    <span class="badge badge-info badge-pill">{{ mb_strtoupper($user->role) }}</span>
+                                @endif
+                            </dd>
 
                             <dt class="col-sm-3">{{ __('E-Mail Address') }}</dt>
                             <dd class="col-sm-9">
@@ -56,10 +61,11 @@
                                 @endif
 
                                 @foreach($files as $file)
-                                    <tr>
+                                    <tr class="{{ $file->canceled_at ? 'table-dark' : null }}">
                                         <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
                                         <td>{{ $file->created_at->diffForHumans() }}</td>
-                                        @include('files.status')
+                                        <td>@include('files.status')</td>
+                                        <td>@include('files.actions')</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -72,4 +78,12 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script type="text/javascript">
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 @endsection

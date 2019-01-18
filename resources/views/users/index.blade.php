@@ -20,7 +20,12 @@
                         <tbody>
                         @foreach($users as $user)
                             <tr>
-                                <td>{{ $user->name }}</td>
+                                <td>
+                                    {{ $user->name }}
+                                    @if ($user->role)
+                                    <span class="badge badge-info badge-pill">{{ mb_strtoupper($user->role) }}</span>
+                                    @endif
+                                </td>
                                 <td>
                                     {{ $user->email }}
                                     @if(!empty($user->email_verified_at))

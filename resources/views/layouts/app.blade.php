@@ -30,10 +30,15 @@
                 <li class="nav-item{{ request()->is('/files')? ' active': '' }}">
                     <a class="nav-link" href="{{ route('files.index') }}">{{ __('Geocode File') }}</a>
                 </li>
-                @can('view', GeoLV\User::class)
-                <li class="nav-item{{ request()->is('/users')? ' active': '' }}">
-                    <a class="nav-link" href="{{ route('users.index') }}">{{ __('Users') }}</a>
-                </li>
+                @can('viewUsers')
+                    <li class="nav-item{{ request()->is('/users')? ' active': '' }}">
+                        <a class="nav-link" href="{{ route('users.index') }}">{{ __('Users') }}</a>
+                    </li>
+                @endcan
+                @can('viewTelescope')
+                    <li class="nav-item{{ request()->is('/users')? ' active': '' }}" target="_blank">
+                        <a class="nav-link" href="{{ route('telescope') }}">Debug</a>
+                    </li>
                 @endcan
             </ul>
 

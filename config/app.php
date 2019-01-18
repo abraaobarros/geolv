@@ -159,6 +159,7 @@ return [
         GeoLV\Providers\AuthServiceProvider::class,
         // GeoLV\Providers\BroadcastServiceProvider::class,
         GeoLV\Providers\EventServiceProvider::class,
+        GeoLV\Providers\TelescopeServiceProvider::class,
         GeoLV\Providers\RouteServiceProvider::class,
         GeoLV\Providers\GeocoderServiceProvider::class,
 

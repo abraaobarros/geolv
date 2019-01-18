@@ -22,6 +22,24 @@ class GeocodingFilePolicy
         return $geocodingFile->user_id == $user->id || $user->isAdmin();
     }
 
+    /**
+     * Determine whether the user can cancel the file
+     *
+     * @param User $user
+     * @param GeocodingFile $geocodingFile
+     * @return mixed
+     */
+    public function cancel(User $user, GeocodingFile $geocodingFile)
+    {
+        return $this->view($user, $geocodingFile);
+    }
+
+    /**
+     * Determine whether the user can change the file priority
+     *
+     * @param  \GeoLV\User  $user
+     * @return mixed
+     */
     public function prioritize(User $user)
     {
         return $user->isAdmin();
@@ -36,7 +54,7 @@ class GeocodingFilePolicy
      */
     public function delete(User $user, GeocodingFile $geocodingFile)
     {
-        return $geocodingFile->user_id == $user->id || $user->isAdmin();
+        return $this->view($user, $geocodingFile);
     }
 
 }

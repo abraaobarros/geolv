@@ -30,6 +30,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('viewUsers', '\GeoLV\Policies\UserPolicy@view');
     }
 }

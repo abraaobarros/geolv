@@ -1,29 +1,26 @@
 @if($file->initializing)
-    <td>{{ __(\GeoLV\Jobs\ProcessGeocodingFile::isProcessing($file) ? 'Initializing' : 'On queue') }}...</td>
-    <td>
-        <a href="{{ request()->url() }}" class="btn btn-block btn-outline-success">
-            {{ __('Refresh') }} <i class="fa fa-refresh"></i>
-        </a>
-    </td>
+    @if ($file->canceled_at)
+        {{ __('Canceled') }} {{ $file->canceled_at->diffForHumans($file->created_at) }}
+    @else
+        {{ __($file->in_process ? 'Initializing' : 'On queue') }}...
+    @endif
 @elseif($file->done)
-    <td>{{ __('Finished') }} {{ $file->updated_at->diffForHumans($file->created_at) }}</td>
-    <td>
-        <a href="{{ route('files.show', $file->id) }}" class="btn btn-block btn-outline-success">
-            <i class="fa fa-download mr-2"></i>
-            {{ __('Download') }}
-        </a>
-    </td>
+    {{ __('Finished') }} {{ $file->updated_at->diffForHumans($file->created_at) }}
 @else
-    <td>
-        <small>{{ __(\GeoLV\Jobs\ProcessGeocodingFile::isProcessing($file) ? 'Processing' : 'Paused (On queue)') }}: {{ number_format($file->progress, 1) }}%</small>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: {{ $file->progress }}%"></div>
+    @if ($file->canceled_at)
+        <small>
+            {{ __('Canceled') }}:
+            ({{$file->offset }} / {{ $file->count }})
+        </small>
+    @else
+        <small>
+            {{ __($file->in_process ? 'Processing' : 'Paused (On queue)') }}:
+            ({{$file->offset }} / {{ $file->count }})
+        </small>
+    @endif
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ $file->progress }}%">
+            {{ number_format($file->progress, 1) }}%
         </div>
-    </td>
-    <td>
-        <a href="{{ route('files.show', $file->id) }}" class="btn btn-block btn-outline-warning">
-            <i class="fa fa-download mr-2"></i>
-            {{ __('Download') }} <b>{{ __('partial') }}</b>
-        </a>
-    </td>
+    </div>
 @endif

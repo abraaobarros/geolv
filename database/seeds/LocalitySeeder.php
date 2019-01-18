@@ -17,6 +17,8 @@ class LocalitySeeder extends Seeder
         $shapefile = new ShapeFile(storage_path('app/shapefiles/brazil/localities.shp'));
         $progress = new ProgressBar($this->command->getOutput(), 5565);
 
+        Locality::truncate();
+
         foreach ($shapefile as $record) {
             $this->fromShapeFileRecord($record)->save();
             $progress->advance();

@@ -33,6 +33,10 @@ $router->group(['middleware' => ['auth', 'verified']], function (Router $router)
         ->name('files.prioritize');
 
     $router
+        ->post('files/{files}/cancel', 'GeocodingFileController@cancel')
+        ->name('files.cancel');
+
+    $router
         ->resource('users', 'UsersController');
 
 });

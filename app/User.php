@@ -2,6 +2,7 @@
 
 namespace GeoLV;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -15,13 +16,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property \Illuminate\Support\Collection|GeocodingFile[] files
  * @property string role
  * @property int id
- * @property \Carbon\Carbon updated_at
+ * @property Carbon updated_at
+ * @property Carbon email_verified_at
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
     const ADMIN_ROLE = 'admin';
+    const DEV_ROLE = 'dev';
 
     /**
      * The attributes that are mass assignable.
@@ -38,7 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'role'
     ];
 
     public function getLastUpdateAttribute()
@@ -57,6 +60,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isAdmin()
     {
-        return $this->role == static::ADMIN_ROLE;
+        return ($this->role == static::ADMIN_ROLE) || $this->isDev();
+    }
+
+    public function isDev()
+    {
+        return $this->role == static::DEV_ROLE;
     }
 }

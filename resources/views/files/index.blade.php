@@ -15,7 +15,7 @@
                     Geolocalizar novo arquivo
                 </a>
 
-                <a href="{{ request()->url() }}" class="btn btn-outline-success">
+                <a href="{{ request()->fullUrl() }}" class="btn btn-outline-success">
                     <i class="fa fa-refresh mr-2"></i> Atualizar
                 </a>
 
@@ -35,13 +35,12 @@
                             @can('view', GeoLV\User::class)
                                 <th style="min-width: 100px;">{{ __('Autor') }}</th>
                             @endcan
-                            <th>{{ __('Created at') }}</th>
+                            <th class="d-none d-md-block">{{ __('Created at') }}</th>
                             @can('prioritize', \GeoLV\GeocodingFile::class)
                                 <th width="100px">{{ __('Priority') }}</th>
                             @endcan
                             <th width="300px">{{ __('Status') }}</th>
-                            <th style="min-width: 160px;">{{ __('Actions') }}</th>
-                            <th>{{ __('Remove') }}</th>
+                            <th>{{ __('Actions') }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -53,20 +52,20 @@
                         @endif
 
                         @foreach($files as $file)
-                            <tr>
+                            <tr class="{{ $file->canceled_at? 'table-warning' : null }}">
                                 <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
                                 @can('view', GeoLV\User::class)
                                     <td>{{ $file->user->name }}</td>
                                 @endcan
-                                <td>{{ $file->created_at->diffForHumans() }}</td>
+                                <td class="d-none d-md-block">{{ $file->created_at->diffForHumans() }}</td>
                                 @can('prioritize', \GeoLV\GeocodingFile::class)
                                     <td>
-                                        @if(!$file->done)
+                                        @if(!$file->done && !$file->canceled_at)
                                             <form action="{{ route('files.prioritize', $file->id) }}" method="post"
                                                   class="d-inline-block">
                                                 @csrf
 
-                                                <div class="input-group input-group-sm mb-3">
+                                                <div class="input-group input-group-sm">
                                                     <input type="number" class="form-control" name="priority"
                                                            value="{{ $file->priority }}" min="0" step="1"/>
                                                     <div class="input-group-append">
@@ -89,18 +88,11 @@
                                         @endif
                                     </td>
                                 @endcan
-                                @include('files.status')
                                 <td>
-                                    <form action="{{ route('files.destroy', $file->id) }}" method="post"
-                                          class="d-inline-block">
-                                        @csrf
-
-                                        <input type="hidden" name="_method" value="DELETE"/>
-                                        <button type="submit" class="btn btn-outline-danger" data-toggle="tooltip"
-                                                data-placement="right" title="{{ __('Remove file') }}">
-                                            <i class="fa fa-trash-o"></i>
-                                        </button>
-                                    </form>
+                                    @include('files.status')
+                                </td>
+                                <td>
+                                    @include('files.actions')
                                 </td>
                             </tr>
                         @endforeach

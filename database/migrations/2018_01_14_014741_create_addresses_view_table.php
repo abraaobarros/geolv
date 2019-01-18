@@ -13,7 +13,7 @@ class CreateAddressesViewTable extends Migration
     public function up()
     {
         DB::statement('
-            CREATE VIEW addresses_view AS 
+            CREATE OR REPLACE VIEW addresses_view AS 
               SELECT 
                 a.*,
                 s.id AS search_id,

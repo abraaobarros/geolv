@@ -2,7 +2,9 @@
 
 namespace GeoLV;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Class GeocodingFile
@@ -26,13 +28,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string delimiter
  * @property integer priority
  * @property bool done
+ * @property \Carbon\Carbon canceled_at
  * @method static GeocodingFile|Model create($data)
+ * @method static Builder nextProcessable()
  */
 class GeocodingFile extends Model
 {
     protected $fillable = [
         'path',
-        'email',
         'offset',
         'count',
         'delimiter',
@@ -40,7 +43,8 @@ class GeocodingFile extends Model
         'header',
         'indexes',
         'fields',
-        'priority'
+        'priority',
+        'canceled_at'
     ];
 
     protected $casts = [
@@ -50,9 +54,24 @@ class GeocodingFile extends Model
         'priority'  => 'int'
     ];
 
+    protected $dates = [
+        'canceled_at',
+        'created_at',
+        'updated_at'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function scopeNextProcessable(Builder $query)
+    {
+        return $query
+            ->where('done', false)
+            ->whereNull('canceled_at')
+            ->orderBy('priority', 'desc')
+            ->orderBy('created_at', 'asc');
     }
 
     public function getOutputPathAttribute()
@@ -82,7 +101,30 @@ class GeocodingFile extends Model
 
     public function getProgressAttribute()
     {
-        return ($this->offset / $this->count) * 100;
+        try {
+            return ($this->offset / $this->count) * 100;
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    public function getInProcessAttribute()
+    {
+        $next = static::nextProcessable()->first();
+        return $next && $this->id == $next->id;
+    }
+
+    public function toggleCancel()
+    {
+        if ($this->canceled_at) {
+            $this->canceled_at = null;
+        } else {
+            $this->canceled_at = Carbon::now();
+        }
+
+        $this->save();
+
+        return $this->canceled_at;
     }
 
 }

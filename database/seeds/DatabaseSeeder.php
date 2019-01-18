@@ -1,6 +1,9 @@
 <?php
 
+use GeoLV\GeocodingFile;
+use GeoLV\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,5 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(LocalitySeeder::class);
+        $this->call(UsersSeeder::class);
+        $this->call(FilesSeeder::class);
     }
 }

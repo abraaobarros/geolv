@@ -70,5 +70,13 @@
   "Remove": "Remover",
   "Files": "Arquivos",
   "Paused (On queue)": "Pausado (em fila)",
-  "Initializing": "Inicializando"
+  "Canceled": "Cancelado",
+  "Cancel file": "Cancelar arquivo",
+  "Initializing": "Inicializando",
+  "Resume file": "Retomar arquivo",
+  "Your file has been successfully processed!": "O seu arquivo foi processo com sucesso!",
+  "Download file": "Baixar arquivo",
+  "Process canceled": "Processo cancelado",
+  "Could not process your file.": "Não foi possível processar o seu arquivo.",
+  "Process finished": "Processo concluído"
 }

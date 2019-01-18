@@ -1,12 +1,9 @@
 @component('mail::message')
-# CSV Pronto!
+# {{ __('Process finished') }}
 
-O seu arquivo foi processo com sucesso!
+{{ __('Your file has been successfully processed!') }}
 
-@component('mail::button', ['url' => route('files.show', $file->id)])
-    Clique para baixar
+@component('mail::markdown::button', ['url' => route('files.show', $file->id)])
+    {{ __('Download file') }}
 @endcomponent
-
-Atenciosamente,<br>
-{{ config('app.name') }}
 @endcomponent

@@ -2,9 +2,10 @@
 
 namespace GeoLV\Http\Controllers;
 
+use Geocoder\Exception\Exception;
 use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\UploadRequest;
-use GeoLV\Jobs\ProcessGeocodingFile;
+use GeoLV\Jobs\GeocodeNextFile;
 use GeoLV\Mail\DoneGeocodingFile;
 use GeoLV\User;
 use Illuminate\Http\Request;
@@ -17,9 +18,9 @@ class GeocodingFileController extends Controller
         $user = auth()->user();
         $query = $user->can('view', User::class) ? GeocodingFile::with('user') : $user->files();
         $files = $query
-            ->orderBy('priority', 'desc')
             ->orderBy('done', 'asc')
-            ->orderBy('updated_at', 'desc')
+            ->orderBy('priority', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate();
 
         return view('files.index', compact('files'));
@@ -70,7 +71,7 @@ class GeocodingFileController extends Controller
             'indexes' => $indexes
         ]);
 
-        $this->dispatch(new ProcessGeocodingFile());
+        $this->dispatch(new GeocodeNextFile());
 
         return redirect()->route('files.index')->with('upload', true);
     }
@@ -85,14 +86,25 @@ class GeocodingFileController extends Controller
     public function prioritize(Request $request, GeocodingFile $file)
     {
         $this->validate($request, ['priority' => 'integer|min:0']);
-        $this->authorize('prioritize', $file);
+        $this->authorize($file);
 
         $file->priority = $request->get('priority', 0);
         $file->save();
 
-        $this->dispatch(new ProcessGeocodingFile());
+        $this->dispatch(new GeocodeNextFile());
 
-        return redirect()->route('files.index');
+        return redirect()->back();
+    }
+
+    public function cancel(GeocodingFile $file)
+    {
+        $this->authorize($file);
+
+        if ($file->toggleCancel()) {
+            $this->dispatch(new GeocodeNextFile());
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -121,8 +133,4 @@ class GeocodingFileController extends Controller
         return redirect()->back();
     }
 
-    public function email(GeocodingFile $file)
-    {
-        return new DoneGeocodingFile($file);
-    }
 }
