@@ -36,8 +36,8 @@
                     </li>
                 @endcan
                 @can('viewTelescope')
-                    <li class="nav-item{{ request()->is('/users')? ' active': '' }}" target="_blank">
-                        <a class="nav-link" href="{{ route('telescope') }}">Debug</a>
+                    <li class="nav-item{{ request()->is('/users')? ' active': '' }}">
+                        <a class="nav-link" href="{{ route('telescope') }}" target="_blank">Debug</a>
                     </li>
                 @endcan
             </ul>
