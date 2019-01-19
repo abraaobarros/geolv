@@ -49,7 +49,7 @@
                                     <th>Arquivo</th>
                                     <th>Criado</th>
                                     <th width="300px">Status</th>
-                                    <th style="min-width: 150px;">{{ __('Actions') }}</th>
+                                    <th>{{ __('Actions') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -61,7 +61,7 @@
                                 @endif
 
                                 @foreach($files as $file)
-                                    <tr class="{{ $file->canceled_at ? 'table-dark' : null }}">
+                                    <tr>
                                         <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
                                         <td>{{ $file->created_at->diffForHumans() }}</td>
                                         <td>@include('files.status')</td>

@@ -52,7 +52,7 @@
                         @endif
 
                         @foreach($files as $file)
-                            <tr class="{{ $file->canceled_at? 'table-warning' : null }}">
+                            <tr>
                                 <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
                                 @can('view', GeoLV\User::class)
                                     <td>{{ $file->user->name }}</td>
