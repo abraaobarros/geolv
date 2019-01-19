@@ -35,6 +35,8 @@ class Search extends Model
         'state'
     ];
 
+    private $locality_obj;
+
     public function addresses(): BelongsToMany
     {
         return $this->belongsToMany(Address::class);
@@ -81,14 +83,18 @@ class Search extends Model
      */
     public function findLocality()
     {
-        return Locality::where(function (Builder $q) {
-            $q->whereRaw('lower(name) = ?', [mb_strtolower($this->locality)]);
+        if (empty($this->locality_obj)) {
+            $this->locality_obj = Locality::where(function (Builder $q) {
+                $q->whereRaw('lower(name) = ?', [mb_strtolower($this->locality)]);
 
-            if (!empty($state))
-                $q->whereRaw('upper(state) = ?', [mb_strtoupper($this->state)]);
+                if (!empty($state))
+                    $q->whereRaw('upper(state) = ?', [mb_strtoupper($this->state)]);
 
-            return $q;
-        })->first();
+                return $q;
+            })->first();
+        }
+
+        return $this->locality_obj;
     }
 
     public function toRequestFormat()
