@@ -6,7 +6,7 @@ use GeoLV\Address;
 use GeoLV\AddressCollection;
 use GeoLV\Geocode\Clusters\ClusterWithScipy;
 use GeoLV\Search;
-use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver;
+use TomLingham\Searchy\SearchDrivers\FuzzySearchUnicodeDriver as SearchDriver;
 
 class GeoLVSearch
 {
@@ -29,12 +29,14 @@ class GeoLVSearch
         'search_text::search_locality::search_postal_code',
     ];
 
+    const MAX_RESULTS = 30;
+
     /**
      * MatchQuerySearchDriver constructor.
      */
     public function __construct()
     {
-        $this->searchDriver = new FuzzySearchDriver('addresses_view', $this->searchColumns, $this->relevanceFieldName, ['*']);
+        $this->searchDriver = new SearchDriver('addresses_view', $this->searchColumns, $this->relevanceFieldName, ['*']);
     }
 
     /**
@@ -63,7 +65,11 @@ class GeoLVSearch
     private function searchResults(Search $search): AddressCollection
     {
         return Address::hydrate(
-            $this->searchDriver->query($search->address)->get()->toArray()
+            $this->searchDriver
+                ->query($search->address)
+                ->limit(static::MAX_RESULTS)
+                ->get()
+                ->toArray()
         );
     }
 
