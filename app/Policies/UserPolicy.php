@@ -23,12 +23,12 @@ class UserPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param  \GeoLV\User  $user
-     * @param  \GeoLV\User  $model
+     * @param User $auth
+     * @param User $model
      * @return mixed
      */
-    public function delete(User $model, User $user)
+    public function destroy(User $auth, User $model)
     {
-        return $model->id == $user->id || $user->isAdmin();
+        return $model->id == $auth->id || $auth->isAdmin();
     }
 }
