@@ -68,7 +68,7 @@ class GeoLVSearch
     private function searchResults(Search $search): AddressCollection
     {
         return Address::hydrate(
-            $this->searchDriver->query($search->address)->get()->toArray()
+            $this->searchDriver->query($search->address)->get()->take(static::MAX_RESULTS)->toArray()
         );
     }
 

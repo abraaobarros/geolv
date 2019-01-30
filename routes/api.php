@@ -4,7 +4,7 @@
 
 $router
     ->get('geocode', 'Api\GeocodingController@geocode')
-    ->middleware('auth:api');
+    ->middleware('auth.basic', 'api');
 
 
 

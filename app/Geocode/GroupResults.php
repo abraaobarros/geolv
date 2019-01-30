@@ -42,7 +42,6 @@ class GroupResults implements Provider
                     foreach ($results as $result)
                         $list[] = $result;
                 }
-
             } catch (\Throwable $e) {
                 //
             }
