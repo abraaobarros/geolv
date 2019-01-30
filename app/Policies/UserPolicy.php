@@ -27,8 +27,8 @@ class UserPolicy
      * @param  \GeoLV\User  $model
      * @return mixed
      */
-    public function delete(User $user, User $model)
+    public function delete(User $model, User $user)
     {
-        return $user->id == $model->id || $user->isAdmin();
+        return $model->id == $user->id || $user->isAdmin();
     }
 }
