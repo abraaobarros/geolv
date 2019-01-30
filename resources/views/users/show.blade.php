@@ -25,9 +25,11 @@
                             <dt class="col-sm-3">{{ __('E-Mail Address') }}</dt>
                             <dd class="col-sm-9">
                                 {{ $user->email }}
+                                @if($user->email_verified_at)
                                 <span class="badge badge-success ml-2">
                                     <i class="fa fa-check-square-o mr-2"></i> {{ __('Verified') }}
                                 </span>
+                                @endif
                             </dd>
 
                             <dt class="col-sm-3">{{ __('Created at') }}</dt>
