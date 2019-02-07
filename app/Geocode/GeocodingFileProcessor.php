@@ -92,26 +92,29 @@ class GeocodingFileProcessor
         $text = Dictionary::address($this->get($file, $row, 'text'));
         $locality = $this->get($file, $row, 'locality');
         $postalCode = $this->get($file, $row, 'postal_code');
-        $results = $this->geocoder->geocode($text, $locality, $postalCode)->insideLocality();
-        $result = $results->first();
+        $emptyRow = empty($postalCode) ? (empty($text) && empty($locality)) : false;
 
-        if ($result) {
-            foreach ($file->fields as $field) {
-                if ($field == 'dispersion')
-                    $value = $results->inMainCluster()->calculateDispersion();
-                else if ($field == 'clusters_count')
-                    $value = $results->getClustersCount();
-                else if ($field == 'providers_count')
-                    $value = $results->inMainCluster()->getProvidersCount();
-                else
-                    $value = $result->{$field};
+        if (!$emptyRow) {
+            $results = $this->geocoder->geocode($text, $locality, $postalCode)->insideLocality();
+            $result = $results->first();
+            if ($result) {
+                foreach ($file->fields as $field) {
+                    if ($field == 'dispersion')
+                        $value = $results->inMainCluster()->calculateDispersion();
+                    else if ($field == 'clusters_count')
+                        $value = $results->getClustersCount();
+                    else if ($field == 'providers_count')
+                        $value = $results->inMainCluster()->getProvidersCount();
+                    else
+                        $value = $result->{$field};
 
-                array_push($row, $value);
+                    array_push($row, $value);
+                }
+
+                $this->output->insertOne($row);
+            } else {
+                $this->errorOutput->insertOne($row);
             }
-
-            $this->output->insertOne($row);
-        } else {
-            $this->errorOutput->insertOne($row);
         }
     }
 
