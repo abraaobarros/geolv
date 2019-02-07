@@ -81,12 +81,22 @@ class GeocodingFileProcessor
         return $size;
     }
 
+    /**
+     * @param $file
+     * @param $row
+     * @throws CannotInsertRecord
+     */
     private function processHeader($file, $row)
     {
         $this->output->insertOne(array_merge($row, $file->fields));
         $this->errorOutput->insertOne(array_merge($row, $file->fields));
     }
 
+    /**
+     * @param GeocodingFile $file
+     * @param array $row
+     * @throws CannotInsertRecord
+     */
     private function processRow(GeocodingFile $file, array $row)
     {
         $text = Dictionary::address($this->get($file, $row, 'text'));
@@ -95,8 +105,9 @@ class GeocodingFileProcessor
         $emptyRow = empty($postalCode) ? (empty($text) && empty($locality)) : false;
 
         if (!$emptyRow) {
-            $results = $this->geocoder->geocode($text, $locality, $postalCode)->insideLocality();
-            $result = $results->first();
+            $results = $this->geocoder->geocode($text, $locality, $postalCode);
+            $result = !empty($locality) ? $results->insideLocality()->first() : $results->first();
+
             if ($result) {
                 foreach ($file->fields as $field) {
                     if ($field == 'dispersion')

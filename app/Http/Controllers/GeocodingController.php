@@ -3,6 +3,7 @@
 namespace GeoLV\Http\Controllers;
 
 use GeoLV\Address;
+use GeoLV\AddressCollection;
 use GeoLV\Geocode\Dictionary;
 use GeoLV\Geocode\GeocoderProvider;
 use GeoLV\Http\Requests\GeocodingRequest;
@@ -35,16 +36,16 @@ class GeocodingController extends Controller
     public function geocode(GeocodingRequest $request)
     {
         $text = Dictionary::address($request->get('text'));
-        $locality = $request->get('locality');
+        $locality = trim($request->get('locality'));
         $postalCode = $request->get('postal_code');
         $localities = Locality::get(['name', 'state']);
 
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
-        $outside = $results->outsideLocality();
+        $outside = !empty($locality)? $results->outsideLocality() : new AddressCollection();
         $clustersCount = $results->getClustersCount();
         $providersCount = $results->inMainCluster()->getProvidersCount();
 
-        $results = $results->insideLocality();
+        $results = !empty($locality)? $results->insideLocality() : $results;
         $dispersion = $results->inMainCluster()->calculateDispersion();
 
         return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities', 'outside', 'dispersion', 'clustersCount', 'providersCount'));
