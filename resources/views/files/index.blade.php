@@ -55,7 +55,7 @@
                             <tr>
                                 <td><span class="badge badge-default">{{ $file->name }}</span></td>
                                 @can('view', GeoLV\User::class)
-                                    <td>{{ $file->user->name }}</td>
+                                    <td><a href="{{ route('users.show', $file->user_id) }}">{{ $file->user->name }}</a></td>
                                 @endcan
                                 <td class="d-none d-md-block">{{ $file->created_at->diffForHumans() }}</td>
                                 @can('prioritize', \GeoLV\GeocodingFile::class)

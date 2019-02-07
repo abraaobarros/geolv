@@ -73,7 +73,7 @@ class GeocodingFile extends Model
     public function getNameAttribute()
     {
         if (empty($this->attributes['name']))
-            return $this->path;
+            return str_replace('pre-processing/', '', $this->path);;
 
         return $this->attributes['name'];
     }
