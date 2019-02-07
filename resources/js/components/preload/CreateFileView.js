@@ -16,6 +16,7 @@ export default class CreateFileView extends View {
         this.input('geocode_file').change(() => this.parse());
         this.input('delimiter').change(() => this.parse());
         this.input('header').change(() => this.displayResults());
+        this.input('providers[]').change(() => this.displayCount());
         this.get('radioAddress').click(() => this.updateMode());
         this.get('radioLocality').click(() => this.updateMode());
         this.get('radioCEP').click(() => this.updateMode());
@@ -54,12 +55,14 @@ export default class CreateFileView extends View {
     }
 
     displayCount() {
-        let price = this.count / 1000;
+        let providers = this.input('providers[]').filter(':checked').length;
+        let price = 0.5 * (this.count / 1000) * providers;
+
         this.get('price').html(price.toFixed(2));
-        this.get('providers_count').html(4);
+        this.get('providers_count').html(providers);
         this.input('count').val(this.count);
 
-        let time = Math.ceil(this.count / 20);
+        let time = Math.ceil(this.count / 10);
         if (time == 0)
             this.get('time').html('-');
         else

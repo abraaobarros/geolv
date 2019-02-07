@@ -26,7 +26,7 @@ export default class View {
     }
 
     input (name) {
-        return this.find(`input[name=${name}],select[name=${name}]`)
+        return this.find(`input[name='${name}'],select[name='${name}']`)
     }
 
     // noinspection JSUnusedGlobalSymbols

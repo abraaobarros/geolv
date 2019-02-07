@@ -44,7 +44,7 @@
                                                            id="{{ $field }}_check"
                                                             {{ in_array($field, $default) ? 'checked' : '' }}>
                                                     <label class="custom-control-label" for="{{ $field }}_check">
-                                                        {{ trans("validation.attributes.$field") }}
+                                                        {{ ucfirst(trans("validation.attributes.$field")) }}
                                                     </label>
                                                 </div>
                                             @endforeach
@@ -96,8 +96,8 @@
                                                            value="{{ $provider }}"
                                                            id="{{ $provider }}_check"
                                                            checked>
-                                                    <label class="custom-control-label" for="{{ $field }}_check">
-                                                        {{ trans("validation.attributes.$provider") }}
+                                                    <label class="custom-control-label" for="{{ $provider }}_check">
+                                                        {{ ucfirst(trans("validation.attributes.$provider")) }}
                                                     </label>
                                                 </div>
                                             @endforeach
