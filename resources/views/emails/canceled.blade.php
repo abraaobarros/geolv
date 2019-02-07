@@ -4,7 +4,7 @@
 {{ __('Could not process your file.') }}
 
 @component('mail::button', ['url' => route('files.download', $file->id)])
-{{ __('Download') }} <b>{{ __('partial') }}</b>
+{{ __('Download') }} <u>{{ __('partial') }}</u>
 @endcomponent
 
 @if($receiver->isDev())
