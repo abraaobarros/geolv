@@ -10,6 +10,7 @@ use Location\Coordinate;
  * Class Address
  * @package GeoLV
  * @method static Search|Model firstOrCreate(array $data)
+ * @method static AddressCollection hydrate(array $toArray)
  * @property string street_name
  * @property string street_number
  * @property string postal_code
@@ -17,6 +18,7 @@ use Location\Coordinate;
  * @property string sub_locality
  * @property string country_code
  * @property string country_name
+ * @property string provider
  * @property int total_relevance
  * @property double latitude
  * @property double longitude
@@ -28,6 +30,7 @@ use Location\Coordinate;
  * @property int search_id
  * @property-read array algorithm
  * @property-read Coordinate coordinate
+ * @property-read Search search
  */
 class Address extends Model
 {
@@ -49,9 +52,16 @@ class Address extends Model
         'longitude' => 'double'
     ];
 
+    protected $appends = ['state'];
+
     public function search(): BelongsTo
     {
         return $this->belongsTo(Search::class);
+    }
+
+    public function getStateAttribute()
+    {
+        return $this->search->state;
     }
 
     public function getPostalCodeAttribute($value)

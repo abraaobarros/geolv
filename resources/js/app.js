@@ -2,7 +2,7 @@ require('./bootstrap');
 
 import View from "./components/View";
 import GeoLVMap from "./components/GeoLVMap";
-import PreloadView from "./components/preload/PreloadView";
+import CreateFileView from "./components/preload/CreateFileView";
 
 window.initMap = function () {
 
@@ -15,10 +15,11 @@ window.initMap = function () {
 
 window.initPreload = function () {
 
-    View.render(PreloadView, '#preload-container', {
+    View.render(CreateFileView, '#preload-container', {
         label: '.form-control-file',
         table: '.result-table',
         price: '.price-value',
+        providers_count: '.providers-count',
         time: '.time-value',
         preview: '.preview-container',
         preview_hide: '.preview-container-hide',

@@ -14,7 +14,7 @@ class CreateAddressSearchTable extends Migration
     public function up()
     {
         Schema::create('address_search', function (Blueprint $table) {
-            $table->increments('id');
+            $table->primary(['address_id', 'search_id']);
             $table->integer('address_id')->unsigned()->index();
             $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade');
             $table->integer('search_id')->unsigned()->index();

@@ -2,14 +2,15 @@
 
 namespace GeoLV\Http\Controllers;
 
-use Geocoder\Exception\Exception;
 use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\UploadRequest;
 use GeoLV\Jobs\GeocodeNextFile;
-use GeoLV\Mail\DoneGeocodingFile;
 use GeoLV\User;
+use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\FileNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GeocodingFileController extends Controller
 {
@@ -32,6 +33,7 @@ class GeocodingFileController extends Controller
             'street_name',
             'street_number',
             'locality',
+            'state',
             'postal_code',
             'sub_locality',
             'country_code',
@@ -51,23 +53,29 @@ class GeocodingFileController extends Controller
             'dispersion'
         ];
 
-        return view('files.preload', compact('fields', 'default'));
+        $providers = [
+            'google_maps',
+            'bing_maps',
+            'arcgis_online',
+            'here_geocoder'
+        ];
+
+        return view('files.create', compact('fields', 'providers', 'default'));
     }
 
     public function store(UploadRequest $request)
     {
         $indexes = json_decode($request->get('indexes'), true);
-        $path = $request
-            ->file('geocode_file')
-            ->store('pre-processing', ['disk' => 's3']);
+        $file = $request->file('geocode_file');
 
-        /** @var GeocodingFile $file */
         auth()->user()->files()->create([
-            'path' => $path,
+            'path' => $file->store('pre-processing', ['disk' => 's3']),
+            'name'  => $file->getClientOriginalName(),
             'header' => $request->has('header'),
             'fields' => $request->get('fields'),
             'count' => $request->get('count'),
             'delimiter' => $request->get('delimiter'),
+            'providers' => $request->get('providers'),
             'indexes' => $indexes
         ]);
 
@@ -100,7 +108,7 @@ class GeocodingFileController extends Controller
     {
         $this->authorize($file);
 
-        if ($file->toggleCancel()) {
+        if (!$file->toggleCancel()) {
             $this->dispatch(new GeocodeNextFile());
         }
 
@@ -112,11 +120,31 @@ class GeocodingFileController extends Controller
      * @return mixed
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(GeocodingFile $file)
+    public function download(GeocodingFile $file)
     {
         $this->authorize('view', $file);
 
-        return Storage::disk('s3')->download($file->output_path);
+        try {
+            return Storage::disk('s3')->download($file->output_path);
+        } catch (FileNotFoundException $exception) {
+            throw new NotFoundHttpException('file not found');
+        }
+    }
+
+    /**
+     * @param GeocodingFile $file
+     * @return mixed
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function downloadErrors(GeocodingFile $file)
+    {
+        $this->authorize('view', $file);
+
+        try {
+            return Storage::disk('s3')->download($file->error_output_path);
+        } catch (FileNotFoundException $exception) {
+            throw new NotFoundHttpException('file not found');
+        }
     }
 
     /**

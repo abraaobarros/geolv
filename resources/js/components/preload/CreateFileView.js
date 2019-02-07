@@ -3,7 +3,7 @@ import PreviewTableView from "./PreviewTableView";
 import TableView from "../TableView";
 import GeocodeBtnView from "./GeocodeBtnView";
 
-export default class PreloadView extends View {
+export default class CreateFileView extends View {
 
     get hasHeader() {
         return this.input('header').prop('checked');
@@ -56,6 +56,7 @@ export default class PreloadView extends View {
     displayCount() {
         let price = this.count / 1000;
         this.get('price').html(price.toFixed(2));
+        this.get('providers_count').html(4);
         this.input('count').val(this.count);
 
         let time = Math.ceil(this.count / 20);

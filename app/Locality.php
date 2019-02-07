@@ -17,6 +17,7 @@ use Location\Coordinate;
  * @property float min_lng
  * @property float max_lat
  * @property float max_lng
+ * @method static get(array $array)
  */
 class Locality extends Model
 {

@@ -196,6 +196,10 @@ return [
         'has_all_attributes' => 'Contém todos os atributos',
         'dispersion' => 'Dispersão',
         'clusters_count' => 'Quantidade de Clusters',
-        'providers_count' => 'Quantidade de Provedores no Cluster Principal'
+        'providers_count' => 'Quantidade de Provedores no Cluster Principal',
+        'google_maps' => 'Google Maps',
+        'bing_maps' => 'Bing Maps',
+        'arcgis_online' => 'ArcGIS Online',
+        'here_geocoder' => 'Here Geocoder',
     ],
 ];

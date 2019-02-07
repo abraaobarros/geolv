@@ -27,7 +27,7 @@ class GeocodingController extends Controller
     {
         $results = collect();
         $match = null;
-        $localities = Locality::all();
+        $localities = Locality::get(['name', 'state']);
 
         return view('geocode', compact('results', 'match', 'localities'));
     }
@@ -37,7 +37,7 @@ class GeocodingController extends Controller
         $text = Dictionary::address($request->get('text'));
         $locality = $request->get('locality');
         $postalCode = $request->get('postal_code');
-        $localities = Locality::all();
+        $localities = Locality::get(['name', 'state']);
 
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
         $outside = $results->outsideLocality();

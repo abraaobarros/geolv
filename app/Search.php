@@ -5,6 +5,7 @@ namespace GeoLV;
 use Geocoder\Query\GeocodeQuery;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -28,7 +29,7 @@ class Search extends Model
     protected $fillable = [
         'text',
         'locality',
-        'postal_code',
+        'postal_code'
     ];
 
     protected $appends = [
@@ -40,6 +41,11 @@ class Search extends Model
     public function addresses(): BelongsToMany
     {
         return $this->belongsToMany(Address::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getAddressAttribute()

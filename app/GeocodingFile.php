@@ -29,12 +29,14 @@ use Illuminate\Support\Carbon;
  * @property integer priority
  * @property bool done
  * @property \Carbon\Carbon canceled_at
+ * @property string error_output_path
  * @method static GeocodingFile|Model create($data)
  * @method static Builder nextProcessable()
  */
 class GeocodingFile extends Model
 {
     protected $fillable = [
+        'name',
         'path',
         'offset',
         'count',
@@ -44,14 +46,16 @@ class GeocodingFile extends Model
         'indexes',
         'fields',
         'priority',
-        'canceled_at'
+        'canceled_at',
+        'providers'
     ];
 
     protected $casts = [
         'header'    => 'bool',
+        'priority'  => 'int',
         'indexes'   => 'array',
         'fields'    => 'array',
-        'priority'  => 'int'
+        'providers' => 'array'
     ];
 
     protected $dates = [
@@ -63,6 +67,14 @@ class GeocodingFile extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getNameAttribute()
+    {
+        if (empty($this->attributes['name']))
+            return $this->path;
+
+        return $this->attributes['name'];
     }
 
     public function scopeNextProcessable(Builder $query)
@@ -80,6 +92,12 @@ class GeocodingFile extends Model
         return "post-processing/{$hashCode}.csv";
     }
 
+    public function getErrorOutputPathAttribute()
+    {
+        $hashCode = sha1($this->created_at->toDateTimeString());
+        return "post-processing/{$hashCode}-error.csv";
+    }
+
     public function getInitializingAttribute()
     {
         return $this->offset == 0;
@@ -92,11 +110,6 @@ class GeocodingFile extends Model
         } catch (\Exception $e) {
             return 0;
         }
-    }
-
-    public function getFileNameAttribute()
-    {
-        return str_replace('pre-processing/', '', $this->path);
     }
 
     public function getProgressAttribute()

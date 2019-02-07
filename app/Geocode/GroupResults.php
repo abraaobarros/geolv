@@ -8,6 +8,7 @@ use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
+use Illuminate\Support\Facades\Log;
 
 class GroupResults implements Provider
 {
@@ -43,7 +44,7 @@ class GroupResults implements Provider
                         $list[] = $result;
                 }
             } catch (\Throwable $e) {
-                //
+                Log::error('[' . $provider->getName() . '] ' . $e->getMessage());
             }
         }
 

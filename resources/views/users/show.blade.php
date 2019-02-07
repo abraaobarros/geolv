@@ -64,7 +64,7 @@
 
                                 @foreach($files as $file)
                                     <tr>
-                                        <td><span class="badge badge-default">{{ $file->file_name }}</span></td>
+                                        <td><span class="badge badge-default">{{ $file->name }}</span></td>
                                         <td>{{ $file->created_at->diffForHumans() }}</td>
                                         <td>@include('files.status')</td>
                                         <td>@include('files.actions')</td>

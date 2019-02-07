@@ -81,6 +81,32 @@
                             </div>
                         </div>
 
+                        <div class="col-md-12 col-sm-12">
+                            <div class="form-group">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Provedores
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            @foreach ($providers as $provider)
+                                                <div class="custom-control custom-checkbox d-inline-block mr-2 ml-2">
+                                                    <input type="checkbox" name="providers[]"
+                                                           class="custom-control-input"
+                                                           value="{{ $provider }}"
+                                                           id="{{ $provider }}_check"
+                                                           checked>
+                                                    <label class="custom-control-label" for="{{ $field }}_check">
+                                                        {{ trans("validation.attributes.$provider") }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </form>
@@ -105,7 +131,7 @@
                                 <small>Preço:</small>
                                 <h4>
                                     US$ <span class="price-value">0.00</span><br/>
-                                    <small class="text-muted">US$ (0.50 / 1,000) x 2 provedores</small>
+                                    <small class="text-muted">US$ (0.50 / 1,000) x <span class="providers-count">4</span> provedores</small>
                                 </h4>
                                 <hr>
                                 <small>Tempo estimado para conclusão:</small>
@@ -141,16 +167,19 @@
                                     </div>
                                     <div class="row">
                                         <div class="custom-control custom-radio mr-2">
-                                            <input type="radio" id="modeRadioAddress" name="mode" class="custom-control-input"
+                                            <input type="radio" id="modeRadioAddress" name="mode"
+                                                   class="custom-control-input"
                                                    checked>
                                             <label class="custom-control-label" for="modeRadioAddress">Endereço</label>
                                         </div>
                                         <div class="custom-control custom-radio mr-2">
-                                            <input type="radio" id="modeRadioLocality" name="mode" class="custom-control-input">
+                                            <input type="radio" id="modeRadioLocality" name="mode"
+                                                   class="custom-control-input">
                                             <label class="custom-control-label" for="modeRadioLocality">Cidade</label>
                                         </div>
                                         <div class="custom-control custom-radio">
-                                            <input type="radio" id="modeRadioCEP" name="mode" class="custom-control-input">
+                                            <input type="radio" id="modeRadioCEP" name="mode"
+                                                   class="custom-control-input">
                                             <label class="custom-control-label" for="modeRadioCEP">CEP</label>
                                         </div>
                                     </div>

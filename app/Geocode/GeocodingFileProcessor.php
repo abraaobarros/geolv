@@ -20,6 +20,11 @@ class GeocodingFileProcessor
     private $output;
 
     /**
+     * @var \League\Csv\AbstractCsv|Writer
+     */
+    private $errorOutput;
+
+    /**
      * @var GeocoderProvider
      */
     private $geocoder;
@@ -37,6 +42,7 @@ class GeocodingFileProcessor
         $this->geocoder = app('geocoder');
         $this->storage = Storage::disk('s3');
         $this->output = Writer::createFromFileObject(new \SplTempFileObject());
+        $this->errorOutput = Writer::createFromFileObject(new \SplTempFileObject());
     }
 
     private function readRecords(GeocodingFile $file, $chunk): ResultSet
@@ -62,9 +68,9 @@ class GeocodingFileProcessor
         foreach ($records as $i => $record) {
             try {
                 if ($i == 0 && $file->offset == 0 && $file->header)
-                    $this->output->insertOne($this->processHeader($file, $record));
+                    $this->processHeader($file, $record);
                 else
-                    $this->output->insertOne($this->processRow($file, $record));
+                    $this->processRow($file, $record);
             } catch (CannotInsertRecord $exception) {}
         }
 
@@ -76,7 +82,8 @@ class GeocodingFileProcessor
 
     private function processHeader($file, $row): array
     {
-        return array_merge($row, $file->fields);
+        $this->output->insertOne(array_merge($row, $file->fields));
+        $this->errorOutput->insertOne(array_merge($row, $file->fields));
     }
 
     private function processRow(GeocodingFile $file, array $row): array
@@ -100,9 +107,11 @@ class GeocodingFileProcessor
 
                 array_push($row, $value);
             }
-        }
 
-        return $row;
+            $this->output->insertOne($row);
+        } else {
+            $this->errorOutput->insertOne($row);
+        }
     }
 
     private function get(GeocodingFile $file, $row, $type)
@@ -127,13 +136,17 @@ class GeocodingFileProcessor
 
     private function uploadOutput(GeocodingFile $file)
     {
-        $output = substr($this->output->getContent(), 0, -1); // removes the last \n
-        $this->storage->append($file->output_path, $output);
+        $outputContent = substr($this->output->getContent(), 0, -1); // removes the last \n
+        $this->storage->append($file->output_path, $outputContent);
+
+        $errorOutputContent = substr($this->errorOutput->getContent(), 0, -1); // removes the last \n
+        $this->storage->append($file->error_output_path, $errorOutputContent);
     }
 
     public function __destruct()
     {
         $this->output = null;
+        $this->errorOutput = null;
     }
 
 }

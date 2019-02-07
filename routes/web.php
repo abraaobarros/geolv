@@ -26,7 +26,15 @@ $router->group(['middleware' => ['auth', 'verified']], function (Router $router)
 
     $router
         ->resource('files', 'GeocodingFileController')
-        ->except(['edit', 'update']);
+        ->except(['show', 'edit', 'update']);
+
+    $router
+        ->get('files/{files}/download', 'GeocodingFileController@download')
+        ->name('files.download');
+
+    $router
+        ->get('files/{files}/download-errors', 'GeocodingFileController@downloadErrors')
+        ->name('files.download-errors');
 
     $router
         ->post('files/{files}/prioritize', 'GeocodingFileController@prioritize')

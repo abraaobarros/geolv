@@ -29,6 +29,7 @@ $factory->define(GeoLV\User::class, function (Faker $faker) {
 $factory->define(GeoLV\GeocodingFile::class, function (Faker $faker) {
     $count = rand(0, 100);
     return [
+        'name' => str_random(10) . '.csv',
         'path' => str_random(10) . '.csv',
         'offset' => $count - rand(0, 50),
         'count' => $count,

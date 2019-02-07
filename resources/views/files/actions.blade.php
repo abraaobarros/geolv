@@ -19,17 +19,39 @@
             @endif
         </form>
     @elseif($file->done)
-        <a href="{{ route('files.show', $file->id) }}" class="btn btn-outline-success w-100">
-            <i class="fa fa-download mr-2"></i>
-            {{ __('Download') }}
-        </a>
+        <div class="btn-group w-100">
+            <a href="{{ route('files.download', $file->id) }}" class="btn btn-outline-success">
+                <i class="fa fa-download mr-2"></i>
+                {{ __('Download') }}
+            </a>
+            <button type="button" class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="max-width: 50px">
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item text-danger" href="{{ route('files.download-errors', $file->id) }}">
+                    {{ __('Download results not found') }}
+                </a>
+            </div>
+        </div>
     @else
-        <a href="{{ route('files.show', $file->id) }}" class="btn btn-outline-warning w-100">
-            <i class="fa fa-download mr-2"></i>
-            <span class="d-sm-none d-md-inline-block">
+        <div class="btn-group w-100">
+            <a href="{{ route('files.download', $file->id) }}" class="btn btn-outline-warning">
+                <i class="fa fa-download mr-2"></i>
+                <span class="d-sm-none d-md-inline-block">
                 {{ __('Download') }} <b>{{ __('partial') }}</b>
-            </span>
-        </a>
+                </span>
+            </a>
+            <button type="button" class="btn btn-outline-warning dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="max-width: 50px">
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item text-danger" href="{{ route('files.download-errors', $file->id) }}">
+                    {{ __('Download results not found') }}  <b>({{ __('partial') }})</b>
+                </a>
+            </div>
+        </div>
         <form action="{{ route('files.cancel', $file->id) }}" method="post" class="d-inline-block ml-1">
             @csrf
 
