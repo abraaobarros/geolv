@@ -64,6 +64,7 @@ class GeocodingFileProcessor
     {
         $records = $this->readRecords($file, $chunk);
         $size = count($records);
+        $this->geocoder->setUpProviders($file->providers);
 
         foreach ($records as $i => $record) {
             try {

@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property bool done
  * @property \Carbon\Carbon canceled_at
  * @property string error_output_path
+ * @property array providers
  * @method static GeocodingFile|Model create($data)
  * @method static Builder nextProcessable()
  */
