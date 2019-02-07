@@ -80,13 +80,13 @@ class GeocodingFileProcessor
         return $size;
     }
 
-    private function processHeader($file, $row): array
+    private function processHeader($file, $row)
     {
         $this->output->insertOne(array_merge($row, $file->fields));
         $this->errorOutput->insertOne(array_merge($row, $file->fields));
     }
 
-    private function processRow(GeocodingFile $file, array $row): array
+    private function processRow(GeocodingFile $file, array $row)
     {
         $text = Dictionary::address($this->get($file, $row, 'text'));
         $locality = $this->get($file, $row, 'locality');
