@@ -32,6 +32,7 @@ use Illuminate\Support\Carbon;
  * @property string error_output_path
  * @property array providers
  * @property string name
+ * @property string error_name
  * @method static GeocodingFile|Model create($data)
  * @method static Builder nextProcessable()
  */
