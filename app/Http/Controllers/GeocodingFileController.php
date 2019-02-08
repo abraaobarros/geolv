@@ -16,6 +16,7 @@ class GeocodingFileController extends Controller
 {
     public function index()
     {
+        /** @var User $user */
         $user = auth()->user();
         $query = $user->can('view', User::class) ? GeocodingFile::with('user') : $user->files();
         $files = $query
@@ -29,48 +30,25 @@ class GeocodingFileController extends Controller
 
     public function create()
     {
-        $fields = [
-            'street_name',
-            'street_number',
-            'locality',
-            'state',
-            'postal_code',
-            'sub_locality',
-            'country_code',
-            'country_name',
-            'provider',
-            'latitude',
-            'longitude',
-            'dispersion',
-            'clusters_count',
-            'providers_count',
-            'levenshtein_match_street_name'
-        ];
+        $fields = ['street_name', 'street_number', 'locality', 'state', 'postal_code', 'sub_locality', 'country_code',
+            'country_name', 'provider', 'latitude', 'longitude', 'dispersion', 'clusters_count', 'providers_count',
+            'levenshtein_match_street_name'];
+        $default = ['latitude', 'longitude', 'dispersion'];
+        $providers = ['google_maps', 'here_geocoder', 'bing_maps', 'arcgis_online'];
+        $defaultProviders = ['google_maps', 'here_geocoder'];
 
-        $default = [
-            'latitude',
-            'longitude',
-            'dispersion'
-        ];
-
-        $providers = [
-            'google_maps',
-            'bing_maps',
-            'arcgis_online',
-            'here_geocoder'
-        ];
-
-        return view('files.create', compact('fields', 'providers', 'default'));
+        return view('files.create', compact('fields', 'providers', 'default', 'defaultProviders'));
     }
 
     public function store(UploadRequest $request)
     {
         $indexes = json_decode($request->get('indexes'), true);
         $file = $request->file('geocode_file');
+        $user = $request->user();
 
-        auth()->user()->files()->create([
+        $user->files()->create([
             'path' => $file->store('pre-processing', ['disk' => 's3']),
-            'name'  => $file->getClientOriginalName(),
+            'name' => $file->getClientOriginalName(),
             'header' => $request->has('header'),
             'fields' => $request->get('fields'),
             'count' => $request->get('count'),
@@ -104,6 +82,11 @@ class GeocodingFileController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * @param GeocodingFile $file
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function cancel(GeocodingFile $file)
     {
         $this->authorize($file);

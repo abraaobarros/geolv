@@ -11,7 +11,7 @@
                 <h2>{{ __('Files') }}</h2>
 
                 <a href="{{ route('files.create') }}" class="btn btn-primary">
-                    <span class="fa fa-file-o mr-2"></span>
+                    <span class="fa fa-file mr-2"></span>
                     Geolocalizar novo arquivo
                 </a>
 

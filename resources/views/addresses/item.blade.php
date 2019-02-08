@@ -46,7 +46,7 @@
             <a href="#info-{{ $result->id }}" class="card-link mr-2" data-toggle="collapse" aria-expanded="false" aria-controls="info-{{ $result->id }}">
                 <i class="fa fa-bars mr-1"></i>Abrir Resultado
             </a>
-            <a href="{{ route('map', ['selected_id' => $result->id, 'search_id' => $result->search_id ]) }}" class="card-link">
+            <a href="{{ route('map', ['selected_id' => $result->id, 'search_id' => $result->search_id, 'providers' => $selectedProviders]) }}" class="card-link">
                 <i class="fa fa-map mr-1"></i> Ver no mapa
             </a>
         </li>

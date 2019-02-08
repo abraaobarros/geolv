@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read string state
  * @method static Builder geocodeQuery(GeocodeQuery $geocodeQuery)
  * @method static Search|Model firstOrCreate(array $data)
+ * @method static findOrFail($get)
  */
 class Search extends Model
 {

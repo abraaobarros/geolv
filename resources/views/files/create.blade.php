@@ -95,7 +95,7 @@
                                                            class="custom-control-input"
                                                            value="{{ $provider }}"
                                                            id="{{ $provider }}_check"
-                                                           checked>
+                                                            {{ in_array($provider, $defaultProviders) ? 'checked' : '' }}>
                                                     <label class="custom-control-label" for="{{ $provider }}_check">
                                                         {{ ucfirst(trans("validation.attributes.$provider")) }}
                                                     </label>
@@ -131,7 +131,9 @@
                                 <small>Preço:</small>
                                 <h4>
                                     US$ <span class="price-value">0.00</span><br/>
-                                    <small class="text-muted">US$ (0.50 / 1,000) x <span class="providers-count">4</span> provedores</small>
+                                    <small class="text-muted">US$ (0.50 / 1,000) x <span
+                                                class="providers-count">{{ count($defaultProviders) }}</span> provedores
+                                    </small>
                                 </h4>
                                 <hr>
                                 <small>Tempo estimado para conclusão:</small>

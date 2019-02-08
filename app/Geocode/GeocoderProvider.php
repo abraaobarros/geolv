@@ -29,15 +29,15 @@ class GeocoderProvider
 
     public function __construct()
     {
-        $this->defaultProviders = ['google_maps', 'arcgis_online', 'here_geocoder', 'bing_maps'];
+        $this->defaultProviders = ['google_maps', 'here_geocoder'];
         $this->adapter = Client::createWithConfig(['verify' => false]);
         $this->searchDriver = new GeoLVSearch();
         $this->user = auth()->user();
 
-        $this->setUpProviders();
+        $this->setProviders();
     }
 
-    public function setUpProviders(array $providers = null): void
+    public function setProviders(array $providers = null): void
     {
         $this->provider = new ProviderAggregator();
         $this->providers = empty($providers)? $this->defaultProviders : $providers;

@@ -16,12 +16,16 @@ class GeocodingController extends Controller
     /** @var GeocoderProvider */
     private $geocoder;
 
+    /** @var array */
+    private $defaultProviders;
+
     /**
      * GeocodingController constructor.
      */
     public function __construct()
     {
         $this->geocoder = app('geocoder');
+        $this->defaultProviders = ['google_maps', 'here_geocoder'];
     }
 
     public function index()
@@ -29,8 +33,10 @@ class GeocodingController extends Controller
         $results = collect();
         $match = null;
         $localities = Locality::get(['name', 'state']);
+        $providers = ['google_maps', 'here_geocoder', 'bing_maps', 'arcgis_online'];
+        $selectedProviders = session('geocode.default_providers', $this->defaultProviders);
 
-        return view('geocode', compact('results', 'match', 'localities'));
+        return view('geocode', compact('results', 'match', 'localities', 'providers', 'selectedProviders'));
     }
 
     public function geocode(GeocodingRequest $request)
@@ -39,24 +45,31 @@ class GeocodingController extends Controller
         $locality = trim($request->get('locality'));
         $postalCode = $request->get('postal_code');
         $localities = Locality::get(['name', 'state']);
+        $providers = ['google_maps', 'here_geocoder', 'bing_maps', 'arcgis_online'];
+        $selectedProviders = $request->get('providers', $this->defaultProviders);
+        session(['geocode.default_providers' => $selectedProviders]);
 
+        $this->geocoder->setProviders($selectedProviders);
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
-        $outside = !empty($locality)? $results->outsideLocality() : new AddressCollection();
+        $outside = !empty($locality) ? $results->outsideLocality() : new AddressCollection();
         $clustersCount = $results->getClustersCount();
         $providersCount = $results->inMainCluster()->getProvidersCount();
 
-        $results = !empty($locality)? $results->insideLocality() : $results;
+        $results = !empty($locality) ? $results->insideLocality() : $results;
         $dispersion = $results->inMainCluster()->calculateDispersion();
 
-        return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities', 'outside', 'dispersion', 'clustersCount', 'providersCount'));
+        return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities',
+            'outside', 'dispersion', 'clustersCount', 'providersCount', 'providers', 'selectedProviders'));
     }
 
     public function map(Request $request)
     {
         $search = Search::findOrFail($request->get('search_id'));
         $selected = Address::findOrFail($request->get('selected_id'));
+        $providers = $request->get('providers');
         $search->max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
 
+        $this->geocoder->setProviders($providers);
         $results = $this->geocoder->get($search)->insideLocality();
 
         return view('map', compact('results', 'selected', 'search'));

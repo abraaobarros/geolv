@@ -28,7 +28,7 @@
                     <a class="nav-link" href="{{ route('home') }}">{{ __('Geocode Address') }}</a>
                 </li>
                 <li class="nav-item{{ request()->is('/files')? ' active': '' }}">
-                    <a class="nav-link" href="{{ route('files.index') }}">{{ __('Geocode File') }}</a>
+                    <a class="nav-link" href="{{ route('files.index') }}">{{ __('Files') }}</a>
                 </li>
                 @can('viewUsers')
                     <li class="nav-item{{ request()->is('/users')? ' active': '' }}">

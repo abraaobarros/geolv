@@ -3,10 +3,10 @@
 @section('content')
 
     <div class="container">
-        <div class="row justify-content-center" style="margin: {{ $results->count() == 0? 200: 50 }}px 0 0 0">
-            <div class="col-lg-8 col-md-10 col-xs-12">
-                <h1>GeoLV</h1>
-                <form action="{{ route('geocode') }}" method="get">
+        <form action="{{ route('geocode') }}" method="get">
+            <div class="row justify-content-center" style="margin: {{ $results->count() == 0? 200: 50 }}px 0 0 0">
+                <div class="col-lg-8 col-md-10 col-xs-12">
+                    <h1>GeoLV</h1>
                     <div class="row text-center">
                         <div class="input-group">
                             <input type="text" class="form-control form-control-danger col-md-7" name="text"
@@ -17,7 +17,8 @@
                                    value="{{ old('locality') ?? $locality ?? "" }}" tabindex="2" list="localities">
                             <input type="text" class="form-control form-control-danger col-md-2" name="postal_code"
                                    placeholder="CEP"
-                                   value="{{ old('postal_code') ?? $postalCode ?? "" }}" tabindex="3" autocomplete="off">
+                                   value="{{ old('postal_code') ?? $postalCode ?? "" }}" tabindex="3"
+                                   autocomplete="off">
                         </div>
 
                         <datalist id="localities">
@@ -36,9 +37,33 @@
                             <span class="fa fa-search"></span>
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10 col-xs-12">
+                    <a data-toggle="collapse" href="#collapseProviders" role="button" aria-expanded="false"
+                       aria-controls="collapseProviders">
+                        {{ __('Select providers') }} <i class="fa fa-chevron-down ml-1"></i>
+                    </a>
+                    <div class="collapse" id="collapseProviders">
+                        <div class="card card-body">
+                            @foreach ($providers as $provider)
+                                <div class="custom-control custom-checkbox d-inline-block mr-2 ml-2">
+                                    <input type="checkbox" name="providers[]"
+                                           class="custom-control-input"
+                                           value="{{ $provider }}"
+                                           id="{{ $provider }}_check"
+                                            {{ in_array($provider, $selectedProviders) ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="{{ $provider }}_check">
+                                        {{ ucfirst(trans("validation.attributes.$provider")) }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
 
         @if (filled($results))
             <hr>
