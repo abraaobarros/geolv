@@ -41,12 +41,15 @@ class GeocodeNextFile implements ShouldQueue
                 $this->notify(true);
             }
         } catch (\Exception $e) {
+            report($e);
             $this->notify(false, $e->getMessage());
         } catch (\TypeError $e) {
+            report($e);
             $this->notify(false, $e->getMessage());
         }
 
-        dispatch(new GeocodeNextFile());
+        if (GeocodingFile::nextProcessable()->first() != null)
+            dispatch(new GeocodeNextFile());
     }
 
     private function notify($success, $message = null)
