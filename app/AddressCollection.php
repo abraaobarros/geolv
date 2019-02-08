@@ -71,31 +71,65 @@ class AddressCollection extends Collection
         return sqrt($dispersion) * 11057;
     }
 
+    public function calculateAvgDistance(): float
+    {
+        $count = $this->count() - 1;
+        if ($count <= 0)
+            return 0;
+
+        $first = $this->first();
+        $coordinate = $first->coordinate;
+        $calculator = new Vincenty();
+        $sum = 0.0;
+
+        foreach ($this as $address) {
+            if ($address->id != $first->id) {
+                $sum += $address->coordinate->getDistance($coordinate, $calculator);
+            }
+        }
+
+        return $sum / $count;
+    }
+
     public function calculatePrecision(): float
     {
-        if ($this->count() <= 0)
-            return -1;
+        $count = $this->count() - 1;
+        if ($count <= 0)
+            return 0;
 
         /** @var Address $first */
         $first = $this->first();
+        $coordinate = $first->coordinate;
         $calculator = new Vincenty();
         $distances = [];
-        $count = $this->count() - 1;
 
         /** @var Address $address */
         foreach ($this as $address) {
             if ($address->id != $first->id) {
-                $distances[] = $address->coordinate->getDistance($first->coordinate, $calculator);
+                $distances[] = $address->coordinate->getDistance($coordinate, $calculator);
             }
         }
 
         $avgDistance = array_sum($distances) / $count;
-        $diffList = [];
+        $deviations = [];
 
         foreach ($distances as $distance) {
-            $diffList[] = abs($distance - $avgDistance);
+            $deviations[] = pow($distance - $avgDistance, 2);
         }
 
-        return array_sum($diffList) / $count;
+        return sqrt(array_sum($deviations) / $count);
+    }
+
+    public function calculateConfidence(): float
+    {
+        if ($this->count() <= 0)
+            return 0;
+
+        $first = $this->first();
+        $levenshtein = $first->levenshtein_match_search_text;
+        $clusters = 1.0 / $this->getClustersCount();
+        $providers = $this->inMainCluster()->getProvidersCount() / 4.0;
+
+        return ($levenshtein + $clusters + $providers) / 3.0;
     }
 }

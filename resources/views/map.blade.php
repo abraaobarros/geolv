@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <a href="{{ route('geocode', $search->toRequestFormat()) }}" class="btn btn-outline-primary" style="position: fixed; top: 10px; left: 10px; z-index: 20">
+    <a href="{{ route('geocode', $search->toRequestFormat($providers)) }}" class="btn btn-outline-primary" style="position: fixed; top: 10px; left: 10px; z-index: 20">
         Voltar
     </a>
 
@@ -34,7 +34,8 @@
         <div class="card-body">
             <p class="text-muted small">
                 Dispersão: <b>{{ $dispersion }}</b><br/>
-                Precisão: <b>{{ $precision }} metros</b><br/>
+                Precisão: <b>{{ $precision }} m</b><br/>
+                Confiança: <b>{{ number_format($confidence * 100, 1) }}%</b><br/>
                 Quantidade de Clusters: <b>{{ $clustersCount }}</b><br/>
                 Quantidade de Provedores no Cluster Principal: <b>{{ $providersCount }}</b>
             </p>

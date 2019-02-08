@@ -104,9 +104,9 @@ class Search extends Model
         return $this->locality_obj;
     }
 
-    public function toRequestFormat()
+    public function toRequestFormat(array $providers = [])
     {
-        return array_only($this->toArray(), $this->fillable);
+        return array_merge(array_only($this->toArray(), $this->fillable), compact('providers'));
     }
 
 }

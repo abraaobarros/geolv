@@ -32,8 +32,8 @@ class GeocodingFileController extends Controller
     {
         $fields = ['street_name', 'street_number', 'locality', 'state', 'postal_code', 'sub_locality', 'country_code',
             'country_name', 'provider', 'latitude', 'longitude', 'dispersion', 'clusters_count', 'providers_count',
-            'levenshtein_match_street_name'];
-        $default = ['latitude', 'longitude', 'dispersion'];
+            'levenshtein_match_street_name', 'precision', 'confidence'];
+        $default = ['latitude', 'longitude', 'dispersion', 'precision', 'confidence'];
         $providers = ['google_maps', 'here_geocoder', 'bing_maps', 'arcgis_online'];
         $defaultProviders = ['google_maps', 'here_geocoder'];
 

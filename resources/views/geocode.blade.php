@@ -89,7 +89,8 @@
                     <h5>Algoritmo</h5>
                     <p class="text-muted">
                         Dispersão: <b>{{ $dispersion }}</b><br/>
-                        Precisão: <b>{{ $precision }} metros</b><br/>
+                        Precisão: <b>{{ $precision }} m</b><br/>
+                        Confiança: <b>{{ number_format($confidence * 100, 1) }}%</b><br/>
                         Quantidade de Clusters: <b>{{ $clustersCount }}</b><br/>
                         Quantidade de Provedores no Cluster Principal: <b>{{ $providersCount }}</b>
                     </p>

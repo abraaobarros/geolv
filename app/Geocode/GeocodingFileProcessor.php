@@ -109,13 +109,19 @@ class GeocodingFileProcessor
             $result = !empty($locality) ? $results->insideLocality()->first() : $results->first();
 
             if ($result) {
+                $mainCluster = $results->inMainCluster();
+
                 foreach ($file->fields as $field) {
                     if ($field == 'dispersion')
-                        $value = $results->inMainCluster()->calculateDispersion();
+                        $value = $mainCluster->calculateDispersion();
                     else if ($field == 'clusters_count')
                         $value = $results->getClustersCount();
                     else if ($field == 'providers_count')
-                        $value = $results->inMainCluster()->getProvidersCount();
+                        $value = $mainCluster->getProvidersCount();
+                    else if ($field == 'precision')
+                        $value = $mainCluster->calculatePrecision();
+                    else if ($field == 'confidence')
+                        $value = $results->calculateConfidence();
                     else
                         $value = $result->{$field};
 
