@@ -88,8 +88,12 @@ class GeocodingFileProcessor
      */
     private function processHeader($file, $row)
     {
-        $this->output->insertOne(array_merge($row, $file->fields));
-        $this->errorOutput->insertOne(array_merge($row, $file->fields));
+        $fields = collect($file->fields)->map(function ($field) {
+            return mb_strtolower(trans("validation.attributes.$field"));
+        });
+
+        $this->output->insertOne(array_merge($row, $fields));
+        $this->errorOutput->insertOne(array_merge($row, $fields));
     }
 
     /**

@@ -189,6 +189,8 @@ return [
         'levenshtein_match_search_text' => 'Distancia Levenshtein com Logradouro da Busca',
         'levenshtein_match_street_name' => 'Distancia Levenshtein com Logradouro',
         'levenshtein_match_locality' => 'Distancia Levenshtein com Município do Resultado',
+        'precision' => 'Precisão',
+        'confidence' => 'Confiança',
         'contains_street_number' => 'Contém o Número da Rua',
         'contains_sub_locality' => 'Contém o Bairro',
         'match_postal_code' => 'Match com Código Postal',
