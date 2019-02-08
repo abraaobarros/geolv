@@ -31,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @property \Carbon\Carbon canceled_at
  * @property string error_output_path
  * @property array providers
+ * @property string name
  * @method static GeocodingFile|Model create($data)
  * @method static Builder nextProcessable()
  */
@@ -76,6 +77,11 @@ class GeocodingFile extends Model
             return str_replace('pre-processing/', '', $this->path);;
 
         return $this->attributes['name'];
+    }
+
+    public function getErrorNameAttribute()
+    {
+        return 'errors_' . $this->name;
     }
 
     public function scopeNextProcessable(Builder $query)

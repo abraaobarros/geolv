@@ -108,7 +108,10 @@ class GeocodingFileController extends Controller
         $this->authorize('view', $file);
 
         try {
-            return Storage::disk('s3')->download($file->output_path);
+            return Storage::disk('s3')
+                ->download($file->output_path, $file->name, [
+                    'Content-Type' => 'text/csv; charset=utf-8'
+                ]);
         } catch (FileNotFoundException $exception) {
             throw new NotFoundHttpException('file not found');
         }
@@ -124,7 +127,10 @@ class GeocodingFileController extends Controller
         $this->authorize('view', $file);
 
         try {
-            return Storage::disk('s3')->download($file->error_output_path);
+            return Storage::disk('s3')
+                ->download($file->error_output_path, $file->error_name, [
+                    'Content-Type' => 'text/csv; charset=utf-8'
+                ]);
         } catch (FileNotFoundException $exception) {
             throw new NotFoundHttpException('file not found');
         }
