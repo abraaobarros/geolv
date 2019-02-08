@@ -90,7 +90,7 @@ class GeocodingFileProcessor
     {
         $fields = collect($file->fields)->map(function ($field) {
             return mb_strtolower(trans("validation.attributes.$field"));
-        });
+        })->toArray();
 
         $this->output->insertOne(array_merge($row, $fields));
         $this->errorOutput->insertOne(array_merge($row, $fields));
