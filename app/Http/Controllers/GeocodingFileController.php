@@ -157,6 +157,11 @@ class GeocodingFileController extends Controller
     {
         $this->authorize('delete', $file);
 
+        Storage::disk('s3')->delete([
+            $file->output_path,
+            $file->error_output_path
+        ]);
+
         $file->delete();
         return redirect()->back();
     }
