@@ -44,7 +44,7 @@ class GroupResults implements Provider
                         $list[] = $result;
                 }
             } catch (\Throwable $e) {
-                Log::error('[' . $provider->getName() . '] ' . $e->getMessage());
+                report($e);
             }
         }
 
