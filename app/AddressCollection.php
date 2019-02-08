@@ -3,6 +3,7 @@
 namespace GeoLV;
 
 use Illuminate\Database\Eloquent\Collection;
+use Location\Distance\Vincenty;
 
 class AddressCollection extends Collection
 {
@@ -68,5 +69,33 @@ class AddressCollection extends Collection
         }
 
         return sqrt($dispersion) * 11057;
+    }
+
+    public function calculatePrecision(): float
+    {
+        if ($this->count() <= 0)
+            return -1;
+
+        /** @var Address $first */
+        $first = $this->first();
+        $calculator = new Vincenty();
+        $distances = [];
+        $count = $this->count() - 1;
+
+        /** @var Address $address */
+        foreach ($this as $address) {
+            if ($address->id != $first->id) {
+                $distances[] = $address->coordinate->getDistance($first->coordinate, $calculator);
+            }
+        }
+
+        $avgDistance = array_sum($distances) / $count;
+        $diffList = [];
+
+        foreach ($distances as $distance) {
+            $diffList[] = abs($distance - $avgDistance);
+        }
+
+        return array_sum($diffList) / $count;
     }
 }

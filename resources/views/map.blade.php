@@ -17,10 +17,27 @@
                     <input type="number" name="max_d" id="max_d" step="0.001" value="{{ old('max_d', $search->max_d) }}" class="form-control form-control-sm">
                     <input type="hidden" name="selected_id" value="{{ $selected->id }}">
                     <input type="hidden" name="search_id" value="{{ $search->id }}">
+                    @foreach($providers as $provider)
+                    <input type="hidden" name="providers[]" value="{{ $provider }}"/>
+                    @endforeach
                 </label>
 
                 <button type="submit" class="btn btn-block btn-outline-success btn-sm"><i class="fa fa-refresh"></i> Atualizar</button>
             </form>
+        </div>
+    </div>
+
+    <div class="card" style="position: fixed; top: 10px; right: 10px; z-index: 20; max-width: 3000px">
+        <div class="card-header">
+            Algoritmo
+        </div>
+        <div class="card-body">
+            <p class="text-muted small">
+                Dispersão: <b>{{ $dispersion }}</b><br/>
+                Precisão: <b>{{ $precision }} metros</b><br/>
+                Quantidade de Clusters: <b>{{ $clustersCount }}</b><br/>
+                Quantidade de Provedores no Cluster Principal: <b>{{ $providersCount }}</b>
+            </p>
         </div>
     </div>
 

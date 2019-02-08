@@ -54,25 +54,30 @@ class GeocodingController extends Controller
         $outside = !empty($locality) ? $results->outsideLocality() : new AddressCollection();
         $clustersCount = $results->getClustersCount();
         $providersCount = $results->inMainCluster()->getProvidersCount();
-
         $results = !empty($locality) ? $results->insideLocality() : $results;
         $dispersion = $results->inMainCluster()->calculateDispersion();
+        $precision = $results->inMainCluster()->calculatePrecision();
 
         return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities',
-            'outside', 'dispersion', 'clustersCount', 'providersCount', 'providers', 'selectedProviders'));
+            'outside', 'dispersion', 'clustersCount', 'providersCount', 'providers', 'selectedProviders', 'precision'));
     }
 
     public function map(Request $request)
     {
         $search = Search::findOrFail($request->get('search_id'));
         $selected = Address::findOrFail($request->get('selected_id'));
-        $providers = $request->get('providers');
+        $providers = $request->get('providers', $this->defaultProviders);
         $search->max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
 
         $this->geocoder->setProviders($providers);
         $results = $this->geocoder->get($search)->insideLocality();
+        $dispersion = $results->inMainCluster()->calculateDispersion();
+        $precision = $results->inMainCluster()->calculatePrecision();
+        $clustersCount = $results->getClustersCount();
+        $providersCount = $results->inMainCluster()->getProvidersCount();
 
-        return view('map', compact('results', 'selected', 'search'));
+        return view('map', compact('results', 'selected', 'search', 'providers', 'dispersion',
+            'precision', 'clustersCount', 'providersCount'));
     }
 
 }

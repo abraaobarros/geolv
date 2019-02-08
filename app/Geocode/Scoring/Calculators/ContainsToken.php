@@ -10,7 +10,12 @@ class ContainsToken extends SearchRelevanceCalculator
 {
     private $token;
 
-    public function __construct(Search $search, string $token)
+    /**
+     * ContainsToken constructor.
+     * @param Search $search
+     * @param string $token
+     */
+    public function __construct(Search $search, $token)
     {
         parent::__construct($search);
         $this->token = $token;

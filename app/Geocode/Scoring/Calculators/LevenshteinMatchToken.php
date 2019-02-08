@@ -12,7 +12,13 @@ class LevenshteinMatchToken extends SearchRelevanceCalculator
     private $searchFieldText;
     private $searchFieldLength;
 
-    public function __construct(Search $search, string $token, string $searchToken = 'text')
+    /**
+     * LevenshteinMatchToken constructor.
+     * @param Search $search
+     * @param string $token
+     * @param string $searchToken
+     */
+    public function __construct(Search $search, $token, $searchToken = 'text')
     {
         parent::__construct($search);
         $this->token = $token;

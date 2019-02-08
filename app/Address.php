@@ -32,6 +32,7 @@ use Location\Coordinate;
  * @property-read array algorithm
  * @property-read Coordinate coordinate
  * @property-read Search search
+ * @property mixed id
  */
 class Address extends Model
 {
