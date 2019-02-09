@@ -13,7 +13,7 @@
                                    placeholder="Endereço"
                                    value="{{ old('text') ?? $text ?? "" }}" tabindex="1" autocomplete="off" autofocus>
                             <input type="text" class="form-control form-control-danger col-md-3" name="locality"
-                                   placeholder="Cidade"
+                                   placeholder="Cidade - UF"
                                    value="{{ old('locality') ?? $locality ?? "" }}" tabindex="2" list="localities">
                             <input type="text" class="form-control form-control-danger col-md-2" name="postal_code"
                                    placeholder="CEP"
@@ -89,8 +89,8 @@
                     <h5>Algoritmo</h5>
                     <p class="text-muted">
                         Dispersão: <b>{{ $dispersion }}</b><br/>
-                        Precisão: <b>{{ $precision }} m</b><br/>
-                        Confiança: <b>{{ number_format($confidence * 100, 1) }}%</b><br/>
+                        Precisão: <b>{{ $precision }}</b> m<br/>
+                        Confiança: <b>{{ $confidence }}</b><small>/10 </small> scores<br/>
                         Quantidade de Clusters: <b>{{ $clustersCount }}</b><br/>
                         Quantidade de Provedores no Cluster Principal: <b>{{ $providersCount }}</b>
                     </p>

@@ -34,6 +34,17 @@ class AddressCollection extends Collection
         });
     }
 
+    public function outsideMainCluster(): AddressCollection
+    {
+        if ($this->count() == 0)
+            return $this;
+
+        $main_cluster = $this->first()->cluster;
+        return $this->filter(function (Address $address) use ($main_cluster) {
+            return $address->cluster != $main_cluster;
+        });
+    }
+
     public function getClustersCount(): int
     {
         return $this->groupBy('cluster')->count();
@@ -122,14 +133,20 @@ class AddressCollection extends Collection
 
     public function calculateConfidence(): float
     {
-        if ($this->count() <= 0)
-            return 0;
+        $mainLocation = $this->first();
+        $locationsTotal = $this->count();
+        $outsideMainCluster = $this->outsideMainCluster();
+        $outsideMainClusterCount = $outsideMainCluster->count();
+        $levenshteinAvg = $this->avg('levenshtein_match_search_text');
+        $levenshteinOutsideAvg = $outsideMainCluster->avg('levenshtein_match_search_text');
+        $providersCount = $this->getProvidersCount();
 
-        $first = $this->first();
-        $levenshtein = $first->levenshtein_match_search_text;
-        $clusters = 1.0 / $this->getClustersCount();
-        $providers = $this->inMainCluster()->getProvidersCount() / 4.0;
+        $confidence = 10
+            - (4 - $providersCount)
+            - ($outsideMainClusterCount/$locationsTotal)
+            - (1 - $mainLocation->levenshtein_match_search_text) * 5
+            - (1 - ($levenshteinAvg - $levenshteinOutsideAvg));
 
-        return ($levenshtein + $clusters + $providers) / 3.0;
+        return max(0, $confidence);
     }
 }

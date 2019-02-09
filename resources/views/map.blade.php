@@ -34,8 +34,8 @@
         <div class="card-body">
             <p class="text-muted small">
                 Dispersão: <b>{{ $dispersion }}</b><br/>
-                Precisão: <b>{{ $precision }} m</b><br/>
-                Confiança: <b>{{ number_format($confidence * 100, 1) }}%</b><br/>
+                Precisão: <b>{{ $precision }}</b> m<br/>
+                Confiança: <b>{{ $confidence }}</b><small>/10 </small> scores<br/>
                 Quantidade de Clusters: <b>{{ $clustersCount }}</b><br/>
                 Quantidade de Provedores no Cluster Principal: <b>{{ $providersCount }}</b>
             </p>
