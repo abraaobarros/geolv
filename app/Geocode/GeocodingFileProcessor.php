@@ -101,7 +101,9 @@ class GeocodingFileProcessor
     {
         $text = Dictionary::address($this->get($file, $row, 'text'));
         $locality = $this->get($file, $row, 'locality');
+        $state = $this->get($file, $row, 'state');
         $postalCode = $this->get($file, $row, 'postal_code');
+        $locality = empty($state)? $locality : "$locality - $state";
         $emptyRow = empty($postalCode) ? (empty($text) && empty($locality)) : false;
 
         if (!$emptyRow) {
@@ -137,11 +139,15 @@ class GeocodingFileProcessor
 
     private function get(GeocodingFile $file, $row, $type)
     {
-        $value = [];
-        foreach ($file->indexes[$type] as $index)
-            array_push($value, $row[$index]);
+        if (isset($file->indexes[$type])) {
+            $value = [];
+            foreach ($file->indexes[$type] as $index)
+                array_push($value, $row[$index]);
 
-        return trim(implode(" ", $value));
+            return trim(implode(" ", $value));
+        } else {
+            return null;
+        }
     }
 
     private function updateFileOffset(GeocodingFile $file, $count)

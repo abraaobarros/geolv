@@ -169,20 +169,24 @@
                                     </div>
                                     <div class="row">
                                         <div class="custom-control custom-radio mr-2">
-                                            <input type="radio" id="modeRadioAddress" name="mode"
-                                                   class="custom-control-input"
-                                                   checked>
+                                            <input type="radio" id="modeRadioAddress" name="mode" value="text"
+                                                   class="custom-control-input" checked>
                                             <label class="custom-control-label" for="modeRadioAddress">Endereço</label>
                                         </div>
                                         <div class="custom-control custom-radio mr-2">
-                                            <input type="radio" id="modeRadioLocality" name="mode"
+                                            <input type="radio" id="modeRadioLocality" name="mode" value="locality"
                                                    class="custom-control-input">
                                             <label class="custom-control-label" for="modeRadioLocality">Cidade</label>
                                         </div>
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" id="modeRadioCEP" name="mode"
+                                        <div class="custom-control custom-radio mr-2">
+                                            <input type="radio" id="modeRadioState" name="mode" value="state"
                                                    class="custom-control-input">
-                                            <label class="custom-control-label" for="modeRadioCEP">CEP</label>
+                                            <label class="custom-control-label" for="modeRadioState">Estado</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="modeRadioPostalCode" name="mode" value="postal_code"
+                                                   class="custom-control-input">
+                                            <label class="custom-control-label" for="modeRadioPostalCode">CEP</label>
                                         </div>
                                     </div>
 

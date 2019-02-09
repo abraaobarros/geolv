@@ -5,9 +5,10 @@ export default class PreviewTableView extends TableView {
     onCreate() {
         super.onCreate();
         this.modes = new Map([
-            ['text', ['info', 'Endereço']],
-            ['locality', ['success', 'Cidade']],
-            ['postal_code', ['warning', 'CEP']],
+            ['text',        ['info',        'Endereço']],
+            ['locality',    ['success',     'Cidade']],
+            ['state',       ['secondary',   'Estado']],
+            ['postal_code', ['warning',     'CEP']],
         ]);
         this.selectedIdxList = this.props.indexes;
         let view = this;

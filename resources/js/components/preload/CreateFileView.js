@@ -12,14 +12,12 @@ export default class CreateFileView extends View {
     onCreate() {
         this.results = [];
         this.count = 0;
-        this.indexes = {'text': [], 'locality': [], 'postal_code': []};
+        this.indexes = {'text': [], 'locality': [], 'state': [], 'postal_code': []};
         this.input('geocode_file').change(() => this.parse());
         this.input('delimiter').change(() => this.parse());
         this.input('header').change(() => this.displayResults());
-        this.input('providers[]').change(() => this.displayCount());
-        this.get('radioAddress').click(() => this.updateMode());
-        this.get('radioLocality').click(() => this.updateMode());
-        this.get('radioCEP').click(() => this.updateMode());
+        this.input('providers[]').change(() => { this.displayCount(); this.onAddressUpdated() });
+        this.input('mode').click(() => this.updateMode());
     }
 
     parse() {
@@ -63,7 +61,7 @@ export default class CreateFileView extends View {
         this.input('count').val(this.count);
 
         let time = Math.ceil(this.count / 10);
-        if (time == 0)
+        if (time === 0)
             this.get('time').html('-');
         else
             this.get('time').html(time);
@@ -87,42 +85,58 @@ export default class CreateFileView extends View {
         }
     }
 
-    getAddresses() {
+    getAddressesView() {
         let addresses = [];
+        let providers = this.input('providers[]').filter(':checked').map((i, o) => $(o).val()).toArray();
+
         for (let i in this.results) {
             if (this.hasHeader && i == 0) continue;
 
             let address = {
                 text: this.getParsedAddress(i, this.indexes['text']),
                 locality: this.getParsedAddress(i, this.indexes['locality']),
-                postal_code: this.getParsedAddress(i, this.indexes['postal_code'])
+                state: this.getParsedAddress(i, this.indexes['state']),
+                postal_code: this.getParsedAddress(i, this.indexes['postal_code']),
+                providers: providers
             };
-            addresses.push([
-                address.text,
-                address.locality,
-                address.postal_code,
-                View.render(GeocodeBtnView, {address}).container,
-            ]);
+            let data = [];
+
+            if (this.indexes.text.length > 0)
+                data.push(address.text);
+
+            if (this.indexes.locality.length > 0)
+                data.push(address.locality);
+
+            if (this.indexes.state.length > 0)
+                data.push(address.state);
+
+            if (this.indexes.postal_code.length > 0)
+                data.push(address.postal_code);
+
+            data.push(View.render(GeocodeBtnView, {address}).container);
+            addresses.push(data);
         }
 
         return addresses;
     }
 
-    getCepAddresses() {
-        let addresses = [];
-        for (let i in this.results) {
-            if (this.hasHeader && i == 0) continue;
+    getHeadersView() {
+        let headers = [];
+        if (this.indexes.text.length > 0)
+            headers.push('Endereço');
 
-            let address = {
-                postal_code: this.getParsedAddress(i, this.indexes['postal_code'])
-            };
-            addresses.push([
-                address.postal_code,
-                View.render(GeocodeBtnView, {address}).container,
-            ]);
-        }
+        if (this.indexes.locality.length > 0)
+            headers.push('Cidade');
 
-        return addresses;
+        if (this.indexes.state.length > 0)
+            headers.push('Estado');
+
+        if (this.indexes.postal_code.length > 0)
+            headers.push('CEP');
+
+        headers.push('Resultado');
+
+        return headers;
     }
 
     onParsingError(err, file, reason) {
@@ -130,23 +144,18 @@ export default class CreateFileView extends View {
     }
 
     onAddressUpdated() {
-        let address = this.getParsedAddress(0, this.indexes.text);
-        let locality = this.getParsedAddress(0, this.indexes.locality);
-        let postal_code = this.getParsedAddress(0, this.indexes.postal_code);
+        let address = this.indexes.text.length > 0;
+        let locality = this.indexes.locality.length > 0;
+        let state = this.indexes.state.length > 0;
+        let postal_code = this.indexes.postal_code.length > 0;
 
         this.input('indexes').val(JSON.stringify(this.indexes));
 
-        if (address.length > 0 && locality.length > 0) {
+        if ((address  && (locality || state)) || postal_code > 0) {
             this.get('exampleContainer').fadeIn();
             View.render(TableView, this.get('exampleTable'), {
-                data: this.getAddresses(),
-                header: ['Endereço', 'Cidade', 'CEP', 'Resultado']
-            });
-        } else if (address.length == 0 && locality.length == 0 && postal_code.length > 0) {
-            this.get('exampleContainer').fadeIn();
-            View.render(TableView, this.get('exampleTable'), {
-                data: this.getCepAddresses(),
-                header: ['CEP', 'Resultado']
+                data: this.getAddressesView(),
+                header: this.getHeadersView()
             });
         } else {
             this.get('exampleContainer').fadeOut();
@@ -154,16 +163,8 @@ export default class CreateFileView extends View {
     }
 
     updateMode() {
-        let address = this.get('radioAddress').prop('checked');
-        let locality = this.get('radioLocality').prop('checked');
-        let postal_code = this.get('radioCEP').prop('checked');
-
-        if (address)
-            this.previewTable.setMode('text');
-        else if (locality)
-            this.previewTable.setMode('locality');
-        else if (postal_code)
-            this.previewTable.setMode('postal_code');
+        let mode = this.input('mode').filter(':checked').val();
+        this.previewTable.setMode(mode);
     }
 
     onCompletedParsing(results) {
