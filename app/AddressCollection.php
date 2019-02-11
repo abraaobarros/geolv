@@ -164,12 +164,12 @@ class AddressCollection extends Collection
         $hhi = $this->calculateHHI();
 
         $confidence = 10
+            - min(0, -(3 - $mainClusterCount))
+            - min(0, -(3 - $providersCount))
+            - (1 - ($levenshteinAvg - $levenshteinOutsideAvg))
             - $hhi
-            - (3 - $mainClusterCount)
-            - (3 - $providersCount)
-            - ($outsideMainClusterCount / $locationsTotal)
-            - (100 - $mainLevenshtein) * 0.05
-            - (1 - ($levenshteinAvg - $levenshteinOutsideAvg));
+            - ((100 - $mainLevenshtein) * 0.05)
+            - ($outsideMainClusterCount / $locationsTotal);
 
         return min(10, max(0, $confidence));
     }
@@ -189,8 +189,8 @@ class AddressCollection extends Collection
         $hhi = $this->calculateHHI();
 
         return [
-            "3 - vector_cluster_locations_pry_first[1]" => (3 - $mainClusterCount),
-            "3 - num_sources_pry" => (3 - $providersCount),
+            "3 - vector_cluster_locations_pry_first[1]" => min(0,-(3 - $mainClusterCount)),
+            "3 - num_sources_pry" => min(0, -(3 - $providersCount)),
             "1 - (pry_cluster_avg_levenstein/100 - avg_other_cluster_levenstein/100)" => number_format(1 - ($levenshteinAvg - $levenshteinOutsideAvg), 1),
             "hhi" => number_format($hhi, 2),
             "(100 - pry_levenstein) * 0.05" => number_format((100 - $mainLevenshtein) * 0.05, 2),

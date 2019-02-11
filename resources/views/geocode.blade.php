@@ -104,11 +104,7 @@
                                     <code>
                                         10 <small>(pontuação inicial)</small><br>
                                         @foreach($confidenceInfo as $description => $value)
-                                            @if ($value >= 0)
-                                                - {{ abs($value) }}
-                                            @else
-                                                + {{ abs($value) }}
-                                            @endif
+                                            - {{ abs($value) }}
                                             <small>({{ $description }})</small><br>
                                         @endforeach
                                     </code>
