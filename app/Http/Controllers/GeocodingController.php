@@ -73,7 +73,8 @@ class GeocodingController extends Controller
         $search->max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
 
         $this->geocoder->setProviders($providers);
-        $results = $this->geocoder->get($search)->insideLocality();
+        $results = $this->geocoder->get($search);
+        $results = blank($search->locality) ? $results : $results->insideLocality();
         $dispersion = $results->inMainCluster()->calculateDispersion();
         $precision = $results->inMainCluster()->calculatePrecision();
         $clustersCount = $results->getClustersCount();

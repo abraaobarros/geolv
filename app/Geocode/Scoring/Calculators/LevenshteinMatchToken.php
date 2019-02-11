@@ -28,11 +28,8 @@ class LevenshteinMatchToken extends SearchRelevanceCalculator
 
     public function calculate(Address $address): float
     {
-        if (blank($address->{$this->token}))
+        if (blank($address->{$this->token}) || blank($this->searchFieldText))
             return 0;
-
-        if (blank($this->searchFieldText))
-            return 1;
 
         $addressField = $this->clear($address->{$this->token});
         $match = $this->searchFieldLength - levenshtein($addressField, $this->searchFieldText);
