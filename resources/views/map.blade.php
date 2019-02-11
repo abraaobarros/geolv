@@ -67,7 +67,7 @@
 
 
     <div id="geolv-container" style="position: fixed; width: 100%; height: 100%">
-        <div class="geolv-map" style="width: 100%; height: 100%" data-locality="{{ implode('|', $search->findLocality()->getRect()) }}">
+        <div class="geolv-map" style="width: 100%; height: 100%" data-locality="{{ $search->findLocality()? implode('|', $search->findLocality()->getRect()) : null }}">
         </div>
 
         @foreach ($results as $result)
