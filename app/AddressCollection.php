@@ -157,7 +157,7 @@ class AddressCollection extends Collection
         $mainClusterCount = $mainCluster->count();
         $outsideMainCluster = $this->outsideMainCluster();
         $outsideMainClusterCount = $outsideMainCluster->count();
-        $mainLevenshtein = $mainLocation->levenshtein_match_street_name * 100;
+        $mainLevenshtein = $mainLocation? $mainLocation->levenshtein_match_street_name * 100 : 0;
         $levenshteinAvg = $mainCluster->avg('levenshtein_match_street_name');
         $levenshteinOutsideAvg = $outsideMainCluster->avg('levenshtein_match_street_name');
         $providersCount = $this->getProvidersCount();
@@ -182,7 +182,7 @@ class AddressCollection extends Collection
         $mainClusterCount = $mainCluster->count();
         $outsideMainCluster = $this->outsideMainCluster();
         $outsideMainClusterCount = $outsideMainCluster->count();
-        $mainLevenshtein = $mainLocation->levenshtein_match_street_name * 100;
+        $mainLevenshtein = $mainLocation? $mainLocation->levenshtein_match_street_name * 100 : 0;
         $levenshteinAvg = $mainCluster->avg('levenshtein_match_street_name');
         $levenshteinOutsideAvg = $outsideMainCluster->avg('levenshtein_match_street_name');
         $providersCount = $this->getProvidersCount();
