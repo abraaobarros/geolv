@@ -22,17 +22,14 @@ class GeocodeNextFile implements ShouldQueue
     /**
      * @var GeocodingFile
      */
-    public $file;
+    private $file;
 
     const CHUNK_SIZE = 5;
 
-    public function __construct()
-    {
-        $this->file = GeocodingFile::nextProcessable()->first();
-    }
-
     public function handle(GeocodingFileProcessor $processor)
     {
+        $this->file = GeocodingFile::nextProcessable()->first();
+
         if (empty($this->file))
             return;
 
@@ -55,11 +52,15 @@ class GeocodeNextFile implements ShouldQueue
     private function notify($success, $message = null)
     {
         if ($success) {
-            $this->file->update(['done' => true]);
-            $this->file->user->notify(new DoneGeocodingFile($this->file));
+            if (!$this->file->done) {
+                $this->file->update(['done' => true]);
+                $this->file->user->notify(new DoneGeocodingFile($this->file));
+            }
         } else {
-            $this->file->update(['canceled_at' => Carbon::now()]);
-            $this->file->user->notify(new FailedGeocodingFile($this->file, $message));
+            if (!$this->file->canceled_at) {
+                $this->file->update(['canceled_at' => Carbon::now()]);
+                $this->file->user->notify(new FailedGeocodingFile($this->file, $message));
+            }
         }
     }
 
