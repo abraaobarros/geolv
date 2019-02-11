@@ -169,7 +169,7 @@ class AddressCollection extends Collection
             - abs(1 - ($levenshteinAvg - $levenshteinOutsideAvg))
             - abs($hhi)
             - abs((100 - $mainLevenshtein) * 0.05)
-            - abs($outsideMainClusterCount / $locationsTotal);
+            - abs($locationsTotal > 0? $outsideMainClusterCount / $locationsTotal : 0);
 
         return min(10, max(0, $confidence));
     }
@@ -194,7 +194,7 @@ class AddressCollection extends Collection
             "1 - (pry_cluster_avg_levenstein/100 - avg_other_cluster_levenstein/100)" => 1 - ($levenshteinAvg - $levenshteinOutsideAvg),
             "hhi" => $hhi,
             "(100 - pry_levenstein) * 0.05" => (100 - $mainLevenshtein) * 0.05,
-            "1 - vector_cluster_locations_pry_first[1] / sum(vector_cluster_locations_pry_first)" => $outsideMainClusterCount / $locationsTotal,
+            "1 - vector_cluster_locations_pry_first[1] / sum(vector_cluster_locations_pry_first)" => $locationsTotal > 0? $outsideMainClusterCount / $locationsTotal : 0,
         ];
     }
 }
