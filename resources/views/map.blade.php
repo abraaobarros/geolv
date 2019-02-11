@@ -34,7 +34,7 @@
         <ul class="list-group list-group-compact list-group-flush">
             <li class="list-group-item">Dispersão: <b>{{ $dispersion }}</b></li>
             <li class="list-group-item">
-                Confiança: <b>{{ number_format($confidence, 1) }}<small>/10</small></b> scores
+                Confiança: <b>{{ $confidence }}<small>/10</small></b> scores
                 <a href="#collapseConfidence" class="small" data-toggle="collapse">
                     (Mais informações
                     <i class="fa fa-chevron-down"></i>)

@@ -191,10 +191,10 @@ class AddressCollection extends Collection
         return [
             "3 - vector_cluster_locations_pry_first[1]" => min(0,-(3 - $mainClusterCount)),
             "3 - num_sources_pry" => min(0, -(3 - $providersCount)),
-            "1 - (pry_cluster_avg_levenstein/100 - avg_other_cluster_levenstein/100)" => number_format(1 - ($levenshteinAvg - $levenshteinOutsideAvg), 1),
-            "hhi" => number_format($hhi, 2),
-            "(100 - pry_levenstein) * 0.05" => number_format((100 - $mainLevenshtein) * 0.05, 2),
-            "1 - vector_cluster_locations_pry_first[1] / sum(vector_cluster_locations_pry_first)" => number_format($outsideMainClusterCount / $locationsTotal, 2),
+            "1 - (pry_cluster_avg_levenstein/100 - avg_other_cluster_levenstein/100)" => (1 - ($levenshteinAvg - $levenshteinOutsideAvg)),
+            "hhi" => $hhi,
+            "(100 - pry_levenstein) * 0.05" => (100 - $mainLevenshtein) * 0.05,
+            "1 - vector_cluster_locations_pry_first[1] / sum(vector_cluster_locations_pry_first)" => $outsideMainClusterCount / $locationsTotal,
         ];
     }
 }
