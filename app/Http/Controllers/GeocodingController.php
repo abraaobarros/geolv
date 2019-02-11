@@ -58,10 +58,11 @@ class GeocodingController extends Controller
         $dispersion = $results->inMainCluster()->calculateDispersion();
         $precision = $results->inMainCluster()->calculatePrecision();
         $confidence = $results->calculateConfidence();
+        $confidenceInfo = $results->getConfidenceInfo();
 
         return view('geocode', compact('results', 'text', 'locality', 'postalCode', 'localities',
             'outside', 'dispersion', 'clustersCount', 'providersCount', 'providers', 'selectedProviders', 'precision',
-            'confidence'));
+            'confidence', 'confidenceInfo'));
     }
 
     public function map(Request $request)
@@ -78,9 +79,10 @@ class GeocodingController extends Controller
         $clustersCount = $results->getClustersCount();
         $providersCount = $results->inMainCluster()->getProvidersCount();
         $confidence = $results->calculateConfidence();
+        $confidenceInfo = $results->getConfidenceInfo();
 
         return view('map', compact('results', 'selected', 'search', 'providers', 'dispersion',
-            'precision', 'clustersCount', 'providersCount', 'confidence'));
+            'precision', 'clustersCount', 'providersCount', 'confidence', 'confidenceInfo'));
     }
 
 }

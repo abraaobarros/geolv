@@ -31,15 +31,38 @@
         <div class="card-header">
             Algoritmo
         </div>
-        <div class="card-body">
-            <p class="text-muted small">
-                Dispersão: <b>{{ $dispersion }}</b><br/>
-                Precisão: <b>{{ $precision }}</b> m<br/>
-                Confiança: <b>{{ $confidence }}</b><small>/10 </small> scores<br/>
-                Quantidade de Clusters: <b>{{ $clustersCount }}</b><br/>
-                Quantidade de Provedores no Cluster Principal: <b>{{ $providersCount }}</b>
-            </p>
+        <ul class="list-group list-group-compact list-group-flush">
+            <li class="list-group-item">Dispersão: <b>{{ $dispersion }}</b></li>
+            <li class="list-group-item">
+                Confiança: <b>{{ number_format($confidence, 1) }}<small>/10</small></b> scores
+                <a href="#collapseConfidence" class="small" data-toggle="collapse">
+                    (Mais informações
+                    <i class="fa fa-chevron-down"></i>)
+                </a>
+            </li>
+        </ul>
+        <div class="collapse" id="collapseConfidence">
+            <ul class="list-group list-group-compact list-group-flush">
+                <li class="list-group-item">
+                    <code>
+                        10 <small>(pontuação inicial)</small><br>
+                        @foreach($confidenceInfo as $description => $value)
+                            @if ($value >= 0)
+                                - {{ abs($value) }}
+                            @else
+                                + {{ abs($value) }}
+                            @endif
+                            <small>({{ $description }})</small><br>
+                        @endforeach
+                    </code>
+                </li>
+            </ul>
         </div>
+        <ul class="list-group list-group-compact list-group-flush">
+            <li class="list-group-item">Quantidade de Clusters: <b>{{ $clustersCount }}</b></li>
+            <li class="list-group-item">Quantidade de Provedores no Cluster Principal:
+                <b>{{ $providersCount }}</b></li>
+        </ul>
     </div>
 
 
