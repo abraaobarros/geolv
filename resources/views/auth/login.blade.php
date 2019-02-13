@@ -32,6 +32,10 @@
                                     <strong>{{ $errors->first('password') }}</strong>
                                 </span>
                             @endif
+
+                            <div class="help-block text-right">
+                                <a href="{{ url('password/reset') }}" class="btn btn-link btn-sm">{{ __('Forgot Your Password?') }}</a>
+                            </div>
                         </div>
 
                         <div class="form-group">
