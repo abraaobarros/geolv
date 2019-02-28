@@ -54,7 +54,7 @@ export default class CreateFileView extends View {
 
     displayCount() {
         let providers = this.input('providers[]').filter(':checked').length;
-        let price = 0.5 * (this.count / 1000) * providers;
+        let price = 1.5 * (this.count / 1000) * providers;
 
         this.get('price').html(price.toFixed(2));
         this.get('providers_count').html(providers);
