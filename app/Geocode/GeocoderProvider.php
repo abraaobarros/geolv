@@ -182,6 +182,8 @@ class GeocoderProvider
                 'provider' => $result->getProvidedBy(),
             ]);
 
+            $address->search_id = $search->id;
+
             try {
                 $search->addresses()->attach($address->id);
             } catch (QueryException $exception) {}

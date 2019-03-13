@@ -68,7 +68,7 @@ class GeocodingController extends Controller
     public function map(Request $request)
     {
         $search = Search::findOrFail($request->get('search_id'));
-        $selected = Address::findOrFail($request->get('selected_id'));
+        $selected = Address::find($request->get('selected_id'));
         $providers = $request->get('providers', $this->defaultProviders);
         $search->max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
 

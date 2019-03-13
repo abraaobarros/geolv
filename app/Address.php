@@ -12,6 +12,7 @@ use Location\Coordinate;
  * @method static Search|Model firstOrCreate(array $data)
  * @method static AddressCollection hydrate(array $toArray)
  * @method static findOrFail($get)
+ * @method static find($get)
  * @property string street_name
  * @property string street_number
  * @property string postal_code
