@@ -56,9 +56,12 @@ class Address extends Model
 
     protected $appends = ['state'];
 
-    public function getStateAttribute()
+    public function getStateAttribute($value)
     {
-        return $this->locality->state;
+        if (blank($value))
+            return optional($this->findLocality())->state;
+        else
+            return $value;
     }
 
     public function getPostalCodeAttribute($value)
