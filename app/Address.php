@@ -56,14 +56,9 @@ class Address extends Model
 
     protected $appends = ['state'];
 
-    public function search(): BelongsTo
-    {
-        return $this->belongsTo(Search::class);
-    }
-
     public function getStateAttribute()
     {
-        return $this->search->state;
+        return $this->locality->state;
     }
 
     public function getPostalCodeAttribute($value)
