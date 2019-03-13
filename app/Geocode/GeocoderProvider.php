@@ -67,7 +67,7 @@ class GeocoderProvider
 
     public function get(Search $search): AddressCollection
     {
-        $results = $this->geocodeResults(GeocodeQuery::create($search->address));
+        $results = $this->geocodeResults($search);
 
         $sorter = new SortByRelevance($search);
         $results = $sorter->apply($results);
@@ -151,13 +151,13 @@ class GeocoderProvider
     }
 
     /**
-     * @param GeocodeQuery $query
+     * @param Search $search
      * @return Collection|AddressCollection
      */
-    private function geocodeResults(GeocodeQuery $query)
+    private function geocodeResults(Search $search)
     {
         try {
-            $results = $this->provider->geocodeQuery($query);
+            $results = $this->provider->geocodeQuery(GeocodeQuery::create($search->address));
         } catch (\Geocoder\Exception\Exception $e) {
             $results = [];
         }
@@ -169,7 +169,7 @@ class GeocoderProvider
             if (empty($result->getStreetName()))
                 continue;
 
-            $collection->add(new Address([
+            $address = Address::firstOrCreate([
                 'street_name' => $result->getStreetName(),
                 'street_number' => $result->getStreetNumber(),
                 'locality' => $result->getLocality(),
@@ -180,7 +180,13 @@ class GeocoderProvider
                 'latitude' => $result->getCoordinates()->getLatitude(),
                 'longitude' => $result->getCoordinates()->getLongitude(),
                 'provider' => $result->getProvidedBy(),
-            ]));
+            ]);
+
+            try {
+                $search->addresses()->attach($address->id);
+            } catch (QueryException $exception) {}
+
+            $collection->add($address);
         }
 
         return $collection;
