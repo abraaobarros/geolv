@@ -48,8 +48,7 @@ class RelevanceAggregator implements IRelevanceCalculator
 
     public function getName(): string
     {
-        return 'total_relevance';
+        return 'relevance';
     }
-
 
 }

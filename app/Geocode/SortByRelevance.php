@@ -36,12 +36,7 @@ class SortByRelevance
     {
         return $results->sortByDesc(function (Address $address) {
             return $this->relevanceCalculator->calculate($address);
-        })
-            ->groupBy('id')
-            ->map(function (Collection $addresses) {
-                return $addresses->first();
-            })
-            ->values();
+        })->values();
     }
 
     private function getRelevanceCalculator(Search $search): IRelevanceCalculator
