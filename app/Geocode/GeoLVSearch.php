@@ -10,37 +10,7 @@ use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver as SearchDriver;
 
 class GeoLVSearch
 {
-    private $searchDriver;
-    private $relevanceFieldName = 'relevance';
-    private $searchColumns = [
-        'street_name::street_number::sub_locality::locality::country_name',
-        'street_name::street_number::sub_locality::locality',
-        'street_name::street_number::country_name',
-        'street_name::street_number::locality',
-        'street_name::street_number::sub_locality',
-        'street_name::street_number',
-        'street_name',
-        'postal_code',
-        'search_text',
-        'search_postal_code',
-        'search_locality',
-        'search_locality::search_state',
-        'search_text::search_locality',
-        'search_text::search_locality::search_state',
-        'search_text::search_postal_code',
-        'search_text::search_locality::search_postal_code',
-        'search_text::search_locality::search_state::search_postal_code',
-    ];
-
     const MAX_RESULTS = 30;
-
-    /**
-     * MatchQuerySearchDriver constructor.
-     */
-    public function __construct()
-    {
-        $this->searchDriver = new SearchDriver('addresses_view', $this->searchColumns, $this->relevanceFieldName, ['*']);
-    }
 
     /**
      * @param Search $search

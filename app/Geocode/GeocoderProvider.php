@@ -12,9 +12,11 @@ use Geocoder\Provider\GoogleMaps\GoogleMaps;
 use Geocoder\ProviderAggregator;
 use Geocoder\Query\GeocodeQuery;
 use GeoLV\Address;
+use GeoLV\Geocode\Clusters\ClusterWithScipy;
 use GeoLV\Search;
 use Http\Adapter\Guzzle6\Client;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 
 class GeocoderProvider
@@ -65,12 +67,17 @@ class GeocoderProvider
 
     public function get(Search $search): AddressCollection
     {
-        $query = GeocodeQuery::create($search->address);
-        $this->searchForNewResults($search, $query);
+        $results = $this->geocodeResults(GeocodeQuery::create($search->address));
 
-        return $this->searchDriver->search($search)->filter(function (Address $address) {
-            return in_array($address->provider, $this->providers);
-        });
+        $sorter = new SortByRelevance($search);
+        $results = $sorter->apply($results);
+
+        $groupper = new ClusterWithScipy($search);
+        //$groupper = new ClusterByAverage();
+        //$groupper = new ClusterWithKMeans();
+        $groupper->apply($results);
+
+        return $results->values();
     }
 
     /**
@@ -144,10 +151,10 @@ class GeocoderProvider
     }
 
     /**
-     * @param Search $search
      * @param GeocodeQuery $query
+     * @return Collection|AddressCollection
      */
-    private function searchForNewResults(Search $search, GeocodeQuery $query): void
+    private function geocodeResults(GeocodeQuery $query)
     {
         try {
             $results = $this->provider->geocodeQuery($query);
@@ -155,12 +162,14 @@ class GeocoderProvider
             $results = [];
         }
 
+        $collection = new AddressCollection();
+
         /** @var Location $result */
         foreach ($results as $result) {
             if (empty($result->getStreetName()))
                 continue;
 
-            $address = Address::firstOrCreate([
+            $collection->add(new Address([
                 'street_name' => $result->getStreetName(),
                 'street_number' => $result->getStreetNumber(),
                 'locality' => $result->getLocality(),
@@ -171,12 +180,10 @@ class GeocoderProvider
                 'latitude' => $result->getCoordinates()->getLatitude(),
                 'longitude' => $result->getCoordinates()->getLongitude(),
                 'provider' => $result->getProvidedBy(),
-            ]);
-
-            try {
-                $search->addresses()->attach($address->id);
-            } catch (QueryException $e) {}
+            ]));
         }
+
+        return $collection;
     }
 
 }

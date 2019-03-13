@@ -28,7 +28,11 @@ class SortByRelevance
         $this->relevanceCalculator = $this->getRelevanceCalculator($search);
     }
 
-    public function apply(AddressCollection $results): AddressCollection
+    /**
+     * @param Collection|AddressCollection $results
+     * @return Collection|AddressCollection
+     */
+    public function apply($results)
     {
         return $results->sortByDesc(function (Address $address) {
             return $this->relevanceCalculator->calculate($address);
