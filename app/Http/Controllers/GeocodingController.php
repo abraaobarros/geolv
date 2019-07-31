@@ -53,10 +53,11 @@ class GeocodingController extends Controller
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
         $outside = !empty($locality) ? $results->outsideLocality() : new AddressCollection();
         $clustersCount = $results->getClustersCount();
-        $providersCount = $results->inMainCluster()->getProvidersCount();
+        $mainCluster = $results->inMainCluster();
+        $providersCount = $mainCluster->getProvidersCount();
         $results = !empty($locality) ? $results->insideLocality() : $results;
-        $dispersion = $results->inMainCluster()->calculateDispersion();
-        $precision = $results->inMainCluster()->calculatePrecision();
+        $dispersion = $mainCluster->calculateDispersion();
+        $precision = $mainCluster->calculatePrecision();
         $confidence = $results->calculateConfidence();
         $confidenceInfo = $results->getConfidenceInfo();
 
