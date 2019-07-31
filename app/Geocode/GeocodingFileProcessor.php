@@ -112,10 +112,7 @@ class GeocodingFileProcessor
             $result = !empty($locality) ? $results->insideLocality()->first() : $results->first();
 
             if ($result) {
-                if (in_array(['dispersion', 'providers_count', 'precision'], $file->fields))
-                    $mainCluster = $results->inMainCluster();
-                else
-                    $mainCluster = null;
+                $mainCluster = $results->inMainCluster();
 
                 foreach ($file->fields as $field) {
                     if ($field == 'dispersion')
