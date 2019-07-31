@@ -3,6 +3,7 @@
 namespace GeoLV\Jobs;
 
 use Carbon\Carbon;
+use Exception;
 use GeoLV\Geocode\CannotProcessFileException;
 use GeoLV\Geocode\GeocodingFileProcessor;
 use GeoLV\GeocodingFile;
@@ -14,16 +15,17 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
+use TypeError;
 
 class GeocodeNextFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    const CHUNK_SIZE = 5;
+    const CHUNK_SIZE = 3;
 
     public function handle(GeocodingFileProcessor $processor)
     {
-        /** @var \GeoLV\GeocodingFile **/
+        /** @var GeocodingFile $file **/
         $file = GeocodingFile::nextProcessable()->first();
 
         if (empty($file))
@@ -33,10 +35,10 @@ class GeocodeNextFile implements ShouldQueue
             if ($processor->process($file, static::CHUNK_SIZE) == 0) {
                 $this->notify($file,true);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             $this->notify($file, false, $e->getMessage());
-        } catch (\TypeError $e) {
+        } catch (TypeError $e) {
             report($e);
             $this->notify($file,false, $e->getMessage());
         }

@@ -9,6 +9,7 @@ use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class GroupResults implements Provider
 {
@@ -18,10 +19,20 @@ class GroupResults implements Provider
     private $providers = [];
 
     /**
+     * @var int
+     */
+    private $strategy;
+
+    const LOW_COST_STRATEGY = 0;
+    const HIGH_COST_STRATEGY = 1;
+
+    /**
+     * @param int $strategy LOW_COST_STRATEGY|HIGH_COST_STRATEGY
      * @param Provider[] $providers
      */
-    public function __construct(array $providers = [])
+    public function __construct(int $strategy, array $providers = [])
     {
+        $this->strategy = $strategy;
         $this->providers = $providers;
     }
 
@@ -42,8 +53,11 @@ class GroupResults implements Provider
                 if (!$results->isEmpty()) {
                     foreach ($results as $result)
                         $list[] = $result;
+
+                    if ($this->strategy == static::LOW_COST_STRATEGY)
+                        break;
                 }
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 report($e);
             }
         }

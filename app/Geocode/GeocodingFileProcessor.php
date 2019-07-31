@@ -11,6 +11,7 @@ use League\Csv\Reader;
 use League\Csv\ResultSet;
 use League\Csv\Statement;
 use League\Csv\Writer;
+use SplTempFileObject;
 
 class GeocodingFileProcessor
 {
@@ -41,8 +42,8 @@ class GeocodingFileProcessor
     {
         $this->geocoder = app('geocoder');
         $this->storage = Storage::disk('s3');
-        $this->output = Writer::createFromFileObject(new \SplTempFileObject());
-        $this->errorOutput = Writer::createFromFileObject(new \SplTempFileObject());
+        $this->output = Writer::createFromFileObject(new SplTempFileObject());
+        $this->errorOutput = Writer::createFromFileObject(new SplTempFileObject());
     }
 
     private function readRecords(GeocodingFile $file, $chunk): ResultSet
@@ -64,7 +65,7 @@ class GeocodingFileProcessor
     {
         $records = $this->readRecords($file, $chunk);
         $size = count($records);
-        $this->geocoder->setProviders($file->providers);
+        $this->geocoder->setProviders(GeocoderProvider::LOW_COST_STRATEGY, $file->providers);
 
         foreach ($records as $i => $record) {
             try {
@@ -111,17 +112,20 @@ class GeocodingFileProcessor
             $result = !empty($locality) ? $results->insideLocality()->first() : $results->first();
 
             if ($result) {
-                $mainCluster = $results->inMainCluster();
+                if (in_array(['dispersion', 'providers_count', 'precision'], $file->fields))
+                    $mainCluster = $results->inMainCluster();
+                else
+                    $mainCluster = null;
 
                 foreach ($file->fields as $field) {
                     if ($field == 'dispersion')
                         $value = $mainCluster->calculateDispersion();
-                    else if ($field == 'clusters_count')
-                        $value = $results->getClustersCount();
                     else if ($field == 'providers_count')
                         $value = $mainCluster->getProvidersCount();
                     else if ($field == 'precision')
                         $value = $mainCluster->calculatePrecision();
+                    else if ($field == 'clusters_count')
+                        $value = $results->getClustersCount();
                     else if ($field == 'confidence')
                         $value = $results->calculateConfidence();
                     else
