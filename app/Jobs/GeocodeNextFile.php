@@ -19,7 +19,7 @@ class GeocodeNextFile implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    const CHUNK_SIZE = 10;
+    const CHUNK_SIZE = 5;
 
     public function handle(GeocodingFileProcessor $processor)
     {
