@@ -79,7 +79,7 @@ class GeocodingFileProcessor
 
         info("[GEOCODE: {$file->id}] {$size} records read");
 
-        if (count($records) == $size)
+        if ($size == 0)
             return 0;
 
         foreach ($records as $i => $record) {
