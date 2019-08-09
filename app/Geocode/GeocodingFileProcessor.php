@@ -48,11 +48,16 @@ class GeocodingFileProcessor
 
     private function readRecords(GeocodingFile $file, $chunk): ResultSet
     {
+        info("[GEOCODE: {$file->id}] reading records");
+
         /** @var \League\Flysystem\AwsS3v3\AwsS3Adapter $adapter */
         $adapter = $this->storage->getAdapter();
         $response = $adapter->readStream($file->path);
         $reader = Reader::createFromStream($response['stream'])->setDelimiter($file->delimiter);
         $statement = (new Statement())->offset($file->offset)->limit($chunk);
+
+        info("[GEOCODE: {$file->id}] {$chunk} records read");
+
         return $statement->process($reader);
     }
 
@@ -73,7 +78,11 @@ class GeocodingFileProcessor
                     $this->processHeader($file, $record);
                 else
                     $this->processRow($file, $record);
-            } catch (CannotInsertRecord $exception) {}
+
+                info("[GEOCODE: {$file->id}] processed row");
+            } catch (CannotInsertRecord $exception) {
+                report($exception);
+            }
         }
 
         $this->updateFileOffset($file, $size);
@@ -164,6 +173,8 @@ class GeocodingFileProcessor
 
     private function uploadOutput(GeocodingFile $file)
     {
+        info("[GEOCODE: {$file->id}] uploading output");
+
         $outputContent = substr($this->output->getContent(), 0, -1); // removes the last \n
         $this->storage->append($file->output_path, $outputContent);
 

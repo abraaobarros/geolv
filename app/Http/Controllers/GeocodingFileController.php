@@ -57,7 +57,7 @@ class GeocodingFileController extends Controller
             'indexes' => $indexes
         ]);
 
-        $this->dispatch(new GeocodeNextFile());
+        GeocodeNextFile::dispatch();
 
         return redirect()->route('files.index')->with('upload', true);
     }
@@ -77,7 +77,7 @@ class GeocodingFileController extends Controller
         $file->priority = $request->get('priority', 0);
         $file->save();
 
-        $this->dispatch(new GeocodeNextFile());
+        GeocodeNextFile::dispatch();
 
         return redirect()->back();
     }
@@ -92,7 +92,7 @@ class GeocodingFileController extends Controller
         $this->authorize($file);
 
         if (!$file->toggleCancel()) {
-            $this->dispatch(new GeocodeNextFile());
+            GeocodeNextFile::dispatch();
         }
 
         return redirect()->back();
