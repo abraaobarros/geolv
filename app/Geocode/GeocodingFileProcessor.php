@@ -54,11 +54,10 @@ class GeocodingFileProcessor
         $adapter = $this->storage->getAdapter();
         $response = $adapter->readStream($file->path);
         $reader = Reader::createFromStream($response['stream'])->setDelimiter($file->delimiter);
-        $statement = (new Statement())->offset($file->offset)->limit($chunk);
 
         info("[GEOCODE: {$file->id}] {$chunk} records read");
 
-        return $statement->process($reader);
+        return $reader->setOffset($file->offset)->setLimit($chunk)->fetchAll();
     }
 
     /**
