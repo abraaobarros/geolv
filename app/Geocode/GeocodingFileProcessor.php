@@ -7,6 +7,7 @@ use GeoLV\GeocodingFile;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use League\Csv\CannotInsertRecord;
+use League\Csv\Exception;
 use League\Csv\Reader;
 use League\Csv\ResultSet;
 use League\Csv\Statement;
@@ -57,7 +58,11 @@ class GeocodingFileProcessor
 
         info("[GEOCODE: {$file->id}] {$chunk} records read");
 
-        return $reader->setOffset($file->offset)->setLimit($chunk)->fetchAll();
+        try {
+            return $reader->setHeaderOffset($file->offset)->setLimit($chunk)->fetchAll();
+        } catch (Exception $e) {
+            return [];
+        }
     }
 
     /**
@@ -70,6 +75,9 @@ class GeocodingFileProcessor
         $records = $this->readRecords($file, $chunk);
         $size = count($records);
         $this->geocoder->setProviders(GeocoderProvider::LOW_COST_STRATEGY, $file->providers);
+
+        if (count($records) == $size)
+            return 0;
 
         foreach ($records as $i => $record) {
             try {
