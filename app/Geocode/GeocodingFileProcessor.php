@@ -186,10 +186,10 @@ class GeocodingFileProcessor
         info("[GEOCODE: {$file->id}] uploading output");
 
         $outputContent = substr($this->output->getContent(), 0, -1); // removes the last \n
-        //$this->storage->append($file->output_path, $outputContent);
+        $this->storage->append($file->output_path, $outputContent);
 
         $errorOutputContent = substr($this->errorOutput->getContent(), 0, -1); // removes the last \n
-        //$this->storage->append($file->error_output_path, $errorOutputContent);
+        $this->storage->append($file->error_output_path, $errorOutputContent);
     }
 
     public function __destruct()
