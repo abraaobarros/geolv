@@ -3,6 +3,7 @@
 namespace GeoLV\Geocode;
 
 
+use Aws\S3\S3Client;
 use GeoLV\GeocodingFile;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,7 @@ use League\Csv\Reader;
 use League\Csv\ResultSet;
 use League\Csv\Statement;
 use League\Csv\Writer;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use SplTempFileObject;
 
 class GeocodingFileProcessor
@@ -51,18 +53,17 @@ class GeocodingFileProcessor
     {
         info("[GEOCODE: {$file->id}] reading records");
 
-        /** @var \League\Flysystem\AwsS3v3\AwsS3Adapter $adapter */
+        /** @var AwsS3Adapter $adapter */
+        /** @var S3Client $client */
         $adapter = $this->storage->getAdapter();
+        $client = $adapter->getClient();
+        $client->registerStreamWrapper();
+        
         $response = $adapter->readStream($file->path);
-        $reader = Reader::createFromStream($response['stream'])->setDelimiter($file->delimiter);
+        $stream = $response['stream'];
+        fseek($stream, $file->offset);
 
-        info("[GEOCODE: {$file->id}] {$chunk} records read");
-
-        try {
-            return $reader->setHeaderOffset($file->offset)->setLimit($chunk)->fetchAll();
-        } catch (Exception $e) {
-            return [];
-        }
+        return fgetcsv($stream, 0, $file->delimiter);
     }
 
     /**
@@ -75,6 +76,9 @@ class GeocodingFileProcessor
         $records = $this->readRecords($file, $chunk);
         $size = count($records);
         $this->geocoder->setProviders(GeocoderProvider::LOW_COST_STRATEGY, $file->providers);
+
+        dd($records);
+        info("[GEOCODE: {$file->id}] {$size} records read");
 
         if (count($records) == $size)
             return 0;
@@ -183,10 +187,10 @@ class GeocodingFileProcessor
         info("[GEOCODE: {$file->id}] uploading output");
 
         $outputContent = substr($this->output->getContent(), 0, -1); // removes the last \n
-        $this->storage->append($file->output_path, $outputContent);
+        //$this->storage->append($file->output_path, $outputContent);
 
         $errorOutputContent = substr($this->errorOutput->getContent(), 0, -1); // removes the last \n
-        $this->storage->append($file->error_output_path, $errorOutputContent);
+        //$this->storage->append($file->error_output_path, $errorOutputContent);
     }
 
     public function __destruct()
