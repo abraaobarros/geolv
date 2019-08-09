@@ -77,7 +77,6 @@ class GeocodingFileProcessor
         $size = count($records);
         $this->geocoder->setProviders(GeocoderProvider::LOW_COST_STRATEGY, $file->providers);
 
-        dd($records);
         info("[GEOCODE: {$file->id}] {$size} records read");
 
         if (count($records) == $size)
