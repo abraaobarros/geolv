@@ -47,7 +47,7 @@ class GeocodingFileProcessor
         $this->errorOutput = Writer::createFromFileObject(new SplTempFileObject());
     }
 
-    private function readRecords(GeocodingFile $file, $chunk): ResultSet
+    private function readRecords(GeocodingFile $file, $chunk)
     {
         info("[GEOCODE: {$file->id}] reading records");
 
