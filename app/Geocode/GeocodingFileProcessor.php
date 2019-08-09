@@ -61,9 +61,9 @@ class GeocodingFileProcessor
         
         $response = $adapter->readStream($file->path);
         $stream = $response['stream'];
-        fseek($stream, $file->offset);
+        $reader = Reader::createFromStream($stream)->setDelimiter($file->delimiter);
 
-        return fgetcsv($stream, 0, $file->delimiter);
+        return (new Statement())->offset($file->offset)->limit($chunk)->process($reader);
     }
 
     /**
@@ -83,6 +83,7 @@ class GeocodingFileProcessor
             return 0;
 
         foreach ($records as $i => $record) {
+
             try {
                 if ($i == 0 && $file->offset == 0 && $file->header)
                     $this->processHeader($file, $record);
