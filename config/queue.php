@@ -50,10 +50,10 @@ return [
 
         'sqs' => [
             'driver' => 'sqs',
-            'key' => 'your-public-key',
-            'secret' => 'your-secret-key',
-            'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
-            'queue' => 'your-queue-name',
+            'key' => env('AWS_SQS_KEY'),
+            'secret' =>  env('AWS_SQS_SECRET'),
+            'prefix' => 'https://sqs.us-east-1.amazonaws.com/' . env('AWS_SQS_ACCOUNT_ID'),
+            'queue' => env('AWS_SQS_QUEUE_NAME'),
             'region' => 'us-east-1',
         ],
 

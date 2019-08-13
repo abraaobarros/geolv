@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "adfdd0e06937971da17286dd67ed9d75",
+    "content-hash": "bf91e81a07a1da3eb6d0fdd38f564717",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.108.6",
+            "version": "3.109.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "8894571024e4c75d20bbf8c6f1500c1e62c227e8"
+                "reference": "bfbf0f0f1e4949747bd3e77dd8de94af47f7fb72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8894571024e4c75d20bbf8c6f1500c1e62c227e8",
-                "reference": "8894571024e4c75d20bbf8c6f1500c1e62c227e8",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/bfbf0f0f1e4949747bd3e77dd8de94af47f7fb72",
+                "reference": "bfbf0f0f1e4949747bd3e77dd8de94af47f7fb72",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-08-07T18:11:35+00:00"
+            "time": "2019-08-12T18:14:30+00:00"
         },
         {
             "name": "bdelespierre/php-kmeans",
