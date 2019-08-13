@@ -15,6 +15,7 @@
         "bdelespierre/php-kmeans": "dev-master",
         "bugsnag/bugsnag-laravel": "^2.0",
         "caouecs/laravel-lang": "~3.0",
+        "dusterio/laravel-aws-worker": "^0.1.17",
         "fideloper/proxy": "^4.0",
         "gasparesganga/php-shapefile": "^2.4",
         "geocoder-php/arcgis-online-provider": "^4.0",

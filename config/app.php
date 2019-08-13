@@ -151,6 +151,7 @@ return [
          * Package Service Providers...
          */
         Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
+        Dusterio\AwsWorker\Integrations\LaravelServiceProvider::class,
 
         /*
          * Application Service Providers...

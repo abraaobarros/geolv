@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e9417d3b1552223afd1cc1e296678d3",
+    "content-hash": "ef962b0ac97949e9946ebf757e69b503",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -672,6 +672,62 @@
                 "schedule"
             ],
             "time": "2019-03-31T00:38:28+00:00"
+        },
+        {
+            "name": "dusterio/laravel-aws-worker",
+            "version": "v0.1.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dusterio/laravel-aws-worker.git",
+                "reference": "356103318badb5af8b7c154bb4fc9eaefd3b41d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dusterio/laravel-aws-worker/zipball/356103318badb5af8b7c154bb4fc9eaefd3b41d8",
+                "reference": "356103318badb5af8b7c154bb4fc9eaefd3b41d8",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-sdk-php": "~3.0",
+                "illuminate/bus": "5.*",
+                "illuminate/http": "5.*",
+                "illuminate/queue": "5.*",
+                "illuminate/support": "5.*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dusterio\\AwsWorker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Denis Mysenko",
+                    "email": "denis@mysenko.com",
+                    "homepage": "https://www.mysenko.com"
+                }
+            ],
+            "description": "Run Laravel (or Lumen) tasks and queue listeners inside of AWS Elastic Beanstalk workers",
+            "homepage": "https://github.com/dusterio/laravel-aws-worker",
+            "keywords": [
+                "aws",
+                "elasticbeanstalk",
+                "laravel",
+                "lumen",
+                "php",
+                "sqs",
+                "worker"
+            ],
+            "time": "2019-02-27T10:46:53+00:00"
         },
         {
             "name": "egulias/email-validator",
