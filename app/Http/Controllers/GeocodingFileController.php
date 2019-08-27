@@ -188,10 +188,10 @@ class GeocodingFileController extends Controller
         return redirect()->back();
     }
 
-    private function getFileResults(GeocodingFile $file, ClusterWithScipy $cluster)
+    private function getFileResults(GeocodingFile $file)
     {
         $results = collect();
-        $data = $cluster->getResults($file);
+        $data = (new ClusterWithScipy())->getResults($file);
 
         foreach ($data as $row) {
             $results->add((object) $row);
