@@ -29,15 +29,10 @@
         @foreach ($results as $result)
             <div class="geolv-result"
                  data-street-name="{{ $result->street_name }}"
-                 data-number="{{ $result->street_number }}"
-                 data-locality="{{ $result->locality }}"
-                 data-sub-locality="{{ $result->sub_locality }}"
-                 data-country-code="{{ $result->country_code }}"
-                 data-country-name="{{ $result->country_name }}"
-                 data-provider="{{ $result->provider }}"
                  data-latitude="{{ $result->latitude }}"
                  data-longitude="{{ $result->longitude }}"
-                 data-relevance="{{ $result->relevance }}"
+                 data-locality="{{ $result->locality }}"
+                 data-provider="{{ $result->provider }}"
                  data-cluster="{{ $result->cluster }}"></div>
         @endforeach
     </div>

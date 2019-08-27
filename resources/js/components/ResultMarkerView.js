@@ -27,7 +27,7 @@ export default class ResultMarkerView extends View {
         this.addItem('Localidade', this.props.locality);
         this.addItem('Sub-localidade', this.props.postalCode);
         this.addItem('CEP', this.props.subLocality);
-        this.addItem('País', `(${ this.props.countryCode || "" }) ${ this.props.countryName || ""}`);
+        this.addItem('País', this.props.countryName);
         this.addItem('Latitude', this.props.latitude.toFixed(8));
         this.addItem('Longitude', this.props.longitude.toFixed(8));
     }

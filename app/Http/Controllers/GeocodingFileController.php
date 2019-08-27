@@ -5,6 +5,7 @@ namespace GeoLV\Http\Controllers;
 use GeoLV\Address;
 use GeoLV\AddressCollection;
 use GeoLV\Geocode\Clusters\ClusterWithScipy;
+use GeoLV\Geocode\GeocodingFileReader;
 use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\UploadRequest;
 use GeoLV\Jobs\GeocodeNextFile;
@@ -190,13 +191,23 @@ class GeocodingFileController extends Controller
     private function getFileResults(GeocodingFile $file): AddressCollection
     {
         $results = new AddressCollection();
+        $reader = new GeocodingFileReader($file);
 
         try {
-            $adapter = Storage::disk('s3')->getAdapter();
-            $response = $adapter->readStream($file->path);
-            $reader = Reader::createFromStream($response['stream'])->setDelimiter($file->delimiter);
-            foreach ($reader as $row) {
-                $results->add(new Address(Arr::only($row, $file->fields)));
+            $data = $reader->read(GeocodingFileReader::POST_PROCESSED_FILE);
+            $n_fields = count($file->fields);
+            $lat_idx = array_search('latitude', $file->fields);
+            $lng_idx = array_search('longitude', $file->fields);
+
+            foreach ($data as $row) {
+                $n_cols = count($row) - $n_fields;
+
+                $results->add(new Address([
+                    'street_name' => $reader->getField($row, 'text'),
+                    'latitude' => $row[$n_cols + $lat_idx],
+                    'longitude' => $row[$n_cols + $lng_idx],
+                    'provider' => 'geolv'
+                ]));
             }
         } catch (\League\Csv\Exception $e) {
             report($e);

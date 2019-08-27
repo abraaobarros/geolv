@@ -30,11 +30,14 @@ export default class GeoLVMap extends View {
     get results() {
         let addresses = [];
         let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let results = this.get('result');
+        let total = results.length;
 
-        this.get('result').each((i, result) => {
+        results.each((i, result) => {
             let address = $(result).data();
             address.position = new google.maps.LatLng(address.latitude, address.longitude);
-            address.label = alphabet[i % 26];
+            if (total < 26)
+                address.label = alphabet[i];
 
             addresses.push(address);
         });
@@ -159,7 +162,11 @@ export default class GeoLVMap extends View {
     }
 
     getColor(group) {
-        return this.colors[group - 1];
+        if (group > 16) {
+            return (0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+        } else {
+            return this.colors[group - 1];
+        }
     }
 
     drawLocality() {
@@ -193,7 +200,7 @@ export default class GeoLVMap extends View {
                 icon: icon,
                 title: address.streetName,
                 position: address.position,
-                label: address.label,
+                label: address.label
             });
 
             let info = new google.maps.InfoWindow({

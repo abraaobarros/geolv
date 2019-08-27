@@ -49,23 +49,6 @@ class GeocodingFileProcessor
         $this->errorOutput = Writer::createFromFileObject(new SplTempFileObject());
     }
 
-    private function readRecords(GeocodingFile $file, $chunk)
-    {
-        info("[GEOCODE: {$file->id}] reading records");
-
-        /** @var AwsS3Adapter $adapter */
-        /** @var S3Client $client */
-        $adapter = $this->storage->getAdapter();
-        $client = $adapter->getClient();
-        $client->registerStreamWrapper();
-        
-        $response = $adapter->readStream($file->path);
-        $stream = $response['stream'];
-        $reader = Reader::createFromStream($stream)->setDelimiter($file->delimiter);
-
-        return (new Statement())->offset($file->offset)->limit($chunk)->process($reader);
-    }
-
     /**
      * @param GeocodingFile $file
      * @param $chunk
@@ -73,7 +56,8 @@ class GeocodingFileProcessor
      */
     public function process(GeocodingFile $file, $chunk): int
     {
-        $records = $this->readRecords($file, $chunk);
+        $reader = new GeocodingFileReader($file);
+        $records = $reader->read(GeocodingFileReader::PREPROCESSED_FILE, $chunk, $file->offset);
         $size = count($records);
         $this->geocoder->setProviders(GeocoderProvider::LOW_COST_STRATEGY, $file->providers);
 
@@ -83,12 +67,11 @@ class GeocodingFileProcessor
             return 0;
 
         foreach ($records as $i => $record) {
-
             try {
                 if ($i == 0 && $file->offset == 0 && $file->header)
                     $this->processHeader($file, $record);
                 else
-                    $this->processRow($file, $record);
+                    $this->processRow($reader, $record);
             } catch (CannotInsertRecord $exception) {
                 report($exception);
             }
@@ -112,17 +95,17 @@ class GeocodingFileProcessor
     }
 
     /**
-     * @param GeocodingFile $file
+     * @param GeocodingFileReader $reader
      * @param array $row
      * @throws CannotInsertRecord
      */
-    private function processRow(GeocodingFile $file, array $row)
+    private function processRow(GeocodingFileReader $reader, array $row)
     {
-        $text = Dictionary::address($this->get($file, $row, 'text'));
-        $locality = $this->get($file, $row, 'locality');
-        $state = $this->get($file, $row, 'state');
-        $postalCode = $this->get($file, $row, 'postal_code');
-        $locality = empty($state)? $locality : "$locality - $state";
+        $text = Dictionary::address($reader->getField($row, 'text'));
+        $locality = $reader->getField($row, 'locality');
+        $state = $reader->getField($row, 'state');
+        $postalCode = $reader->getField($row, 'postal_code');
+        $locality = empty($state) ? $locality : "$locality - $state";
         $emptyRow = empty($postalCode) ? (empty($text) && empty($locality)) : false;
 
         if (!$emptyRow) {
