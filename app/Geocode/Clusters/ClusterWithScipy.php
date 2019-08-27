@@ -40,12 +40,19 @@ class ClusterWithScipy
     public function getResults(GeocodingFile $file)
     {
         try {
-            $response = $this->client->request('POST', '/clusters/file', [
+            dd([
+                'path' => $file->output_path,
+                'fields' => $file->fields,
+                'header' => $file->header
+            ]);
+
+            $response = $this->client->request('GET', '/clusters/file', [
                 'auth' => $this->auth,
-                'json' => [
+                'query' => [
                     'path' => $file->output_path,
                     'fields' => $file->fields,
-                    'header' => $file->header
+                    'header' => $file->header,
+                    'sep' => $file->delimiter
                 ],
             ]);
 
