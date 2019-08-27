@@ -13,16 +13,15 @@ use Illuminate\Support\Collection;
 class ClusterWithScipy
 {
     private $client;
+    private $auth;
 
     public function __construct()
     {
-        $this->client = new Client([
-            'base_uri' => config('services.cluster.url'),
-            'auth' => [
-                config('services.cluster.username'),
-                config('services.cluster.password')
-            ],
-        ]);
+        $this->client = new Client(['base_uri' => config('services.cluster.url')]);
+        $this->auth = [
+            config('services.cluster.username'),
+            config('services.cluster.password')
+        ];
     }
 
     public function apply(Collection $collection, $max_d)
@@ -42,11 +41,12 @@ class ClusterWithScipy
     {
         try {
             $response = $this->client->request('POST', '/clusters/file', [
+                'auth' => $this->auth,
                 'json' => [
                     'path' => $file->output_path,
                     'fields' => $file->fields,
                     'header' => $file->header
-                ]
+                ],
             ]);
 
             return \GuzzleHttp\json_decode($response->getBody());
@@ -62,6 +62,7 @@ class ClusterWithScipy
         })->implode('|');
 
         $response = $this->client->request('POST', '/clusters', [
+            'auth' => $this->auth,
             'json' => [
                 'max_d' => $max_d,
                 'points' => $points
