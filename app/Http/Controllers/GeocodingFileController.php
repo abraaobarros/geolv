@@ -132,21 +132,29 @@ class GeocodingFileController extends Controller
     {
         $this->authorize('view', $file);
 
-        $max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
-        $key = "files.{$file->id}.results";
-        $callback = function () use ($file, $cluster, $max_d) {
-            $results = $this->getFileResults($file);
-            $cluster->apply($results, $max_d);
-            return $results;
+        //Resolve file
+        $results_key = "files.{$file->id}.results";
+        $callback = function () use ($file, $cluster) {
+            return $this->getFileResults($file);
         };
+        $results = $file->done ? Cache::rememberForever($results_key, $callback)
+            : Cache::remember($results_key, 300, $callback);
 
-        if ($file->done) {
-            $results = Cache::rememberForever($key, $callback);
-        } else {
-            $results = Cache::remember($key, 300, $callback); //lives for 5 minutes
-        }
+        //Resolve clusters
+        $max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
+        $clusters_key = "files.{$file->id}.{$max_d}.clusters";
+        $callbackClusters = function () use ($results, $max_d) {
+            $cluster = new ClusterWithScipy();
+            $cluster->apply($results, $max_d);
+            return $results->groupBy('cluster')->map(function ($results, $cluster) {
+                $count = count($results);
+                return compact('cluster', 'count');
+            })->values()->sortByDesc('count');
+        };
+        $clusters = $file->done ? Cache::rememberForever($clusters_key, $callbackClusters)
+            : Cache::remember($clusters_key, 300, $callbackClusters);
 
-        return view('files.map', compact('file', 'results', 'max_d'));
+        return view('files.map', compact('file', 'results', 'max_d', 'clusters'));
     }
 
     /**
