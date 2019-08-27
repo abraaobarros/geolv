@@ -206,7 +206,6 @@ class GeocodingFileController extends Controller
                     'text' => $reader->getField($row, 'text'),
                     'latitude' => $row[$n_cols + $lat_idx],
                     'longitude' => $row[$n_cols + $lng_idx],
-                    'provider' => 'geolv'
                 ]);
             }
         } catch (\Exception $e) {
@@ -221,7 +220,7 @@ class GeocodingFileController extends Controller
      * @param $max_d
      * @return mixed
      */
-    function getResultsClusters($results, $max_d)
+    private function getResultsClusters($results, $max_d)
     {
         $cluster = new ClusterWithScipy();
         $cluster->apply($results, $max_d);
