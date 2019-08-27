@@ -115,7 +115,7 @@ class GeocodingFileProcessor
             if ($result) {
                 $mainCluster = $results->inMainCluster();
 
-                foreach ($file->fields as $field) {
+                foreach ($reader->getFile()->fields as $field) {
                     if ($field == 'dispersion')
                         $value = $mainCluster->calculateDispersion();
                     else if ($field == 'providers_count')
@@ -136,19 +136,6 @@ class GeocodingFileProcessor
             } else {
                 $this->errorOutput->insertOne($row);
             }
-        }
-    }
-
-    private function get(GeocodingFile $file, $row, $type)
-    {
-        if (isset($file->indexes[$type])) {
-            $value = [];
-            foreach ($file->indexes[$type] as $index)
-                array_push($value, $row[$index]);
-
-            return trim(implode(" ", $value));
-        } else {
-            return null;
         }
     }
 

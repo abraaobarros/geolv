@@ -5,6 +5,7 @@ namespace GeoLV\Geocode\Clusters;
 
 use GeoLV\Address;
 use GeoLV\AddressCollection;
+use GeoLV\GeocodingFile;
 use GeoLV\Search;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
@@ -15,7 +16,13 @@ class ClusterWithScipy
 
     public function __construct()
     {
-        $this->client = new Client(['base_uri' => config('services.cluster.url')]);
+        $this->client = new Client([
+            'base_uri' => config('services.cluster.url'),
+            'auth' => [
+                config('services.cluster.username'),
+                config('services.cluster.password')
+            ],
+        ]);
     }
 
     public function apply(Collection $collection, $max_d)
@@ -25,8 +32,26 @@ class ClusterWithScipy
             foreach ($collection as $i => $address)
                 $address->cluster = $clusters[$i];
         } catch (\Exception $e) {
+            report($e);
             foreach ($collection as $i => $address)
                 $address->cluster = 1;
+        }
+    }
+
+    public function getResults(GeocodingFile $file)
+    {
+        try {
+            $response = $this->client->request('POST', '/clusters/file', [
+                'json' => [
+                    'path' => $file->output_path,
+                    'fields' => $file->fields,
+                    'header' => $file->header
+                ]
+            ]);
+
+            return \GuzzleHttp\json_decode($response->getBody());
+        } catch (\Exception $e) {
+            return [];
         }
     }
 
@@ -36,8 +61,8 @@ class ClusterWithScipy
             return $address->latitude . ';' . $address->longitude;
         })->implode('|');
 
-        $response = $this->client->request('GET', '/clusters', [
-            'query' => [
+        $response = $this->client->request('POST', '/clusters', [
+            'json' => [
                 'max_d' => $max_d,
                 'points' => $points
             ]

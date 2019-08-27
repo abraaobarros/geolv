@@ -25,6 +25,14 @@ class GeocodingFileReader
         $this->file = $file;
     }
 
+    /**
+     * @return GeocodingFile
+     */
+    public function getFile(): GeocodingFile
+    {
+        return $this->file;
+    }
+
     public function read($type, $size = -1, $offset = 0)
     {
         /** @var AwsS3Adapter $adapter */

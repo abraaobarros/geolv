@@ -36,7 +36,9 @@ return [
     ],
 
     'cluster' => [
-        'url' => env('SCIPY_CLUSTER_URL')
+        'url' => env('SCIPY_CLUSTER_URL'),
+        'username' => env('SCIPY_USERNAME'),
+        'password' => env('SCIPY_PASSWORD'),
     ]
 
 ];
