@@ -199,10 +199,12 @@ class GeocodingFileController extends Controller
             $lat_idx = array_search('latitude', $file->fields);
             $lng_idx = array_search('longitude', $file->fields);
 
-            foreach ($data as $row) {
-                $n_cols = count($row) - $n_fields;
+            foreach ($data as $line => $row) {
+                if ($line == 0 && $file->header)
+                    continue;
 
-                $results->add([
+                $n_cols = count($row) - $n_fields;
+                $results->add((object) [
                     'text' => $reader->getField($row, 'text'),
                     'latitude' => $row[$n_cols + $lat_idx],
                     'longitude' => $row[$n_cols + $lng_idx],
@@ -224,10 +226,12 @@ class GeocodingFileController extends Controller
     {
         $cluster = new ClusterWithScipy();
         $cluster->apply($results, $max_d);
-        return $results->groupBy('cluster')->map(function ($results, $cluster) {
+        $clusters = $results->groupBy('cluster')->map(function ($results, $cluster) {
             $count = count($results);
             return compact('cluster', 'count');
         })->values()->sortByDesc('count');
+
+        return $clusters;
     }
 
 }

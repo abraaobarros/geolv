@@ -22,18 +22,18 @@ class ClusterWithScipy
     {
         try {
             $clusters = $this->getClusters($collection, $max_d);
-            foreach ($collection->values() as $i => $address)
-                $address['cluster'] = $clusters[$i];
+            foreach ($collection as $i => $address)
+                $address->cluster = $clusters[$i];
         } catch (\Exception $e) {
-            foreach ($collection->values() as $i => $address)
-                $address['cluster'] = 1;
+            foreach ($collection as $i => $address)
+                $address->cluster = 1;
         }
     }
 
     private function getClusters(Collection $collection, float $max_d)
     {
         $points = $collection->map(function ($address) {
-            return $address['latitude'] . ';' . $address['longitude'];
+            return $address->latitude . ';' . $address->longitude;
         })->implode('|');
 
         $response = $this->client->request('GET', '/clusters', [
