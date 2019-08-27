@@ -110,7 +110,7 @@ class GeocodingFileProcessor
     private function processHeader($file, $row)
     {
         $this->output->insertOne(array_merge($row, $file->fields));
-        $this->errorOutput->insertOne(array_merge($row, $file->fields));
+        $this->errorOutput->insertOne($row);
     }
 
     /**
