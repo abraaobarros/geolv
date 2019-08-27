@@ -32,6 +32,7 @@
         </div>
         <ul class="list-group list-group-compact list-group-flush">
             <li class="list-group-item">Qtd. total: <b>{{ $results->count() }}</b></li>
+            <li class="list-group-item">Qtd. clusters: <b>{{ $clusters->count() }}</b></li>
             <li class="list-group-item">Qtd. maior cluster: <b>{{ optional($clusters->first())['count'] }}</b></li>
         </ul>
     </div>
