@@ -203,12 +203,14 @@ class GeocodingFileController extends Controller
                 if ($line == 0 && $file->header)
                     continue;
 
-                $n_cols = count($row) - $n_fields;
-                $results->add((object) [
-                    'text' => $reader->getField($row, 'text'),
-                    'latitude' => $row[$n_cols + $lat_idx],
-                    'longitude' => $row[$n_cols + $lng_idx],
-                ]);
+                try {
+                    $n_cols = count($row) - $n_fields;
+                    $results->add((object) [
+                        'text' => $reader->getField($row, 'text'),
+                        'latitude' => $row[$n_cols + $lat_idx],
+                        'longitude' => $row[$n_cols + $lng_idx],
+                    ]);
+                } catch (\Exception $e) {}
             }
         } catch (\Exception $e) {
             report($e);
