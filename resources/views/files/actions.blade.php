@@ -8,7 +8,9 @@
         <div class="btn-group w-100">
             <a href="{{ route('files.download', $file->id) }}" class="btn btn-outline-success">
                 <i class="fa fa-download mr-2"></i>
+                <span class="d-sm-none d-md-inline-block">
                 {{ __('Download') }}
+                </span>
             </a>
             <button type="button" class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="max-width: 50px">
