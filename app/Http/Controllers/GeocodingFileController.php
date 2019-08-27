@@ -188,32 +188,13 @@ class GeocodingFileController extends Controller
         return redirect()->back();
     }
 
-    private function getFileResults(GeocodingFile $file)
+    private function getFileResults(GeocodingFile $file, ClusterWithScipy $cluster)
     {
         $results = collect();
-        $reader = new GeocodingFileReader($file);
+        $data = $cluster->getResults($file);
 
-        try {
-            $data = $reader->read(GeocodingFileReader::POST_PROCESSED_FILE);
-            $n_fields = count($file->fields);
-            $lat_idx = array_search('latitude', $file->fields);
-            $lng_idx = array_search('longitude', $file->fields);
-
-            foreach ($data as $line => $row) {
-                if ($line == 0 && $file->header)
-                    continue;
-
-                try {
-                    $n_cols = count($row) - $n_fields;
-                    $results->add((object) [
-                        'text' => $reader->getField($row, 'text'),
-                        'latitude' => $row[$n_cols + $lat_idx],
-                        'longitude' => $row[$n_cols + $lng_idx],
-                    ]);
-                } catch (\Exception $e) {}
-            }
-        } catch (\Exception $e) {
-            report($e);
+        foreach ($data as $row) {
+            $results->add((object) $row);
         }
 
         return $results;
