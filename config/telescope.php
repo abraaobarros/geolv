@@ -67,7 +67,8 @@ return [
     */
 
     'ignore_paths' => [
-        //
+        'worker/schedule',
+        'worker/queue'
     ],
 
     'ignore_commands' => [
