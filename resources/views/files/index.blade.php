@@ -53,7 +53,7 @@
 
                     @foreach($files as $file)
                         <tr>
-                            <td class="td-wrap-120"><span class="badge badge-default">{{ $file->name }}</span></td>
+                            <td class="td-wrap td-wrap-120"><span class="badge badge-default">{{ $file->name }}</span></td>
                             @can('view', GeoLV\User::class)
                                 <td><a href="{{ route('users.show', $file->user_id) }}">{{ $file->user->name }}</a></td>
                             @endcan
