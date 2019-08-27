@@ -60,10 +60,10 @@ export default class GeoLVMap extends View {
             'fabebe',
             '008080',
             'aa6e28',
-            'ACE5EE',
-            'DE5D83',
-            '66FF00',
-            'C32148'
+            'acE5ee',
+            'de5d83',
+            '66ff00',
+            'c32148'
         ];
         //</editor-fold>
 
@@ -162,7 +162,7 @@ export default class GeoLVMap extends View {
     }
 
     getColor(group) {
-        if (group > 16) {
+        if (group > 15) {
             return (0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
         } else {
             return this.colors[group - 1];
