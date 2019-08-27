@@ -66,9 +66,8 @@ class GeocodingController extends Controller
             'confidence', 'confidenceInfo'));
     }
 
-    public function map(Request $request)
+    public function map(Request $request, Search $search)
     {
-        $search = Search::findOrFail($request->get('search_id'));
         $selected = Address::find($request->get('selected_id'));
         $providers = $request->get('providers', $this->defaultProviders);
         $search->max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
