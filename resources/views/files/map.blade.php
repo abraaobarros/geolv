@@ -46,7 +46,7 @@
                  data-street-name="{{ $result->text }}"
                  data-latitude="{{ $result->latitude }}"
                  data-longitude="{{ $result->longitude }}"
-                 data-cluster="{{ $result->cluster }}"
+                 data-cluster="{{ optional($result)->cluster }}"
                  data-provider="geolv"></div>
         @endforeach
     </div>
