@@ -195,7 +195,7 @@ class GeocodingFileController extends Controller
 
         try {
             $data = $reader->read(GeocodingFileReader::POST_PROCESSED_FILE);
-            $n_fields = count($this->file->fields);
+            $n_fields = count($file->fields);
             $lat_idx = array_search('latitude', $file->fields);
             $lng_idx = array_search('longitude', $file->fields);
 
