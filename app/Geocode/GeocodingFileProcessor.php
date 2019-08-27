@@ -89,8 +89,6 @@ class GeocodingFileProcessor
                     $this->processHeader($file, $record);
                 else
                     $this->processRow($file, $record);
-
-                info("[GEOCODE: {$file->id}] processed row");
             } catch (CannotInsertRecord $exception) {
                 report($exception);
             }

@@ -16,10 +16,10 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item text-danger" href="{{ route('files.download-errors', $file->id) }}">
-                    {{ __('Download results not found') }}
+                    <i class="fa fa-download mr-2"></i> {{ __('Download results not found') }}
                 </a>
                 <a class="dropdown-item" href="{{ route('files.map', $file->id) }}">
-                    {{ __('Open map') }}
+                    <i class="fa fa-map mr-2"></i> {{ __('Open map') }}
                 </a>
             </div>
         </div>
@@ -37,10 +37,10 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item text-danger" href="{{ route('files.download-errors', $file->id) }}">
-                    {{ __('Download results not found') }}  <b>({{ __('partial') }})</b>
+                    <i class="fa fa-download mr-2"></i> {{ __('Download results not found') }}  <b>({{ __('partial') }})</b>
                 </a>
                 <a class="dropdown-item" href="{{ route('files.map', $file->id) }}">
-                    {{ __('Open map') }}  <b>({{ __('partial') }})</b>
+                    <i class="fa fa-map mr-2"></i> {{ __('Open map') }}  <b>({{ __('partial') }})</b>
                 </a>
             </div>
         </div>
