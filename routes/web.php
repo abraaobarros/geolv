@@ -21,7 +21,7 @@ $router->group(['middleware' => ['auth', 'verified']], function (Router $router)
         ->name('geocode');
 
     $router
-        ->get('/geocode/map', 'GeocodingController@map')
+        ->get('/geocode/map/{searches}', 'GeocodingController@map')
         ->name('map');
 
     $router
@@ -43,6 +43,10 @@ $router->group(['middleware' => ['auth', 'verified']], function (Router $router)
     $router
         ->post('files/{files}/cancel', 'GeocodingFileController@cancel')
         ->name('files.cancel');
+
+    $router
+        ->get('files/{files}/map', 'GeocodingFileController@map')
+        ->name('files.map');
 
     $router
         ->resource('users', 'UsersController');

@@ -2,13 +2,20 @@
 
 namespace GeoLV\Http\Controllers;
 
+use GeoLV\Address;
+use GeoLV\AddressCollection;
+use GeoLV\Geocode\Clusters\ClusterWithScipy;
 use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\UploadRequest;
 use GeoLV\Jobs\GeocodeNextFile;
+use GeoLV\Search;
 use GeoLV\User;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use League\Csv\Reader;
 use League\Flysystem\FileNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -114,6 +121,34 @@ class GeocodingFileController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param GeocodingFile $file
+     * @param ClusterWithScipy $cluster
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function map(Request $request, GeocodingFile $file, ClusterWithScipy $cluster)
+    {
+        $this->authorize('view', $file);
+
+        $max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
+        $key = "files.{$file->id}.results";
+        $callback = function () use ($file, $cluster, $max_d) {
+            $results = $this->getFileResults($file);
+            $cluster->apply($results, $max_d);
+            return $results;
+        };
+
+        if ($file->done) {
+            $results = Cache::rememberForever($key, $callback);
+        } else {
+            $results = Cache::remember($key, 300, $callback); //lives for 5 minutes
+        }
+
+        return view('files.map', compact('file', 'results', 'max_d'));
+    }
+
+    /**
      * @param GeocodingFile $file
      * @return mixed
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -146,6 +181,28 @@ class GeocodingFileController extends Controller
 
         $file->delete();
         return redirect()->back();
+    }
+
+    /**
+     * @param GeocodingFile $file
+     * @return AddressCollection
+     */
+    private function getFileResults(GeocodingFile $file): AddressCollection
+    {
+        $results = new AddressCollection();
+
+        try {
+            $adapter = Storage::disk('s3')->getAdapter();
+            $response = $adapter->readStream($file->path);
+            $reader = Reader::createFromStream($response['stream'])->setDelimiter($file->delimiter);
+            foreach ($reader as $row) {
+                $results->add(new Address(Arr::only($row, $file->fields)));
+            }
+        } catch (\League\Csv\Exception $e) {
+            report($e);
+        }
+
+        return $results;
     }
 
 }

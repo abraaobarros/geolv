@@ -27,78 +27,52 @@
                     </div>
                 @endif
 
-                <div class="table-responsive">
-                    <table class="table table-hover mt-4">
-                        <thead>
+
+                <table class="table table-hover mt-4">
+                    <thead>
+                    <tr>
+                        <th>{{ __('File') }}</th>
+                        @can('view', GeoLV\User::class)
+                            <th style="min-width: 100px;">{{ __('Autor') }}</th>
+                        @endcan
+                        <th class="d-none d-md-block">{{ __('Created at') }}</th>
+                        @can('prioritize', \GeoLV\GeocodingFile::class)
+                            <th width="100px">{{ __('Priority') }}</th>
+                        @endcan
+                        <th width="300px">{{ __('Status') }}</th>
+                        <th style="min-width: 200px">{{ __('Actions') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    @if(blank($files))
                         <tr>
-                            <th>{{ __('File') }}</th>
-                            @can('view', GeoLV\User::class)
-                                <th style="min-width: 100px;">{{ __('Autor') }}</th>
-                            @endcan
-                            <th class="d-none d-md-block">{{ __('Created at') }}</th>
-                            @can('prioritize', \GeoLV\GeocodingFile::class)
-                                <th width="100px">{{ __('Priority') }}</th>
-                            @endcan
-                            <th width="300px">{{ __('Status') }}</th>
-                            <th>{{ __('Actions') }}</th>
+                            <td colspan="5">Nenhum arquivo processado.</td>
                         </tr>
-                        </thead>
-                        <tbody>
+                    @endif
 
-                        @if(blank($files))
-                            <tr>
-                                <td colspan="5">Nenhum arquivo processado.</td>
-                            </tr>
-                        @endif
-
-                        @foreach($files as $file)
-                            <tr>
-                                <td><span class="badge badge-default">{{ $file->name }}</span></td>
-                                @can('view', GeoLV\User::class)
-                                    <td><a href="{{ route('users.show', $file->user_id) }}">{{ $file->user->name }}</a></td>
-                                @endcan
-                                <td class="d-none d-md-block">{{ $file->created_at->diffForHumans() }}</td>
-                                @can('prioritize', \GeoLV\GeocodingFile::class)
-                                    <td>
-                                        @if(!$file->done && !$file->canceled_at)
-                                            <form action="{{ route('files.prioritize', $file->id) }}" method="post"
-                                                  class="d-inline-block">
-                                                @csrf
-
-                                                <div class="input-group input-group-sm">
-                                                    <input type="number" class="form-control" name="priority"
-                                                           value="{{ $file->priority }}" min="0" step="1"/>
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-outline-secondary" type="submit">
-                                                            <i class="fa fa-arrows-v"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        @else
-                                            <div class="input-group input-group-sm mb-3">
-                                                <input type="number" class="form-control" name="priority"
-                                                       value="{{ $file->priority }}" min="0" step="1" readonly/>
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-outline-secondary disabled" disabled>
-                                                        <i class="fa fa-arrows-v"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </td>
-                                @endcan
+                    @foreach($files as $file)
+                        <tr>
+                            <td class="td-wrap-120"><span class="badge badge-default">{{ $file->name }}</span></td>
+                            @can('view', GeoLV\User::class)
+                                <td><a href="{{ route('users.show', $file->user_id) }}">{{ $file->user->name }}</a></td>
+                            @endcan
+                            <td class="d-none d-md-block">{{ $file->created_at->diffForHumans() }}</td>
+                            @can('prioritize', \GeoLV\GeocodingFile::class)
                                 <td>
-                                    @include('files.status')
+                                    @include('files.priority')
                                 </td>
-                                <td>
-                                    @include('files.actions')
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                            @endcan
+                            <td>
+                                @include('files.status')
+                            </td>
+                            <td>
+                                @include('files.actions')
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
 
                 {{ $files->links('pagination::bootstrap-4') }}
 

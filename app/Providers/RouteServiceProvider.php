@@ -26,7 +26,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->model('files', GeocodingFile::class);
-        $this->model('search', Search::class);
+        $this->model('searches', Search::class);
 
         parent::boot();
     }

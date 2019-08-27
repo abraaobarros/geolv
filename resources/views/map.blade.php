@@ -11,12 +11,11 @@
             Opções
         </div>
         <div class="card-body">
-            <form action="{{ route('map') }}" method="get">
+            <form action="{{ route('map', $search->id) }}" method="get">
                 <label for="max_d">
                     <small>Cluster Max:</small>
                     <input type="number" name="max_d" id="max_d" step="0.001" value="{{ old('max_d', $search->max_d) }}" class="form-control form-control-sm">
                     <input type="hidden" name="selected_id" value="{{ $selected->id }}">
-                    <input type="hidden" name="search_id" value="{{ $search->id }}">
                     @foreach($providers as $provider)
                     <input type="hidden" name="providers[]" value="{{ $provider }}"/>
                     @endforeach

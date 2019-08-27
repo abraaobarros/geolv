@@ -11,18 +11,16 @@ use GuzzleHttp\Client;
 class ClusterWithScipy
 {
     private $client;
-    private $search;
 
-    public function __construct(Search $search)
+    public function __construct()
     {
         $this->client = new Client(['base_uri' => config('services.cluster.url')]);
-        $this->search = $search;
     }
 
-    public function apply(AddressCollection $collection)
+    public function apply(AddressCollection $collection, $max_d)
     {
         try {
-            $clusters = $this->getClusters($collection, $this->search->max_d);
+            $clusters = $this->getClusters($collection, $max_d);
             foreach ($collection->values() as $i => $address)
                 $address->cluster = $clusters[$i];
         } catch (\Exception $e) {

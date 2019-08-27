@@ -3,21 +3,7 @@
         <a href="{{ request()->fullUrl() }}" class="btn btn-outline-success w-100">
             {{ __('Refresh') }} <i class="fa fa-refresh"></i>
         </a>
-        <form action="{{ route('files.cancel', $file->id) }}" method="post" class="d-inline-block ml-1">
-            @csrf
-
-            @if ($file->canceled_at)
-                <button type="submit" class="btn btn-block btn-outline-success" data-toggle="tooltip"
-                        data-placement="right" title="{{ __('Resume file') }}">
-                    <i class="fa fa-play"></i>
-                </button>
-            @else
-                <button type="submit" class="btn btn-block btn-outline-secondary" data-toggle="tooltip"
-                        data-placement="right" title="{{ __('Cancel file') }}">
-                    <i class="fa fa-pause"></i>
-                </button>
-            @endif
-        </form>
+        @include('actions.cancel')
     @elseif($file->done)
         <div class="btn-group w-100">
             <a href="{{ route('files.download', $file->id) }}" class="btn btn-outline-success">
@@ -31,6 +17,9 @@
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item text-danger" href="{{ route('files.download-errors', $file->id) }}">
                     {{ __('Download results not found') }}
+                </a>
+                <a class="dropdown-item" href="{{ route('files.map', $file->id) }}">
+                    {{ __('Open map') }}
                 </a>
             </div>
         </div>
@@ -50,23 +39,12 @@
                 <a class="dropdown-item text-danger" href="{{ route('files.download-errors', $file->id) }}">
                     {{ __('Download results not found') }}  <b>({{ __('partial') }})</b>
                 </a>
+                <a class="dropdown-item" href="{{ route('files.map', $file->id) }}">
+                    {{ __('Open map') }}  <b>({{ __('partial') }})</b>
+                </a>
             </div>
         </div>
-        <form action="{{ route('files.cancel', $file->id) }}" method="post" class="d-inline-block ml-1">
-            @csrf
-
-            @if ($file->canceled_at)
-                <button type="submit" class="btn btn-block btn-outline-success" data-toggle="tooltip"
-                        data-placement="right" title="{{ __('Resume file') }}">
-                    <i class="fa fa-play"></i>
-                </button>
-            @else
-                <button type="submit" class="btn btn-block btn-outline-secondary" data-toggle="tooltip"
-                        data-placement="right" title="{{ __('Cancel file') }}">
-                    <i class="fa fa-pause"></i>
-                </button>
-            @endif
-        </form>
+        @include('actions.cancel')
     @endif
     <form action="{{ route('files.destroy', $file->id) }}" method="post" class="ml-1">
         @csrf
