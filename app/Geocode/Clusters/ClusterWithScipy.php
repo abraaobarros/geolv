@@ -48,11 +48,6 @@ class ClusterWithScipy
                     'header' => $file->header
                 ],
             ]);
-            dd([
-                'path' => $file->output_path,
-                'fields' => $file->fields,
-                'header' => $file->header
-            ]);
 
             return \GuzzleHttp\json_decode($response->getBody());
         } catch (\Exception $e) {
