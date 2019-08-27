@@ -42,11 +42,10 @@
 
         @foreach ($results as $result)
             <div class="geolv-result"
-                 data-street-name="{{ $result->street_name }}"
+                 data-street-name="{{ $result->text }}"
                  data-latitude="{{ $result->latitude }}"
                  data-longitude="{{ $result->longitude }}"
-                 data-locality="{{ $result->locality }}"
-                 data-provider="{{ $result->provider }}"
+                 data-provider="geolv"
                  data-cluster="{{ $result->cluster }}"></div>
         @endforeach
     </div>

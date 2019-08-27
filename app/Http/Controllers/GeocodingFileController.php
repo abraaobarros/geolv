@@ -8,6 +8,7 @@ use GeoLV\Geocode\Clusters\ClusterWithScipy;
 use GeoLV\Geocode\GeocodingFileReader;
 use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\UploadRequest;
+use GeoLV\Jobs\GenerateFileResultsCache;
 use GeoLV\Jobs\GeocodeNextFile;
 use GeoLV\Search;
 use GeoLV\User;
@@ -134,22 +135,17 @@ class GeocodingFileController extends Controller
 
         //Resolve file
         $results_key = "files.{$file->id}.results";
-        $callback = function () use ($file, $cluster) {
+        $callbackResults = function () use ($file) {
             return $this->getFileResults($file);
         };
-        $results = $file->done ? Cache::rememberForever($results_key, $callback)
-            : Cache::remember($results_key, 300, $callback);
+        $results = $file->done ? Cache::rememberForever($results_key, $callbackResults)
+            : Cache::remember($results_key, 300, $callbackResults);
 
         //Resolve clusters
         $max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
         $clusters_key = "files.{$file->id}.{$max_d}.clusters";
         $callbackClusters = function () use ($results, $max_d) {
-            $cluster = new ClusterWithScipy();
-            $cluster->apply($results, $max_d);
-            return $results->groupBy('cluster')->map(function ($results, $cluster) {
-                $count = count($results);
-                return compact('cluster', 'count');
-            })->values()->sortByDesc('count');
+            return $this->getResultsClusters($results, $max_d);
         };
         $clusters = $file->done ? Cache::rememberForever($clusters_key, $callbackClusters)
             : Cache::remember($clusters_key, 300, $callbackClusters);
@@ -192,36 +188,47 @@ class GeocodingFileController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * @param GeocodingFile $file
-     * @return AddressCollection
-     */
-    private function getFileResults(GeocodingFile $file): AddressCollection
+    private function getFileResults(GeocodingFile $file)
     {
-        $results = new AddressCollection();
+        $results = collect();
         $reader = new GeocodingFileReader($file);
 
         try {
             $data = $reader->read(GeocodingFileReader::POST_PROCESSED_FILE);
-            $n_fields = count($file->fields);
+            $n_fields = count($this->file->fields);
             $lat_idx = array_search('latitude', $file->fields);
             $lng_idx = array_search('longitude', $file->fields);
 
             foreach ($data as $row) {
                 $n_cols = count($row) - $n_fields;
 
-                $results->add(new Address([
-                    'street_name' => $reader->getField($row, 'text'),
+                $results->add([
+                    'text' => $reader->getField($row, 'text'),
                     'latitude' => $row[$n_cols + $lat_idx],
                     'longitude' => $row[$n_cols + $lng_idx],
                     'provider' => 'geolv'
-                ]));
+                ]);
             }
-        } catch (\League\Csv\Exception $e) {
+        } catch (\Exception $e) {
             report($e);
         }
 
         return $results;
+    }
+
+    /**
+     * @param $results
+     * @param $max_d
+     * @return mixed
+     */
+    function getResultsClusters($results, $max_d)
+    {
+        $cluster = new ClusterWithScipy();
+        $cluster->apply($results, $max_d);
+        return $results->groupBy('cluster')->map(function ($results, $cluster) {
+            $count = count($results);
+            return compact('cluster', 'count');
+        })->values()->sortByDesc('count');
     }
 
 }
