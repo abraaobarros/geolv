@@ -51,6 +51,8 @@ class GeocodingFileReader
 
         if ($size >= 0) {
             return (new Statement())->offset($offset)->limit($size)->process($reader);
+        } else if ($offset > 0) {
+            return (new Statement())->offset($offset)->process($reader);
         } else {
             return $reader;
         }
