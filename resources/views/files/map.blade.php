@@ -84,16 +84,16 @@
                 $('#processing-modal').modal();
                 var refreshBtn = $('#refresh-btn');
                 var counter = refreshBtn.find('.counter');
-                var secondsBeforeExpire = 30;
+                var secondsBeforeExpire = 20;
                 var timer = setInterval(function () {
                     if (secondsBeforeExpire <= 0) {
                         clearInterval(timer);
                         refreshBtn.prop('disabled', false);
-                        refreshBtn.addClass('disabled');
+                        refreshBtn.removeClass('disabled');
                         counter.text("");
                     } else {
                         refreshBtn.prop('disabled', true);
-                        refreshBtn.removeClass('disabled');
+                        refreshBtn.addClass('disabled');
                         secondsBeforeExpire--;
                         counter.text("( " + secondsBeforeExpire + "s )");
                     }
