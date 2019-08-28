@@ -49,9 +49,9 @@
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <a href="{{ request()->url() }}" class="btn btn-success" id="refresh-btn">
+                        <a href="{{ request()->url() }}" class="btn btn-success disabled" id="refresh-btn">
                             <i class="fa fa-refresh mr-2"></i>
-                            Atualizar <span class="counter"></span>
+                            Atualizar <span class="counter">( 20s )</span>
                         </a>
                     </div>
                 </div>
