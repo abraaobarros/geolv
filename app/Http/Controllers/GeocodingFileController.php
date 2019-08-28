@@ -132,6 +132,10 @@ class GeocodingFileController extends Controller
         $results_key = "files.{$file->id}.results";
         $max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
 
+        if ($file->count < 500 && !Cache::has($results_key)) {
+            $this->dispatchNow(new ProcessFilePoints($file));
+        }
+
         if (Cache::has($results_key)) {
             $results = Cache::get("files.{$file->id}.results");
 
