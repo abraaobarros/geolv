@@ -2,6 +2,7 @@
 
 namespace GeoLV\Jobs;
 
+use GeoLV\Geocode\GeocodingFileReader;
 use GeoLV\Geocode\GeoLVPythonService;
 use GeoLV\GeocodingFile;
 use Illuminate\Bus\Queueable;
@@ -56,11 +57,24 @@ class ProcessFilePoints implements ShouldQueue
     private function getFileResults()
     {
         $results = collect();
-        $python = new GeoLVPythonService();
-        $data = $python->getFilePoints($this->file);
+        $reader = new GeocodingFileReader($this->file);
+        $stream = $reader->read(GeocodingFileReader::POST_PROCESSED_FILE, -1, $this->file->header ? 1 : 0);
+        $n_fields = count($this->file->fields);
+        $lat_idx = array_search('latitude', $this->file->fields);
+        $lng_idx = array_search('longitude', $this->file->fields);
 
-        foreach ($data as $row) {
-            $results->add((object)$row);
+        foreach ($stream as $row) {
+            $n_cols = count($row) - $n_fields;
+
+            try {
+                $results->add((object)[
+                    'text' => $reader->getField($row, 'text'),
+                    'latitude' => $row[$n_cols + $lat_idx],
+                    'longitude' => $row[$n_cols + $lng_idx],
+                ]);
+            } catch (\Exception $e) {
+                report($e);
+            }
         }
 
         return $results;
