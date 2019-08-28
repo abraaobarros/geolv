@@ -144,7 +144,7 @@ class GeocodingFileController extends Controller
         } else {
             $results = [];
             $clusters = [];
-            ProcessFilePoints::dispatch();
+            $this->dispatch(new ProcessFilePoints($file));
             $processing = true;
 
             return view('files.map', compact('file', 'results', 'max_d', 'clusters', 'processing'));
