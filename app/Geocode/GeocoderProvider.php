@@ -13,6 +13,7 @@ use Geocoder\ProviderAggregator;
 use Geocoder\Query\GeocodeQuery;
 use GeoLV\Address;
 use GeoLV\Geocode\Clusters\ClusterWithScipy;
+use GeoLV\Geocode\Clusters\GeoLVPythonService;
 use GeoLV\Search;
 use Http\Adapter\Guzzle6\Client;
 use Illuminate\Contracts\Auth\Guard;

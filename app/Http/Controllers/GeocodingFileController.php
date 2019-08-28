@@ -2,22 +2,17 @@
 
 namespace GeoLV\Http\Controllers;
 
-use GeoLV\Address;
-use GeoLV\AddressCollection;
 use GeoLV\Geocode\Clusters\ClusterWithScipy;
-use GeoLV\Geocode\GeocodingFileReader;
+use GeoLV\Geocode\GeoLVPythonService;
 use GeoLV\GeocodingFile;
 use GeoLV\Http\Requests\UploadRequest;
-use GeoLV\Jobs\GenerateFileResultsCache;
 use GeoLV\Jobs\GeocodeNextFile;
+use GeoLV\Jobs\ProcessFilePoints;
 use GeoLV\Search;
 use GeoLV\User;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-use League\Csv\Reader;
 use League\Flysystem\FileNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -125,32 +120,35 @@ class GeocodingFileController extends Controller
     /**
      * @param Request $request
      * @param GeocodingFile $file
-     * @param ClusterWithScipy $cluster
+     * @param GeoLVPythonService $cluster
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function map(Request $request, GeocodingFile $file, ClusterWithScipy $cluster)
+    public function map(Request $request, GeocodingFile $file, GeoLVPythonService $cluster)
     {
         $this->authorize('view', $file);
 
         //Resolve file
         $results_key = "files.{$file->id}.results";
-        $callbackResults = function () use ($file) {
-            return $this->getFileResults($file);
-        };
-        $results = $file->done ? Cache::rememberForever($results_key, $callbackResults)
-            : Cache::remember($results_key, 300, $callbackResults);
-
-        //Resolve clusters
         $max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
-        $clusters_key = "files.{$file->id}.{$max_d}.clusters";
-        $callbackClusters = function () use ($results, $max_d) {
-            return $this->getResultsClusters($results, $max_d);
-        };
-        $clusters = $file->done ? Cache::rememberForever($clusters_key, $callbackClusters)
-            : Cache::remember($clusters_key, 300, $callbackClusters);
 
-        return view('files.map', compact('file', 'results', 'max_d', 'clusters'));
+        if (Cache::has($results_key)) {
+            $results = Cache::get("files.{$file->id}.results");
+
+            $cluster = new ClusterWithScipy();
+            $cluster->apply($results, $max_d);
+            $clusters = $this->getResultsClusters($results);
+            $processing = false;
+
+            return view('files.map', compact('file', 'results', 'max_d', 'clusters', 'processing'));
+        } else {
+            $results = [];
+            $clusters = [];
+            ProcessFilePoints::dispatch();
+            $processing = true;
+
+            return view('files.map', compact('file', 'results', 'max_d', 'clusters', 'processing'));
+        }
     }
 
     /**
@@ -188,27 +186,13 @@ class GeocodingFileController extends Controller
         return redirect()->back();
     }
 
-    private function getFileResults(GeocodingFile $file)
-    {
-        $results = collect();
-        $data = (new ClusterWithScipy())->getResults($file);
-
-        foreach ($data as $row) {
-            $results->add((object) $row);
-        }
-
-        return $results;
-    }
-
     /**
      * @param $results
      * @param $max_d
      * @return mixed
      */
-    private function getResultsClusters($results, $max_d)
+    private function getResultsClusters($results)
     {
-        $cluster = new ClusterWithScipy();
-        $cluster->apply($results, $max_d);
         $clusters = $results->groupBy('cluster')->map(function ($results, $cluster) {
             $count = count($results);
             return compact('cluster', 'count');

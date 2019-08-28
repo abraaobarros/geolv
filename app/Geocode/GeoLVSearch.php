@@ -4,7 +4,7 @@ namespace GeoLV\Geocode;
 
 use GeoLV\Address;
 use GeoLV\AddressCollection;
-use GeoLV\Geocode\Clusters\ClusterWithScipy;
+use GeoLV\Geocode\Clusters\GeoLVPythonService;
 use GeoLV\Search;
 use TomLingham\Searchy\SearchDrivers\FuzzySearchDriver as SearchDriver;
 
@@ -23,7 +23,7 @@ class GeoLVSearch
         $sorter = new SortByRelevance($search);
         $results = $sorter->apply($results);
 
-        $groupper = new ClusterWithScipy();
+        $groupper = new GeoLVPythonService();
         //$groupper = new ClusterByAverage();
         //$groupper = new ClusterWithKMeans();
         $groupper->apply($results, $search->max_d);

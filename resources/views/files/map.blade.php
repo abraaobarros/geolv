@@ -37,6 +37,28 @@
         </ul>
     </div>
 
+    @if($processing)
+        <div class="modal fade" id="processing-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fa fa-refresh fa-spin mr-2"></i>Processando mapa</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Ops! ainda estamos processando o mapa... <br/>Aguarde alguns instantes antes de atualizar.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{ request()->url() }}" class="btn btn-success">
+                            <i class="fa fa-refresh mr-2"></i>
+                            Atualizar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div id="geolv-container" style="position: fixed; width: 100%; height: 100%">
         <div class="geolv-map" style="width: 100%; height: 100%">
         </div>
@@ -56,4 +78,11 @@
 @section('scripts')
     <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async
             defer></script>
+    @if($processing)
+        <script>
+            $(function () {
+                $('#processing-modal').modal();
+            });
+        </script>
+    @endif
 @endsection
