@@ -49,9 +49,9 @@
                         </p>
                     </div>
                     <div class="modal-footer">
-                        <a href="{{ request()->url() }}" class="btn btn-success">
+                        <a href="{{ request()->url() }}" class="btn btn-success" id="refresh-btn">
                             <i class="fa fa-refresh mr-2"></i>
-                            Atualizar
+                            Atualizar <span class="counter"></span>
                         </a>
                     </div>
                 </div>
@@ -82,6 +82,19 @@
         <script>
             $(function () {
                 $('#processing-modal').modal();
+                var refreshBtn = $('#refresh-btn');
+                var counter = refreshBtn.find('.counter');
+                var secondsBeforeExpire = 30;
+                var timer = setInterval(function () {
+                    if (secondsBeforeExpire <= 0) {
+                        clearInterval(timer);
+                        refreshBtn.prop('disabled', false);
+                    } else {
+                        refreshBtn.prop('disabled', true);
+                        secondsBeforeExpire--;
+                        counter.text("( " + secondsBeforeExpire + "s )");
+                    }
+                }, 1000);
             });
         </script>
     @endif
