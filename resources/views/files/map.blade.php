@@ -89,8 +89,11 @@
                     if (secondsBeforeExpire <= 0) {
                         clearInterval(timer);
                         refreshBtn.prop('disabled', false);
+                        refreshBtn.addClass('disabled');
+                        counter.text("");
                     } else {
                         refreshBtn.prop('disabled', true);
+                        refreshBtn.removeClass('disabled');
                         secondsBeforeExpire--;
                         counter.text("( " + secondsBeforeExpire + "s )");
                     }
