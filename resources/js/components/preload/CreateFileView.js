@@ -151,7 +151,7 @@ export default class CreateFileView extends View {
 
         this.input('indexes').val(JSON.stringify(this.indexes));
 
-        if ((address  && (locality || state)) || postal_code > 0) {
+        if (address || postal_code > 0) {
             this.get('exampleContainer').fadeIn();
             View.render(TableView, this.get('exampleTable'), {
                 data: this.getAddressesView(),
