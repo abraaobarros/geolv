@@ -177,10 +177,16 @@ class GeocoderProvider
             if (empty($result->getStreetName()))
                 continue;
 
+            $locality = $result->getLocality();
+            $adminLevel = $result->getAdminLevels();
+            if (blank($locality) && filled($adminLevel) && $adminLevel->has(2)) {
+                $locality = $adminLevel->get(2)->getName();
+            }
+
             $address = Address::firstOrCreate([
                 'street_name' => $result->getStreetName(),
                 'street_number' => $result->getStreetNumber(),
-                'locality' => $result->getLocality(),
+                'locality' => $locality,
                 'postal_code' => $result->getPostalCode(),
                 'sub_locality' => $result->getSubLocality(),
                 'country_code' => $result->getCountry()->getCode(),

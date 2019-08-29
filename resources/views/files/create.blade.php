@@ -131,7 +131,7 @@
                                 <small>Preço:</small>
                                 <h4>
                                     US$ <span class="price-value">0.00</span><br/>
-                                    <small class="text-muted">US$ (0.50 / 1,000) x <span
+                                    <small class="text-muted">US$ (1.00 / 1,000) x <span
                                                 class="providers-count">{{ count($defaultProviders) }}</span> provedores
                                     </small>
                                 </h4>

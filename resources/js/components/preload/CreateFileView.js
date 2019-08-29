@@ -54,7 +54,7 @@ export default class CreateFileView extends View {
 
     displayCount() {
         let providers = this.input('providers[]').filter(':checked').length;
-        let price = 1.5 * (this.count / 1000) * providers;
+        let price = 2.0 * (this.count / 1000) * providers;
 
         this.get('price').html(price.toFixed(2));
         this.get('providers_count').html(providers);
@@ -145,8 +145,8 @@ export default class CreateFileView extends View {
 
     onAddressUpdated() {
         let address = this.indexes.text.length > 0;
-        let locality = this.indexes.locality.length > 0;
-        let state = this.indexes.state.length > 0;
+        //let locality = this.indexes.locality.length > 0;
+        //let state = this.indexes.state.length > 0;
         let postal_code = this.indexes.postal_code.length > 0;
 
         this.input('indexes').val(JSON.stringify(this.indexes));
