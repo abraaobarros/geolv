@@ -3,7 +3,7 @@
         <a href="{{ request()->fullUrl() }}" class="btn btn-outline-success w-100">
             {{ __('Refresh') }} <i class="fa fa-refresh"></i>
         </a>
-        @include('actions.cancel')
+        @include('files.cancel')
     @elseif($file->done)
         <div class="btn-group w-100">
             <a href="{{ route('files.download', $file->id) }}" class="btn btn-outline-success">
@@ -46,7 +46,7 @@
                 </a>
             </div>
         </div>
-        @include('actions.cancel')
+        @include('files.cancel')
     @endif
     <form action="{{ route('files.destroy', $file->id) }}" method="post" class="ml-1">
         @csrf
