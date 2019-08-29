@@ -17,7 +17,7 @@ class MatchLocality extends SearchRelevanceCalculator
         $locality = $this->search->findLocality();
 
         if (blank($locality))
-            return 0;
+            return 1;
 
         return $locality->isInsideBounds($address->coordinate)? 1 : 0;
     }
