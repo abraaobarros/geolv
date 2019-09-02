@@ -33,6 +33,7 @@ class UsersController extends Controller
         $this->authorize('view', User::class);
 
         $files = $user->files()
+            ->withTrashed()
             ->orderBy('done', 'asc')
             ->orderBy('updated_at', 'desc')
             ->paginate();

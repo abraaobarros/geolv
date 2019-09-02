@@ -48,6 +48,7 @@
         </div>
         @include('files.cancel')
     @endif
+    @if(!$file->trashed())
     <form action="{{ route('files.destroy', $file->id) }}" method="post" class="ml-1">
         @csrf
 
@@ -57,4 +58,5 @@
             <i class="fa fa-trash-o"></i>
         </button>
     </form>
+    @endif
 </div>

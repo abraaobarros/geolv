@@ -7,3 +7,12 @@
   }
 
 }
+
+tr.table-disabled, tr.table-disabled:hover {
+  background-color: #efefef !important;
+  color: #b5b5b5 !important;
+
+  .badge {
+    background-color: #c1c1c1 !important;
+  }
+}

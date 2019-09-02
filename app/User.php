@@ -46,7 +46,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getLastUpdateAttribute()
     {
-        $last = $this->files()->orderBy('updated_at', 'desc')->first();
+        $last = $this->files()->withTrashed()->orderBy('updated_at', 'desc')->first();
         if (!empty($last))
             return $last->updated_at;
         else
@@ -55,7 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getTotalProcessedLinesAttribute()
     {
-        return $this->files()->sum('offset');
+        return $this->files()->withTrashed()->sum('offset');
     }
 
     public function files()

@@ -4,6 +4,7 @@ namespace GeoLV;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -38,6 +39,8 @@ use Illuminate\Support\Carbon;
  */
 class GeocodingFile extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'path',

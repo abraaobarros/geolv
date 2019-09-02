@@ -7,7 +7,8 @@
                 <div class="card">
                     <div class="card-header">
                         {{ __('Info about :name', ['name' => $user->name]) }}
-                        <a href="{{ url()->previous() }}" class="btn btn-sm btn-outline-secondary pull-right" tabindex="4">
+                        <a href="{{ url()->previous() }}" class="btn btn-sm btn-outline-secondary pull-right"
+                           tabindex="4">
                             <span class="hidden-sm-up">{{ __('Go Back') }}</span>
                             <span class="fa fa-undo"></span>
                         </a>
@@ -26,14 +27,16 @@
                             <dd class="col-sm-9">
                                 {{ $user->email }}
                                 @if($user->email_verified_at)
-                                <span class="badge badge-success ml-2">
+                                    <span class="badge badge-success ml-2">
                                     <i class="fa fa-check-square-o mr-2"></i> {{ __('Verified') }}
                                 </span>
                                 @endif
                             </dd>
 
                             <dt class="col-sm-3">{{ __('Created at') }}</dt>
-                            <dd class="col-sm-9">{{ $user->created_at->diffForHumans() }} ({{ __('Last update') }}: {{ $user->last_update->diffForHumans() }})</dd>
+                            <dd class="col-sm-9">{{ $user->created_at->diffForHumans() }} ({{ __('Last update')
+                                }}: {{ $user->last_update->diffForHumans() }})
+                            </dd>
 
                             <dt class="col-sm-3">{{ __('Total processed lines') }}</dt>
                             <dd class="col-sm-9">
@@ -69,8 +72,13 @@
                                 @endif
 
                                 @foreach($files as $file)
-                                    <tr>
-                                        <td><span class="badge badge-default">{{ $file->name }}</span></td>
+                                    <tr class="{{ $file->trashed() ? 'table-disabled' : '' }}">
+                                        <td class="text-truncate" style="max-width: 250px; font-size: 0.8em">
+                                            @if($file->trashed())
+                                                <span class="badge badge-pill badge-dark">{{ __('Deleted') }}</span>
+                                            @endif
+                                            {{ $file->name }}
+                                        </td>
                                         <td>{{ $file->created_at->diffForHumans() }}</td>
                                         <td>@include('files.status')</td>
                                         <td>@include('files.actions')</td>
