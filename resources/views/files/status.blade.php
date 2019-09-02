@@ -5,7 +5,8 @@
         {{ __($file->in_process ? 'Initializing' : 'On queue') }}...
     @endif
 @elseif($file->done)
-    {{ __('Finished') }} {{ $file->updated_at->diffForHumans($file->created_at) }}
+    {{ number_format($file->offset, 0, ',', '.') }} {{ __('lines') }}<br/>
+    <small>{{ __('Finished') }} {{ $file->updated_at->diffForHumans($file->created_at) }}</small>
 @else
     @if ($file->canceled_at)
         <small>

@@ -81,5 +81,7 @@
   "Process finished": "Processo concluído",
   "Download results not found": "Baixar resultados não encontrados",
   "Select providers": "Selecionar Provedores",
-  "Open map": "Abrir mapa"
+  "Open map": "Abrir mapa",
+  "Total processed lines": "Total de linhas processadas",
+  "lines": "linhas"
 }

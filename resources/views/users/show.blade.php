@@ -34,6 +34,12 @@
 
                             <dt class="col-sm-3">{{ __('Created at') }}</dt>
                             <dd class="col-sm-9">{{ $user->created_at->diffForHumans() }} ({{ __('Last update') }}: {{ $user->last_update->diffForHumans() }})</dd>
+
+                            <dt class="col-sm-3">{{ __('Total processed lines') }}</dt>
+                            <dd class="col-sm-9">
+                                {{ number_format($user->total_processed_lines, 0, ',', '.') }} {{ __('lines') }}
+                            </dd>
+
                         </dl>
                     </div>
                 </div>

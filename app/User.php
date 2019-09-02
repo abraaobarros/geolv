@@ -53,6 +53,11 @@ class User extends Authenticatable implements MustVerifyEmail
             return $this->updated_at;
     }
 
+    public function getTotalProcessedLinesAttribute()
+    {
+        return $this->files()->sum('offset');
+    }
+
     public function files()
     {
         return $this->hasMany(GeocodingFile::class);
