@@ -38,7 +38,7 @@
                         <div class="form-group">
                             <label for="googleApiKeyInput">Google API Key</label>
                             <input type="text" class="form-control{{ $errors->has('google_maps.api_key') ? ' is-invalid' : '' }}" id="googleApiKeyInput"
-                                   name="google_maps[api_key]" value="{{ $user->google_maps_api_key }}">
+                                   name="google_maps[api_key]">
                             @include('components.input-error', ['input' => 'google_maps.api_key'])
                         </div>
 
