@@ -23,7 +23,7 @@
                                 <div class="col-md-6">
                                     <input id="name" type="text"
                                            class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
-                                           name="name" value="{{ old('name') }}" required autofocus>
+                                           name="name" value="{{ old('name') }}" autofocus>
                                     @include('components.input-error', ['input' => 'name'])
                                 </div>
                             </div>
@@ -35,7 +35,7 @@
                                 <div class="col-md-6">
                                     <input id="email" type="email"
                                            class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
-                                           name="email" value="{{ old('email') }}" required>
+                                           name="email" value="{{ old('email') }}">
                                     @include('components.input-error', ['input' => 'email'])
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                 <div class="col-md-6">
                                     <input id="password" type="password"
                                            class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                           name="password" required>
+                                           name="password">
                                     @include('components.input-error', ['input' => 'password'])
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
 
                                 <div class="col-md-6">
                                     <input id="password-confirm" type="password" class="form-control"
-                                           name="password_confirmation" required>
+                                           name="password_confirmation">
                                 </div>
                             </div>
 

@@ -21,6 +21,7 @@ $factory->define(GeoLV\User::class, function (Faker $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
+        'email_verified_at' => \Carbon\Carbon::now(),
         'remember_token' => str_random(10),
     ];
 });

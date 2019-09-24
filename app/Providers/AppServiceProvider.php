@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Carbon::setLocale('pt_BR');
 
-        if ($this->app->environment('local', 'testing')) {
+        if (!$this->app->environment('production')) {
             $this->app->register('Laravel\Dusk\DuskServiceProvider');
         }
     }
