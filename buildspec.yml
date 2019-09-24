@@ -4,7 +4,6 @@ phases:
     commands:
       - export DEBIAN_FRONTEND=noninteractive
       - apt-get update
-      - apt-get install -y sqlite3
       - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
       - php composer-setup.php
       - php -r "unlink('composer-setup.php');"
