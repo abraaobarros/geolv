@@ -1,6 +1,8 @@
 version: 0.2
 phases:
   install:
+    runtime-versions:
+      php: 7.1
     commands:
       - export DEBIAN_FRONTEND=noninteractive
       - apt-get update
@@ -18,4 +20,4 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - /usr/bin/php /Users/bynd/Projects/GeoLV/vendor/phpunit/phpunit/phpunit --configuration /Users/bynd/Projects/GeoLV/phpunit.xml
+      - php ./vendor/phpunit/phpunit/phpunit --configuration ./phpunit.xml
