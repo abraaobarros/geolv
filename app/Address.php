@@ -9,7 +9,7 @@ use Location\Coordinate;
 /**
  * Class Address
  * @package GeoLV
- * @method static Search|Model firstOrCreate(array $data)
+ * @method static Address|Model firstOrCreate(array $data)
  * @method static AddressCollection hydrate(array $toArray)
  * @method static findOrFail($get)
  * @method static find($get)

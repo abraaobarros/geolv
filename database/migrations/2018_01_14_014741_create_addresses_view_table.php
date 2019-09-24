@@ -12,18 +12,19 @@ class CreateAddressesViewTable extends Migration
      */
     public function up()
     {
-        DB::statement("
-            CREATE OR REPLACE VIEW addresses_view AS 
-              SELECT 
-                a.*,
-                s.id AS search_id,
-                s.text AS search_text,
-                s.postal_code AS search_postal_code,
-                TRIM(SUBSTRING_INDEX(s.locality, '-', 1)) AS search_locality,
-                IF(TRIM(SUBSTRING_INDEX(s.locality, '-', -1)) = TRIM(SUBSTRING_INDEX(s.locality, '-', 1)), '', TRIM(SUBSTRING_INDEX(s.locality, '-', -1))) AS search_state
-              FROM address_search AS ads
-              JOIN addresses AS a ON a.id = ads.address_id
-              JOIN searches AS s ON s.id = ads.search_id");
+        if (DB::getDefaultConnection() == 'mysql')
+            DB::statement("
+                CREATE OR REPLACE VIEW addresses_view AS 
+                  SELECT 
+                    a.*,
+                    s.id AS search_id,
+                    s.text AS search_text,
+                    s.postal_code AS search_postal_code,
+                    TRIM(SUBSTRING_INDEX(s.locality, '-', 1)) AS search_locality,
+                    IF(TRIM(SUBSTRING_INDEX(s.locality, '-', -1)) = TRIM(SUBSTRING_INDEX(s.locality, '-', 1)), '', TRIM(SUBSTRING_INDEX(s.locality, '-', -1))) AS search_state
+                  FROM address_search AS ads
+                  JOIN addresses AS a ON a.id = ads.address_id
+                  JOIN searches AS s ON s.id = ads.search_id");
     }
 
     /**
@@ -33,6 +34,7 @@ class CreateAddressesViewTable extends Migration
      */
     public function down()
     {
-        DB::statement('DROP VIEW addresses_view');
+        if (DB::getDefaultConnection() == 'mysql')
+            DB::statement('DROP VIEW addresses_view');
     }
 }

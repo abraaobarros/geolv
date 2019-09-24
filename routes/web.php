@@ -49,6 +49,15 @@ $router->group(['middleware' => ['auth', 'verified']], function (Router $router)
         ->name('files.map');
 
     $router
-        ->resource('users', 'UsersController');
+        ->resource('users', 'UsersController')
+        ->only(['index', 'show', 'destroy']);
+
+    $router
+        ->get('profile', 'UsersController@getProfile')
+        ->name('profile.edit');
+
+    $router
+        ->post('profile', 'UsersController@updateProfile')
+        ->name('profile.update');
 
 });

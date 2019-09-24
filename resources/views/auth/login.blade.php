@@ -15,23 +15,13 @@
                         <div class="form-group">
 
                             <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" placeholder="{{ __('E-Mail Address') }}" required autofocus>
-
-                            @if ($errors->has('email'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('email') }}</strong>
-                                </span>
-                            @endif
+                            @include('components.input-error', ['input' => 'email'])
 
                         </div>
 
                         <div class="form-group">
                             <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="{{ __('Password') }}" required>
-
-                            @if ($errors->has('password'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('password') }}</strong>
-                                </span>
-                            @endif
+                            @include('components.input-error', ['input' => 'password'])
 
                             <div class="help-block text-right">
                                 <a href="{{ url('password/reset') }}" class="btn btn-link btn-sm">{{ __('Forgot Your Password?') }}</a>

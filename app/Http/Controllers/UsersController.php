@@ -2,11 +2,30 @@
 
 namespace GeoLV\Http\Controllers;
 
+use GeoLV\Http\Requests\ProfileRequest;
 use GeoLV\User;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
+    public function getProfile()
+    {
+        $user = auth()->user();
+        return view('users.profile', compact('user'));
+    }
+
+    public function updateProfile(ProfileRequest $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+        $user->update($request->only(['name']));
+        $user->setProvider('google_maps', $request->get('google_maps', []));
+        $user->setProvider('here_geocoder', $request->get('here_geocoder', []));
+        $user->setProvider('bing_maps', $request->get('bing_maps', []));
+
+        return redirect()->back()->with('profile.updated', true);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +43,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \GeoLV\User $user
+     * @param \GeoLV\User $user
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */

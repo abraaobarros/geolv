@@ -11,6 +11,7 @@
 
 use GeoLV\Geocode\GeocoderProvider;
 use Geocoder\Laravel\Facades\Geocoder;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\ServiceProvider;
 
 class GeocoderServiceProvider extends ServiceProvider
@@ -19,7 +20,7 @@ class GeocoderServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $this->app->singleton('geocoder', function () {
+        $this->app->singleton('geocoder', function ($app) {
             return new GeocoderProvider();
         });
     }

@@ -10,6 +10,8 @@
 
                 <h2>{{ __('Files') }}</h2>
 
+                @include('components.google-warning')
+
                 <a href="{{ route('files.create') }}" class="btn btn-primary">
                     <span class="fa fa-file mr-2"></span>
                     Geolocalizar novo arquivo
@@ -18,15 +20,6 @@
                 <a href="{{ request()->fullUrl() }}" class="btn btn-outline-success">
                     <i class="fa fa-refresh mr-2"></i> Atualizar
                 </a>
-
-                @if(session()->has('upload'))
-                    <div class="alert alert-success mt-2" role="alert">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        Seu arquivo está sendo processado. Enviaremos um email para {{ auth()->user()->email }} quando
-                        concluído.
-                    </div>
-                @endif
-
 
                 <table class="table table-hover mt-4">
                     <thead>

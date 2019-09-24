@@ -43,18 +43,25 @@
             </ul>
 
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item mr-2">
-                    <span class="navbar-text">{{ __('Hello, :name', ['name' => auth()->user()->name]) }}!</span>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-primary btn-block" href="{{ route('logout') }}"
-                       onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }} <i class="fa fa-sign-out ml-2"></i>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        {{ __('Hello, :name', ['name' => auth()->user()->name]) }}!
                     </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Profile') }}</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                           onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }} <i class="fa fa-sign-out ml-2"></i>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </a>
+                    </div>
+                </li>
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
+                <li class="nav-item">
+
                 </li>
             </ul>
         </div>

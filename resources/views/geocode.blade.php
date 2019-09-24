@@ -7,6 +7,9 @@
             <div class="row justify-content-center" style="margin: {{ $results->count() == 0? 200: 50 }}px 0 0 0">
                 <div class="col-lg-8 col-md-10 col-xs-12">
                     <h1>GeoLV</h1>
+
+                    @include('components.google-warning')
+
                     <div class="row text-center">
                         <div class="input-group">
                             <input type="text" class="form-control form-control-danger col-md-7" name="text"
@@ -41,6 +44,7 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10 col-xs-12">
+
                     <a data-toggle="collapse" href="#collapseProviders" role="button" aria-expanded="false"
                        aria-controls="collapseProviders">
                         {{ __('Select providers') }} <i class="fa fa-chevron-down ml-1"></i>

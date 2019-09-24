@@ -13,10 +13,9 @@ use Geocoder\ProviderAggregator;
 use Geocoder\Query\GeocodeQuery;
 use GeoLV\Address;
 use GeoLV\Geocode\Clusters\ClusterWithScipy;
-use GeoLV\Geocode\Clusters\GeoLVPythonService;
 use GeoLV\Search;
+use GeoLV\User;
 use Http\Adapter\Guzzle6\Client;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 
@@ -25,8 +24,6 @@ class GeocoderProvider
     /** @var ProviderAggregator */
     private $provider;
     private $adapter;
-    private $searchDriver;
-    private $user;
     private $defaultProviders;
     private $providers;
 
@@ -37,24 +34,22 @@ class GeocoderProvider
     {
         $this->defaultProviders = ['google_maps', 'here_geocoder'];
         $this->adapter = Client::createWithConfig(['verify' => false]);
-        $this->searchDriver = new GeoLVSearch();
-        $this->user = auth()->user();
-
-        $this->setProviders(static::HIGH_COST_STRATEGY);
     }
 
     /**
      * @param int $strategy LOW_COST_STRATEGY|HIGH_COST_STRATEGY
      * @param array|null $providers
+     * @param User $user
      */
-    public function setProviders(int $strategy, array $providers = null): void
+    public function setProviders(int $strategy, array $providers = null, User $user = null): void
     {
         $this->provider = new ProviderAggregator();
         $this->providers = empty($providers)? $this->defaultProviders : $providers;
+        $user = $user ?: auth()->user();
         $config = [];
 
         foreach ($this->providers as $provider) {
-            $config[] = $this->resolveProvider($provider);
+            $config[] = $this->resolveProvider($provider, $user);
         }
 
         $this->provider->registerProvider(new GroupResults($strategy, $config));
@@ -106,11 +101,14 @@ class GeocoderProvider
     }
 
     /**
+     * @param User $user
      * @return GoogleMaps
      */
-    private function getGoogleProvider(): GoogleMaps
+    private function getGoogleProvider(User $user): GoogleMaps
     {
-        return new GoogleMaps($this->adapter, 'pt-BR', env('GOOGLE_MAPS_API_KEY'));
+        $apiKey = filled($user->google_maps_api_key) ? $user->google_maps_api_key : env('GOOGLE_MAPS_API_KEY');
+
+        return new GoogleMaps($this->adapter, 'pt-BR', $apiKey);
     }
 
     /**
@@ -122,37 +120,44 @@ class GeocoderProvider
     }
 
     /**
+     * @param User $user
      * @return HereGeocoder
      */
-    private function getHereGeocoderProvider(): HereGeocoder
+    private function getHereGeocoderProvider(User $user): HereGeocoder
     {
-        return new HereGeocoder($this->adapter, env('HERE_GEOCODER_ID'), env('HERE_GEOCODER_CODE'));
+        $geocoderId = filled($user->here_geocoder_id) ? $user->here_geocoder_id : env('HERE_GEOCODER_ID');
+        $geocoderCode = filled($user->here_geocoder_code) ? $user->here_geocoder_code : env('HERE_GEOCODER_CODE');
+
+        return new HereGeocoder($this->adapter, $geocoderId, $geocoderCode);
     }
 
     /**
+     * @param User $user
      * @return BingMaps
      */
-    private function getBingMapsProvider(): BingMaps
+    private function getBingMapsProvider(User $user): BingMaps
     {
-        return new BingMaps($this->adapter, env('BING_MAPS_API_KEY'));
+        $apiKey = filled($user->bing_maps_api_key) ? $user->bing_maps_api_key : env('BING_MAPS_API_KEY');
+
+        return new BingMaps($this->adapter, $apiKey);
     }
 
     /**
      * @param $provider
+     * @param User $user
      * @return Provider
-     * @throws UnsupportedOperation
      */
-    private function resolveProvider($provider): Provider
+    private function resolveProvider($provider, User $user): Provider
     {
         switch ($provider) {
             case 'google_maps':
-                return $this->getGoogleProvider();
+                return $this->getGoogleProvider($user);
+            case 'here_geocoder':
+                return $this->getHereGeocoderProvider($user);
+            case 'bing_maps':
+                return $this->getBingMapsProvider($user);
             case 'arcgis_online':
                 return $this->getArcGISOnlineProvider();
-            case 'here_geocoder':
-                return $this->getHereGeocoderProvider();
-            case 'bing_maps':
-                return $this->getBingMapsProvider();
             default:
                 throw new UnsupportedOperation("Unsupported provider $provider.");
         }
@@ -177,16 +182,10 @@ class GeocoderProvider
             if (empty($result->getStreetName()))
                 continue;
 
-            $locality = $result->getLocality();
-            $adminLevel = $result->getAdminLevels();
-            if (blank($locality) && filled($adminLevel) && $adminLevel->has(2)) {
-                $locality = $adminLevel->get(2)->getName();
-            }
-
             $address = Address::firstOrCreate([
                 'street_name' => $result->getStreetName(),
                 'street_number' => $result->getStreetNumber(),
-                'locality' => $locality,
+                'locality' => $this->extractLocality($result),
                 'postal_code' => $result->getPostalCode(),
                 'sub_locality' => $result->getSubLocality(),
                 'country_code' => $result->getCountry()->getCode(),
@@ -206,6 +205,29 @@ class GeocoderProvider
         }
 
         return $collection;
+    }
+
+    /**
+     * @param Location $result
+     * @return string|null
+     */
+    private function extractLocality(Location $result)
+    {
+        $locality = $result->getLocality();
+        $adminLevel = $result->getAdminLevels();
+        if (blank($locality) && filled($adminLevel)) {
+
+            for ($i = 1; $i <= 5; $i++) {
+                if ($adminLevel->has($i)) {
+                    $locality = $adminLevel->get($i)->getName();
+                }
+
+                if (filled($locality))
+                    break;
+            }
+
+        }
+        return $locality;
     }
 
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -14,7 +15,8 @@ class CreateLevenshteinFunction extends Migration
     public function up()
     {
         $levenshtein = file_get_contents(storage_path('app/levenshtein.sql'));
-        \DB::unprepared($levenshtein);
+        if (DB::getDefaultConnection() == 'mysql')
+            DB::unprepared($levenshtein);
     }
 
     /**
@@ -24,6 +26,7 @@ class CreateLevenshteinFunction extends Migration
      */
     public function down()
     {
-        \DB::unprepared('DROP FUNCTION levenshtein;');
+        if (DB::getDefaultConnection() == 'mysql')
+            DB::unprepared('DROP FUNCTION levenshtein;');
     }
 }

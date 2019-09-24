@@ -203,5 +203,6 @@ return [
         'bing_maps' => 'Bing Maps',
         'arcgis_online' => 'ArcGIS Online',
         'here_geocoder' => 'Here Geocoder',
+        'google_maps.api_key' => 'Google Maps API Key'
     ],
 ];

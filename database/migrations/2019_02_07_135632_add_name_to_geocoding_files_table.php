@@ -14,7 +14,7 @@ class AddNameToGeocodingFilesTable extends Migration
     public function up()
     {
         Schema::table('geocoding_files', function (Blueprint $table) {
-            $table->string('name');
+            $table->string('name')->nullable();
         });
     }
 

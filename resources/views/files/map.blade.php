@@ -38,25 +38,24 @@
     </div>
 
     @if($processing)
-        <div class="modal fade" id="processing-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title"><i class="fa fa-refresh fa-spin mr-2"></i>Processando mapa</h5>
-                    </div>
-                    <div class="modal-body">
-                        <p>Ops! ainda estamos processando o mapa... <br/>Aguarde alguns instantes antes de atualizar.
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="{{ request()->url() }}" class="btn btn-success disabled" id="refresh-btn">
-                            <i class="fa fa-refresh mr-2"></i>
-                            Atualizar <span class="counter">( 20s )</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @component('components.modal', ['id' => 'processing-modal'])
+
+            @slot('title')
+                <i class="fa fa-refresh fa-spin mr-2"></i>Processando mapa
+            @endslot
+
+            <p>
+                Ops! ainda estamos processando o mapa... <br/>Aguarde alguns instantes antes de atualizar.
+            </p>
+
+            @slot('footer')
+                <a href="{{ request()->url() }}" class="btn btn-success disabled" id="refresh-btn">
+                    <i class="fa fa-refresh mr-2"></i>
+                    Atualizar <span class="counter">( 20s )</span>
+                </a>
+            @endslot
+
+        @endcomponent
     @endif
 
     <div id="geolv-container" style="position: fixed; width: 100%; height: 100%">
