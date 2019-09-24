@@ -4,7 +4,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Installing composer deps
-      - composer install --no-dev
+      - composer install
 
   post_build:
     commands:
