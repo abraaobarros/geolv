@@ -1,0 +1,22 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - export DEBIAN_FRONTEND=noninteractive
+      - apt-get update
+      - apt-get install -y sqlite3
+      - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+      - php composer-setup.php
+      - php -r "unlink('composer-setup.php');"
+      - mv composer.phar /usr/local/bin/composer
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Installing composer deps
+      - composer install --no-dev
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - /usr/bin/php /Users/bynd/Projects/GeoLV/vendor/phpunit/phpunit/phpunit --configuration /Users/bynd/Projects/GeoLV/phpunit.xml

@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use GeoLV\GoogleProvider;
 use GeoLV\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;

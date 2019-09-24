@@ -52,8 +52,8 @@
                                            id="googleApiKeyInput"
                                            name="google_maps[api_key]">
                                     @include('components.input-error', ['input' => 'google_maps.api_key'])
-                                    <a class="form-text small text-muted text-right" href="#">
-                                        Não tenho uma API Key
+                                    <a class="form-text small text-muted text-right" target="_blank" href="https://maplink.global/blog/como-obter-chave-api-google-maps/">
+                                        <i class="fa fa-external mr-2"></i> Não tenho uma Google API Key
                                     </a>
                                 </div>
                             </div>
