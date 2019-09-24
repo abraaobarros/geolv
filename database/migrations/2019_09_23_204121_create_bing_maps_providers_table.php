@@ -16,7 +16,7 @@ class CreateBingMapsProvidersTable extends Migration
         Schema::create('bing_maps_providers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('api_key');
-            $table->integer('user_id')->unsigned()->index();
+            $table->integer('user_id')->unsigned()->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

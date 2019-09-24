@@ -4,6 +4,7 @@ namespace GeoLV;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\QueryException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -116,14 +117,26 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role == static::DEV_ROLE;
     }
 
-    public function setProvider($provider, array $options)
+    /**
+     * @param $provider
+     * @param array $options
+     * @return GoogleProvider|HereGeocoderProvider|BingMapsProvider
+     */
+    public function provider($provider, array $options)
     {
-        $name = camel_case($provider) . "Provider";
-        $provider = $this->{$name};
+        $providerRelationName = camel_case($provider) . "Provider";
 
-        if ($provider)
-            $provider->update($options);
-        else
-            $this->{$name}()->create($options);
+        try {
+            $providerModel = $this->{$providerRelationName}()->first();
+
+            if ($providerModel)
+                $providerModel->update($options);
+            else
+                $providerModel = $this->{$providerRelationName}()->create($options);
+
+            return $providerModel;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }

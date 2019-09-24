@@ -19,9 +19,9 @@ class UsersController extends Controller
         /** @var User $user */
         $user = $request->user();
         $user->update($request->only(['name']));
-        $user->setProvider('google_maps', $request->get('google_maps', []));
-        $user->setProvider('here_geocoder', $request->get('here_geocoder', []));
-        $user->setProvider('bing_maps', $request->get('bing_maps', []));
+        $user->provider('google_maps', $request->get('google_maps', []));
+        $user->provider('here_geocoder', $request->get('here_geocoder', []));
+        $user->provider('bing_maps', $request->get('bing_maps', []));
 
         return redirect()->back()->with('profile.updated', true);
     }

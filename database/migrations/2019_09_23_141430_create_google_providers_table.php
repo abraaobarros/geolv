@@ -16,7 +16,7 @@ class CreateGoogleProvidersTable extends Migration
         Schema::create('google_providers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('api_key');
-            $table->integer('user_id')->unsigned()->index();
+            $table->integer('user_id')->unsigned()->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
