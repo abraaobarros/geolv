@@ -9,4 +9,4 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - php ./vendor/phpunit/phpunit/phpunit --configuration ./phpunit.xml
+      - ./vendor/bin/phpunit --configuration ./phpunit.xml
