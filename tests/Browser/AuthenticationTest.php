@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Browser;
 
 use GeoLV\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -21,7 +21,7 @@ class AuthenticationTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($user) {
 
-            $browser->visit('/login')
+            $browser->visit('/')
                 ->type('email', $user->email)
                 ->type('password', 'secret')
                 ->click('button[type=submit]')
