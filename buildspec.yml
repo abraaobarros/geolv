@@ -1,9 +1,5 @@
 version: 0.2
 phases:
-  install:
-    commands:
-      - apt-get install -y sqlite3
-
   build:
     commands:
       - echo Build started on `date`
