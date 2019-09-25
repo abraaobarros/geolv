@@ -11,6 +11,7 @@ class CannotCalculateClusterException extends \Exception
     /**
      * CannotCalculateClusterException constructor.
      * @param Collection $points
+     * @param float $max_d
      */
     public function __construct(Collection $points, $max_d)
     {
