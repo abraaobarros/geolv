@@ -86,12 +86,16 @@ class GeoLVPythonService
     public function getClusters(Collection $points, float $max_d)
     {
         try {
+            $n = $points->count();
             $points = $points->map(function ($point) {
                 return [$point->latitude, $point->longitude];
             })->toArray();
 
-            if (count($points) < 100)
+            if ($n < 100)
                 info("cluster ($max_d): " . json_encode($points,JSON_PRETTY_PRINT));
+
+            if ($n == 0)
+                return [];
 
             $response = $this->client->request('POST', '/clusters', [
                 'auth' => $this->auth,
