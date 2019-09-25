@@ -45,6 +45,7 @@ class GeocoderProvider
     {
         $this->provider = new ProviderAggregator();
         $this->providers = empty($providers)? $this->defaultProviders : $providers;
+        /** @var User $user */
         $user = $user ?: auth()->user();
         $config = [];
 
