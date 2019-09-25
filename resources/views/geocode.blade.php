@@ -129,7 +129,11 @@
             <div class="row text-center mt-4">
                 <div class="col-md-12 text-center">
                     <span class="text-muted">
-                        Encontramos <b>{{ $outside->count() }}</b> resultados fora do município.
+                        @if ($outside->count() > 1)
+                            Encontramos <b>{{ $outside->count() }}</b> resultados fora do município.
+                        @else
+                            Encontramos <b>1</b> resultado fora do município.
+                        @endif
                     </span>
                 </div>
             </div>
