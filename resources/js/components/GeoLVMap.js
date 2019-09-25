@@ -1,5 +1,6 @@
 import View from "./View";
 import ResultMarkerView from "./ResultMarkerView";
+import MarkerClusterer from "@google/markerclusterer";
 
 export default class GeoLVMap extends View {
 
@@ -172,6 +173,8 @@ export default class GeoLVMap extends View {
     drawLocality() {
         let bounds = this.locality;
         if (bounds) {
+            let min = new google.maps.LatLng(bounds.min_lat, bounds.min_lng);
+            let max = new google.maps.LatLng(bounds.max_lat, bounds.max_lng);
             new google.maps.Rectangle({
                 strokeColor: '#003366',
                 strokeOpacity: 0.6,
@@ -179,46 +182,62 @@ export default class GeoLVMap extends View {
                 fillColor: '#006699',
                 fillOpacity: 0.1,
                 map: this.map,
-                bounds: new google.maps.LatLngBounds(
-                    new google.maps.LatLng(bounds.min_lat, bounds.min_lng),
-                    new google.maps.LatLng(bounds.max_lat, bounds.max_lng)
-                )
+                bounds: new google.maps.LatLngBounds(min, max)
             });
         }
     }
 
     drawMarkers() {
         let bounds = new google.maps.LatLngBounds();
-        let results = this.results;
-
-        for (let address of results) {
-
-            let color = this.getColor(address.cluster);
-            let icon = new google.maps.MarkerImage(`http://www.googlemapsmarkers.com/v1/${color}/`);
-            let marker = new google.maps.Marker({
-                map: this.map,
-                icon: icon,
-                title: address.streetName,
-                position: address.position,
-                label: address.label
-            });
-
-            let info = new google.maps.InfoWindow({
-                content: View.render(ResultMarkerView, address).dom
-            });
-
-            marker.addListener('click', () => {
-                info.open(this.map, marker);
-            });
-
+        let markers = this.results.map((address) => {
             bounds.extend(address.position);
+            return this.createMarker(address);
+        });
 
-            if (address.isFocus) {
-                this.map.setCenter(address.position);
-                info.open(this.map, marker);
-            }
-        }
+        new MarkerClusterer(this.map, markers,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
         this.map.fitBounds(bounds);
+    }
+
+    createMarker(address) {
+        let pinColor = this.getColor(address.cluster);
+        let pinImage = {
+            url: "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+            scaledSize: new google.maps.Size(21, 34),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(10, 34),
+            labelOrigin: new google.maps.Point(10, 10),
+        };
+        let pinShadow = {
+            url: "https://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+            scaledSize: new google.maps.Size(40, 37),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(12, 35),
+        };
+
+        let marker = new google.maps.Marker({
+            map: this.map,
+            icon: pinImage,
+            shadow: pinShadow,
+            title: address.streetName,
+            position: address.position,
+            label: {text: address.label, color: "white", fontWeight: "bold"}
+        });
+
+        let info = new google.maps.InfoWindow({
+            content: View.render(ResultMarkerView, address).dom
+        });
+
+        marker.addListener('click', () => {
+            info.open(this.map, marker);
+        });
+
+        if (address.isFocus) {
+            this.map.setCenter(address.position);
+            info.open(this.map, marker);
+        }
+
+        return marker;
     }
 }

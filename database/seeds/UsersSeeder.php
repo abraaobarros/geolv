@@ -21,6 +21,7 @@ class UsersSeeder extends Seeder
         $dev->email_verified_at = Carbon::now();
         $dev->role = "dev";
         $dev->save();
+        $dev->provider('google_maps', ['api_key' => env('GOOGLE_MAPS_API_KEY')]);
 
         if ($this->command->confirm('Seed fake users?'))
             factory(User::class)->times(10)->create();

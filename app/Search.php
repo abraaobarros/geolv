@@ -94,7 +94,7 @@ class Search extends Model
             $this->locality_obj = Locality::where(function (Builder $q) {
                 $q->whereRaw('lower(name) = ?', [mb_strtolower($this->locality)]);
 
-                if (!empty($state))
+                if (filled($this->state))
                     $q->whereRaw('upper(state) = ?', [mb_strtoupper($this->state)]);
 
                 return $q;

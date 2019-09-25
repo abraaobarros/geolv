@@ -69,7 +69,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-        $user->setProvider('google_maps', $data['google_maps']);
+        $user->provider('google_maps', $data['google_maps']);
 
         return $user;
     }

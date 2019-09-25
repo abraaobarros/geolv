@@ -55,7 +55,7 @@ class GeocodingController extends Controller
         $clustersCount = $results->getClustersCount();
         $mainCluster = $results->inMainCluster();
         $providersCount = $mainCluster->getProvidersCount();
-        $results = !empty($locality) ? $results->insideLocality() : $results;
+        //$results = blank($locality) ? $results->insideLocality() : $results;
         $dispersion = $mainCluster->calculateDispersion();
         $precision = $mainCluster->calculatePrecision();
         $confidence = $results->calculateConfidence();
@@ -74,7 +74,7 @@ class GeocodingController extends Controller
 
         $this->geocoder->setProviders(GeocoderProvider::HIGH_COST_STRATEGY, $providers);
         $results = $this->geocoder->get($search);
-        $results = blank($search->locality) ? $results : $results->insideLocality();
+        //$results = blank($search->locality) ? $results : $results->insideLocality();
         $dispersion = $results->inMainCluster()->calculateDispersion();
         $precision = $results->inMainCluster()->calculatePrecision();
         $clustersCount = $results->getClustersCount();
