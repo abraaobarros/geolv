@@ -22,7 +22,7 @@ class ClusterWithScipy
     public function apply(Collection $collection, $max_d)
     {
         $clusters = $this->python->getClusters($collection, $max_d);
-        if (empty($clusters)) {
+        if (blank($clusters)) {
             foreach ($collection as $i => $address)
                 $address->cluster = 1;
         } else {
