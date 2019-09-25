@@ -110,7 +110,7 @@ class GeocodingFileProcessor
 
         if (!$emptyRow) {
             $results = $this->geocoder->geocode($text, $locality, $postalCode);
-            $result = filled($locality) ? $results->insideLocality()->first() : $results->first();
+            $result = $results->first();
 
             if (filled($result)) {
                 $mainCluster = $results->inMainCluster();

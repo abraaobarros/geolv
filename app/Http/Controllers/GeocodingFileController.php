@@ -35,10 +35,10 @@ class GeocodingFileController extends Controller
     {
         $fields = ['street_name', 'street_number', 'locality', 'state', 'postal_code', 'sub_locality', 'country_code',
             'country_name', 'provider', 'latitude', 'longitude', 'dispersion', 'clusters_count', 'providers_count',
-            'levenshtein_match_street_name'];
+            'levenshtein_match_street_name', 'match_locality'];
         $default = ['latitude', 'longitude', 'dispersion'];
         $providers = ['google_maps', 'here_geocoder', 'bing_maps', 'arcgis_online'];
-        $defaultProviders = ['google_maps', 'here_geocoder'];
+        $defaultProviders = session('geocode.default_providers', ['google_maps', 'here_geocoder']);
 
         return view('files.create', compact('fields', 'providers', 'default', 'defaultProviders'));
     }
