@@ -34,7 +34,7 @@ class LevenshteinMatchToken extends SearchRelevanceCalculator
         $addressField = $this->clear($address->{$this->token});
         $match = $this->searchFieldLength - levenshtein($addressField, $this->searchFieldText);
 
-        return $match / $this->searchFieldLength;
+        return abs($match / $this->searchFieldLength);
     }
 
     public function getName(): string
