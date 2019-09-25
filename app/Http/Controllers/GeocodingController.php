@@ -51,11 +51,11 @@ class GeocodingController extends Controller
 
         $this->geocoder->setProviders(GeocoderProvider::HIGH_COST_STRATEGY, $selectedProviders);
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
-        $outside = !empty($locality) ? $results->outsideLocality() : new AddressCollection();
+        $outside = filled($locality) ? $results->outsideLocality() : new AddressCollection();
         $clustersCount = $results->getClustersCount();
         $mainCluster = $results->inMainCluster();
         $providersCount = $mainCluster->getProvidersCount();
-        $results = blank($locality) ? $results->insideLocality() : $results;
+        $results = filled($locality) ? $results->insideLocality() : $results;
         $dispersion = $mainCluster->calculateDispersion();
         $precision = $mainCluster->calculatePrecision();
         $confidence = $results->calculateConfidence();
@@ -74,7 +74,7 @@ class GeocodingController extends Controller
 
         $this->geocoder->setProviders(GeocoderProvider::HIGH_COST_STRATEGY, $providers);
         $results = $this->geocoder->get($search);
-        $results = blank($search->locality) ? $results : $results->insideLocality();
+        $results = filled($search->locality) ? $results->insideLocality() : $results;
         $dispersion = $results->inMainCluster()->calculateDispersion();
         $precision = $results->inMainCluster()->calculatePrecision();
         $clustersCount = $results->getClustersCount();
