@@ -97,7 +97,7 @@ class GeoLVPythonService
 
             return \GuzzleHttp\json_decode($response->getBody());
         } catch (GuzzleException $e) {
-            report($e);
+            report(new CannotCalculateClusterException($points, $max_d);
             return [];
         }
     }
