@@ -6,6 +6,7 @@ namespace GeoLV\Geocode;
 use GeoLV\GeocodingFile;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Collection;
 
 class GeoLVPythonService
@@ -80,7 +81,7 @@ class GeoLVPythonService
     /**
      * @param Collection $points
      * @param float $max_d
-     * @return array|mixed
+     * @return array
      */
     public function getClusters(Collection $points, float $max_d)
     {
@@ -96,7 +97,8 @@ class GeoLVPythonService
             ]);
 
             return \GuzzleHttp\json_decode($response->getBody());
-        } catch (GuzzleException $e) {
+        } catch (\Exception $e) {
+            report($e);
             report(new CannotCalculateClusterException($points, $max_d));
             return [];
         }
