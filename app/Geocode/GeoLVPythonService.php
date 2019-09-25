@@ -90,6 +90,9 @@ class GeoLVPythonService
                 return [$point->latitude, $point->longitude];
             })->toArray();
 
+            if (count($points) < 100)
+                info("cluster ($max_d): " . json_encode($points,JSON_PRETTY_PRINT));
+
             $response = $this->client->request('POST', '/clusters', [
                 'auth' => $this->auth,
                 'json' => [
@@ -97,9 +100,6 @@ class GeoLVPythonService
                     'points' => $points
                 ]
             ]);
-
-            if (count($points) < 100)
-                info("cluster ($max_d): " . json_encode($points,JSON_PRETTY_PRINT));
 
             return \GuzzleHttp\json_decode($response->getBody());
         } catch (GuzzleException $e) {
