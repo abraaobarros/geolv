@@ -27,9 +27,6 @@ class GeocoderProvider
     private $defaultProviders;
     private $providers;
 
-    const LOW_COST_STRATEGY = GroupResults::LOW_COST_STRATEGY;
-    const HIGH_COST_STRATEGY = GroupResults::HIGH_COST_STRATEGY;
-
     public function __construct()
     {
         $this->defaultProviders = ['google_maps', 'here_geocoder'];
@@ -37,11 +34,10 @@ class GeocoderProvider
     }
 
     /**
-     * @param int $strategy LOW_COST_STRATEGY|HIGH_COST_STRATEGY
      * @param array|null $providers
      * @param User $user
      */
-    public function setProviders(int $strategy, array $providers = null, User $user = null): void
+    public function setProviders(array $providers = null, User $user = null): void
     {
         $this->provider = new ProviderAggregator();
         $this->providers = empty($providers)? $this->defaultProviders : $providers;
@@ -53,7 +49,7 @@ class GeocoderProvider
             $config[] = $this->resolveProvider($provider, $user);
         }
 
-        $this->provider->registerProvider(new GroupResults($strategy, $config));
+        $this->provider->registerProvider(new GroupResults($config));
     }
 
     /**

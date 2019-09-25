@@ -59,7 +59,7 @@ class GeocodingFileProcessor
         $reader = new GeocodingFileReader($file);
         $records = $reader->read(GeocodingFileReader::PREPROCESSED_FILE, $chunk, $file->offset);
         $size = count($records);
-        $this->geocoder->setProviders(GeocoderProvider::LOW_COST_STRATEGY, $file->providers, $file->user);
+        $this->geocoder->setProviders($file->providers, $file->user);
 
         info("[GEOCODE: {$file->id}] {$size} records read");
 
