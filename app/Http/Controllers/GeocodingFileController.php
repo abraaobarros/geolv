@@ -18,6 +18,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GeocodingFileController extends Controller
 {
+    private $storage;
+
+    /**
+     * GeocodingFileController constructor.
+     */
+    public function __construct()
+    {
+        $this->storage = Storage::disk('s3');
+    }
+
     public function index()
     {
         /** @var User $user */
@@ -111,7 +121,7 @@ class GeocodingFileController extends Controller
         $this->authorize('view', $file);
 
         try {
-            return Storage::disk('s3')->download($file->output_path, $file->name);
+            return $this->storage->download($file->output_path, $file->name);
         } catch (FileNotFoundException $exception) {
             throw new NotFoundHttpException('file not found');
         }
@@ -165,7 +175,18 @@ class GeocodingFileController extends Controller
         $this->authorize('view', $file);
 
         try {
-            return Storage::disk('s3')->download($file->error_output_path, $file->error_name);
+            return $this->storage->download($file->error_output_path, $file->error_name);
+        } catch (FileNotFoundException $exception) {
+            throw new NotFoundHttpException('file not found');
+        }
+    }
+
+    public function downloadOriginal(GeocodingFile $file)
+    {
+        $this->authorize('view', $file);
+
+        try {
+            return $this->storage->download($file->path, $file->name);
         } catch (FileNotFoundException $exception) {
             throw new NotFoundHttpException('file not found');
         }

@@ -17,8 +17,11 @@
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item text-danger" href="{{ route('files.download-errors', $file->id) }}">
-                    <i class="fa fa-download mr-2"></i> {{ __('Download results not found') }}
+                <a class="dropdown-item" href="{{ route('files.download-original', $file->id) }}">
+                    <i class="fa fa-download mr-2"></i> {{ __('Download original file') }}
+                </a>
+                <a class="dropdown-item" href="{{ route('files.download-errors', $file->id) }}">
+                    <i class="fa fa-download mr-2"></i> {{ __('Download not found results') }}
                 </a>
                 <a class="dropdown-item" href="{{ route('files.map', $file->id) }}">
                     <i class="fa fa-map mr-2"></i> {{ __('Open map') }}

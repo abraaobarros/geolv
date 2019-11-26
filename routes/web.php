@@ -33,8 +33,12 @@ $router->group(['middleware' => ['auth', 'verified']], function (Router $router)
         ->name('files.download');
 
     $router
-        ->get('files/{files}/download-errors', 'GeocodingFileController@downloadErrors')
+        ->get('files/{files}/download/errors', 'GeocodingFileController@downloadErrors')
         ->name('files.download-errors');
+
+    $router
+        ->get('files/{files}/download/original', 'GeocodingFileController@downloadOriginal')
+        ->name('files.download-original');
 
     $router
         ->post('files/{files}/prioritize', 'GeocodingFileController@prioritize')
