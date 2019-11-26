@@ -3,6 +3,7 @@
 use Aws\S3\S3Client;
 use GeoLV\GeocodingFile;
 use Illuminate\Support\Facades\Storage;
+use League\Csv\Exception;
 use League\Csv\Reader;
 use League\Csv\Statement;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
@@ -46,15 +47,21 @@ class GeocodingFileReader
         elseif ($type == static::POST_PROCESSED_FILE)
             $response = $adapter->readStream($this->file->output_path);
 
-        $stream = $response['stream'];
-        $reader = Reader::createFromStream($stream)->setDelimiter($this->file->delimiter);
+        $stream = !empty($response) ? $response['stream'] : null;
+        if (empty($stream)) return [];
 
-        if ($size >= 0) {
-            return (new Statement())->offset($offset)->limit($size)->process($reader);
-        } else if ($offset > 0) {
-            return (new Statement())->offset($offset)->process($reader);
-        } else {
-            return $reader;
+        try {
+            $reader = Reader::createFromStream($stream)->setDelimiter($this->file->delimiter);
+
+            if ($size >= 0) {
+                return (new Statement())->offset($offset)->limit($size)->process($reader);
+            } else if ($offset > 0) {
+                return (new Statement())->offset($offset)->process($reader);
+            } else {
+                return $reader;
+            }
+        } catch (Exception $e) {
+            return [];
         }
     }
 

@@ -58,7 +58,7 @@ class Search extends Model
     {
         try {
             list($locality, ) = explode('-', $this->attributes['locality']);
-            return $locality;
+            return trim($locality);
         } catch (\Exception $exception) {
             return null;
         }
@@ -68,7 +68,7 @@ class Search extends Model
     {
         try {
             list(, $state) = explode('-', $this->attributes['locality']);
-            return $state;
+            return trim($state);
         } catch (\Exception $exception) {
             return null;
         }
