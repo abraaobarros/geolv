@@ -4,9 +4,10 @@ namespace GeoLV;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use \Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 
 /**
  * Class User
@@ -30,7 +31,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable;
+    use Notifiable, MustVerifyEmailTrait;
 
     const ADMIN_ROLE = 'admin';
     const DEV_ROLE = 'dev';
@@ -127,6 +128,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $providerRelationName = camel_case($provider) . "Provider";
 
         try {
+            /** @var Model $providerModel */
             $providerModel = $this->{$providerRelationName}()->first();
 
             if ($providerModel)

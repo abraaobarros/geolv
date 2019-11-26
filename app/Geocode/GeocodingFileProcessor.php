@@ -56,15 +56,18 @@ class GeocodingFileProcessor
      */
     public function process(GeocodingFile $file, $chunk): int
     {
+        $this->updateFileOffset($file, $chunk);
+
         $reader = new GeocodingFileReader($file);
         $records = $reader->read(GeocodingFileReader::PREPROCESSED_FILE, $chunk, $file->offset);
         $size = count($records);
+
         $this->geocoder->setProviders($file->providers, $file->user);
 
-        info("[GEOCODE: {$file->id}] {$size} records read");
-
-        if ($size == 0)
+        if ($size == 0) {
+            $this->setFileDone($file);
             return 0;
+        }
 
         foreach ($records as $i => $record) {
             try {
@@ -77,7 +80,6 @@ class GeocodingFileProcessor
             }
         }
 
-        $this->updateFileOffset($file, $size);
         $this->uploadOutput($file);
 
         return $size;
@@ -142,18 +144,11 @@ class GeocodingFileProcessor
     private function updateFileOffset(GeocodingFile $file, $count)
     {
         $file->offset = $file->offset + $count;
-
-        if ($count == 0) {
-            $file->done = true;
-        }
-
         $file->save();
     }
 
     private function uploadOutput(GeocodingFile $file)
     {
-        info("[GEOCODE: {$file->id}] uploading output");
-
         $outputContent = substr($this->output->getContent(), 0, -1); // removes the last \n
         $this->storage->append($file->output_path, $outputContent);
 
@@ -165,6 +160,12 @@ class GeocodingFileProcessor
     {
         $this->output = null;
         $this->errorOutput = null;
+    }
+
+    private function setFileDone(GeocodingFile $file)
+    {
+        $file->done = true;
+        $file->save();
     }
 
 }

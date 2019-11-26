@@ -126,7 +126,7 @@ class GeocodingFile extends Model
     public function getProgressAttribute()
     {
         try {
-            return ($this->offset / $this->count) * 100;
+            return min($this->offset / $this->count, 1);
         } catch (\Exception $e) {
             return 0;
         }

@@ -56,25 +56,22 @@ class Search extends Model
 
     public function getLocalityAttribute()
     {
-        $locality = $this->attributes['locality'];
-
         try {
-            $locality = trim(array_first(explode('-', $locality)));
-        } catch (\Exception $exception) {}
-
-        return $locality;
+            list($locality, ) = explode('-', $this->attributes['locality']);
+            return $locality;
+        } catch (\Exception $exception) {
+            return null;
+        }
     }
 
     public function getStateAttribute()
     {
-        $state = null;
-
         try {
-            $locality = $this->attributes['locality'];
-            $state = trim(array_last(explode('-', $locality)));
-        } catch (\Exception $exception) {}
-
-        return $state;
+            list(, $state) = explode('-', $this->attributes['locality']);
+            return $state;
+        } catch (\Exception $exception) {
+            return null;
+        }
     }
 
     public function getMaxDAttribute($value)

@@ -91,9 +91,6 @@ class GeoLVPythonService
                 return [$point->latitude, $point->longitude];
             })->toArray();
 
-            if ($n < 100)
-                info("cluster ($max_d): " . json_encode($points,JSON_PRETTY_PRINT));
-
             if ($n == 0)
                 return [];
 

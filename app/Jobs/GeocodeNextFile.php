@@ -47,6 +47,8 @@ class GeocodeNextFile implements ShouldQueue
 
     private function notify(GeocodingFile $file, $success, $message = null)
     {
+        $file->fresh();
+
         if ($success) {
             if (!$file->done) {
                 $file->update(['done' => true]);
