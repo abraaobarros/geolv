@@ -22,6 +22,11 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         $this->hideSensitiveRequestDetails();
 
         Telescope::filter(function (IncomingEntry $entry) {
+
+            //Ignore worker requests
+            if ($entry->type == 'request')
+                return !starts_with($entry->content['uri'], '/worker');
+
             return true;
         });
     }
