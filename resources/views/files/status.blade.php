@@ -21,7 +21,7 @@
     </small>
 
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: {{ $file->progress }}%">
+        <div class="progress-bar" role="progressbar" style="width: {{ $file->progress * 100 }}%">
             {{ number_format($file->progress * 100, 1) }}%
         </div>
     </div>
