@@ -73,6 +73,7 @@
             <div class="geolv-result"
                  data-is-focus="{{ $selected->id == $result->id }}"
                  data-id="{{ $result->id }}"
+                 data-formatted-address="{{ $result->formatted_address }}"
                  data-street-name="{{ $result->street_name }}"
                  data-number="{{ $result->street_number }}"
                  data-locality="{{ $result->locality }}"

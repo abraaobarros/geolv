@@ -1,6 +1,6 @@
 <div class="card" style="margin-bottom: 10px">
     <div class="card-body">
-        <h4 class="card-title">{{ $result->street_name }}</h4>
+        <h4 class="card-title">{{ $result->formatted_address }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ $result->provider }}</h6>
     </div>
     <ul class="list-group list-group-flush">

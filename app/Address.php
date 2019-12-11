@@ -34,6 +34,7 @@ use Location\Coordinate;
  * @property-read Coordinate coordinate
  * @property-read Search search
  * @property mixed id
+ * @property-read Locality calculated_locality
  */
 class Address extends Model
 {
@@ -60,7 +61,7 @@ class Address extends Model
     public function getStateAttribute($value)
     {
         if (blank($value))
-            return optional($this->findLocality())->state;
+            return optional($this->calculated_locality)->state;
         else
             return $value;
     }
@@ -108,17 +109,45 @@ class Address extends Model
             ->first();
     }
 
+    private $_calculated_locality;
+    public function getCalculatedLocalityAttribute()
+    {
+        if (empty($this->calculated_locality))
+            $this->_calculated_locality = $this->findLocality();
+
+        return $this->_calculated_locality;
+    }
+
     public function getLocalityAttribute($value)
     {
-        if (blank($value))
-            return optional($this->findLocality())->name;
-        else
+        if ($this->calculated_locality) {
+            return $this->calculated_locality->name;
+        } else {
             return $value;
+        }
     }
 
     public function getCoordinateAttribute()
     {
         return new Coordinate($this->latitude, $this->longitude);
+    }
+
+    public function getFormattedAddressAttribute()
+    {
+        $locality = optional($this->calculated_locality);
+        $locality = implode(" - ", array_filter([
+            $locality->name,
+            $locality->state
+        ]));
+
+        return implode(", ", array_filter([
+            !empty($this->street_name) ? $this->street_name : null,
+            !empty($this->street_number) ? $this->street_number : null,
+            !empty($this->sub_locality && $this->sub_locality != $this->locality) ? $this->sub_locality : null,
+            !empty($locality) ? $locality : null,
+            !empty($this->postal_code) ? $this->postal_code : null,
+            !empty($this->country_name) ? $this->country_name : null,
+        ]));
     }
 
     public function getAlgorithmAttribute()

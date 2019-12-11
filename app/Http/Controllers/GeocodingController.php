@@ -51,6 +51,7 @@ class GeocodingController extends Controller
 
         $this->geocoder->setProviders($selectedProviders);
         $results = $this->geocoder->geocode($text, $locality, $postalCode);
+
         $outside = filled($locality) ? $results->outsideLocality() : new AddressCollection();
         $clustersCount = $results->getClustersCount();
         $mainCluster = $results->inMainCluster();

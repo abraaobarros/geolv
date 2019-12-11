@@ -166,19 +166,11 @@ class GeocoderProvider
      */
     private function geocodeResults(Search $search)
     {
-        try {
-            $results = $this->provider->geocodeQuery(GeocodeQuery::create($search->address));
-        } catch (\Geocoder\Exception\Exception $e) {
-            $results = [];
-        }
-
+        $results = $this->provider->geocodeQuery(GeocodeQuery::create($search->address));
         $collection = new AddressCollection();
 
         /** @var Location $result */
         foreach ($results as $result) {
-            if (empty($result->getStreetName()))
-                continue;
-
             $address = Address::firstOrCreate([
                 'street_name' => $result->getStreetName(),
                 'street_number' => $result->getStreetNumber(),
@@ -224,7 +216,8 @@ class GeocoderProvider
             }
 
         }
-        return $locality;
+
+        return trim(str_replace("State of", "", $locality));
     }
 
 }
