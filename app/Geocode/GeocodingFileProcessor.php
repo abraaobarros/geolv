@@ -50,6 +50,7 @@ class GeocodingFileProcessor
      */
     public function process(GeocodingFile $file, $chunk): int
     {
+        $firstChunk = $file->offset == 0;
         $this->updateFileOffset($file, $chunk);
 
         $reader = new GeocodingFileReader($file);
@@ -65,7 +66,7 @@ class GeocodingFileProcessor
 
         foreach ($records as $i => $record) {
             try {
-                if ($i == 0 && $file->offset == 0 && $file->header)
+                if ($i == 0 && $firstChunk && $file->header)
                     $this->processHeader($file, $record);
                 else
                     $this->processRow($reader, $record);
