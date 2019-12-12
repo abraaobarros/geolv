@@ -4,6 +4,28 @@ import MarkerClusterer from "@google/markerclusterer";
 
 export default class GeoLVMap extends View {
 
+    constructor(jQueryElement, properties) {
+        super(jQueryElement, properties);
+        this.colors = {
+            0: 'e6194b',
+            1: '3cb44b',
+            2: 'ffe119',
+            3: '0082c8',
+            4: 'f58231',
+            5: '911eb4',
+            6: '46f0f0',
+            7: 'f032e6',
+            8: 'd2f53c',
+            9: 'fabebe',
+            10: '008080',
+            11: 'aa6e28',
+            12: 'acE5ee',
+            13: 'de5d83',
+            14: '66ff00',
+            15: 'c32148'
+        };
+    }
+
     get center() {
         let center = this.get('map').data('center');
         if (center) {
@@ -47,26 +69,7 @@ export default class GeoLVMap extends View {
     }
 
     onCreate() {
-        //<editor-fold defaultstate="collapsed" desc="this.colors = [...]">
-        this.colors = [
-            'e6194b',
-            '3cb44b',
-            'ffe119',
-            '0082c8',
-            'f58231',
-            '911eb4',
-            '46f0f0',
-            'f032e6',
-            'd2f53c',
-            'fabebe',
-            '008080',
-            'aa6e28',
-            'acE5ee',
-            'de5d83',
-            '66ff00',
-            'c32148'
-        ];
-        //</editor-fold>
+
 
         this.map = new google.maps.Map(this.get('map').get(0), {
             center: this.center,
@@ -163,11 +166,11 @@ export default class GeoLVMap extends View {
     }
 
     getColor(group) {
-        if (group > 15) {
-            return (0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
-        } else {
-            return this.colors[group - 1];
+        if (!this.colors.hasOwnProperty(group)) {
+            this.colors[group] = (0x1000000 + (Math.random()) * 0xffffff).toString(16).substr(1, 6);
         }
+
+        return this.colors[group];
     }
 
     drawLocality() {
