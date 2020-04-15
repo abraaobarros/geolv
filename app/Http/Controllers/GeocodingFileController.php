@@ -150,12 +150,12 @@ class GeocodingFileController extends Controller
             $emptyResults = empty($results);
         }
 
-        if (!$emptyResults) {
+        if ($emptyResults) {
             $results = collect();
             $clusters = collect();
             $processing = true;
 
-            $this->dispatchNow(new ProcessFilePoints($file));
+            $this->dispatch(new ProcessFilePoints($file));
         } else {
             $cluster = new ClusterWithScipy();
             $cluster->apply($results, $max_d);
