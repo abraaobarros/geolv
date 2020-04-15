@@ -151,21 +151,19 @@ class GeocodingFileController extends Controller
         }
 
         if (!$emptyResults) {
-            $cluster = new ClusterWithScipy();
-            $cluster->apply($results, $max_d);
-            $clusters = $this->getResultsClusters($results);
-            $processing = false;
-
-            return view('files.map', compact('file', 'results', 'max_d', 'clusters', 'processing'));
-        } else {
             $results = collect();
             $clusters = collect();
             $processing = true;
 
             $this->dispatchNow(new ProcessFilePoints($file));
-
-            return view('files.map', compact('file', 'results', 'max_d', 'clusters', 'processing'));
+        } else {
+            $cluster = new ClusterWithScipy();
+            $cluster->apply($results, $max_d);
+            $clusters = $this->getResultsClusters($results);
+            $processing = false;
         }
+
+        return view('files.map', compact('file', 'results', 'max_d', 'clusters', 'processing'));
     }
 
     /**
