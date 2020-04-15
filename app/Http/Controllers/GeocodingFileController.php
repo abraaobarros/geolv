@@ -145,7 +145,7 @@ class GeocodingFileController extends Controller
         $results = Cache::get($results_key);
 
         if ($results instanceof Collection) {
-            $emptyResults = !empty($results->first());
+            $emptyResults = $results->isEmpty();
         } else {
             $emptyResults = empty($results);
         }
