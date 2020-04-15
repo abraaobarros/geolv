@@ -141,14 +141,9 @@ class GeocodingFileController extends Controller
         //Resolve file
         $results_key = "files.{$file->id}.results";
         $max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
+        $results = Cache::get($results_key);
 
-        if ($file->offset < 500 && !Cache::has($results_key)) {
-            $this->dispatchNow(new ProcessFilePoints($file));
-        }
-
-        if (Cache::has($results_key)) {
-            $results = Cache::get("files.{$file->id}.results");
-
+        if (!empty($results)) {
             $cluster = new ClusterWithScipy();
             $cluster->apply($results, $max_d);
             $clusters = $this->getResultsClusters($results);
@@ -158,8 +153,9 @@ class GeocodingFileController extends Controller
         } else {
             $results = collect();
             $clusters = collect();
-            $this->dispatch(new ProcessFilePoints($file));
             $processing = true;
+
+            $this->dispatchNow(new ProcessFilePoints($file));
 
             return view('files.map', compact('file', 'results', 'max_d', 'clusters', 'processing'));
         }
