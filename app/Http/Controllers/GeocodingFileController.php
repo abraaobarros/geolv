@@ -11,6 +11,7 @@ use GeoLV\Jobs\ProcessFilePoints;
 use GeoLV\Search;
 use GeoLV\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
@@ -143,7 +144,13 @@ class GeocodingFileController extends Controller
         $max_d = $request->get('max_d', Search::DEFAULT_MAX_D);
         $results = Cache::get($results_key);
 
-        if (!empty($results)) {
+        if ($results instanceof Collection) {
+            $emptyResults = !empty($results->first());
+        } else {
+            $emptyResults = empty($results);
+        }
+
+        if (!$emptyResults) {
             $cluster = new ClusterWithScipy();
             $cluster->apply($results, $max_d);
             $clusters = $this->getResultsClusters($results);
