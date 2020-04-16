@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class ProcessFilePoints implements ShouldQueue
@@ -39,7 +40,12 @@ class ProcessFilePoints implements ShouldQueue
     public function handle()
     {
         $results_key = "files.{$this->file->id}.results";
-        if (Cache::has($results_key))
+        $results = Cache::get($results_key);
+
+        if (!empty($results))
+            return;
+
+        if ($results instanceof Collection && !$results->isEmpty())
             return;
 
         $callbackResults = function () {
