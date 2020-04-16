@@ -42,10 +42,10 @@ class ProcessFilePoints implements ShouldQueue
         $results_key = "files.{$this->file->id}.results";
         $results = Cache::get($results_key);
 
-        if (!empty($results))
+        if ($results instanceof Collection && !$results->isEmpty())
             return;
 
-        if ($results instanceof Collection && !$results->isEmpty())
+        if (!empty($results))
             return;
 
         $callbackResults = function () {
