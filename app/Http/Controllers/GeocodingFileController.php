@@ -157,9 +157,7 @@ class GeocodingFileController extends Controller
 
             $this->dispatch(new ProcessFilePoints($file));
         } else {
-            $cluster = new ClusterWithScipy();
-            $cluster->apply($results, $max_d);
-            $clusters = $this->getResultsClusters($results);
+            $clusters = $this->getResultsClusters($results, $max_d);
             $processing = false;
         }
 
@@ -209,17 +207,18 @@ class GeocodingFileController extends Controller
 
     /**
      * @param $results
-     * @param $max_d
+     * @param float $maxDistance
      * @return mixed
      */
-    private function getResultsClusters($results)
+    private function getResultsClusters(Collection $results, $maxDistance)
     {
-        $clusters = $results->groupBy('cluster')->map(function ($results, $cluster) {
-            $count = count($results);
+        $cluster = new ClusterWithScipy();
+        $cluster->apply($results, $maxDistance);
+
+        return $results->groupBy('cluster')->map(function ($results, $cluster) {
+            $count = $results->count();
             return compact('cluster', 'count');
         })->values()->sortByDesc('count');
-
-        return $clusters;
     }
 
 }
