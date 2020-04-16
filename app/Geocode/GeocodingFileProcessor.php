@@ -60,7 +60,6 @@ class GeocodingFileProcessor
         $this->geocoder->setProviders($file->providers, $file->user);
 
         if ($size == 0) {
-            $this->setFileDone($file);
             return 0;
         }
 
@@ -155,12 +154,6 @@ class GeocodingFileProcessor
     {
         $this->output = null;
         $this->errorOutput = null;
-    }
-
-    private function setFileDone(GeocodingFile $file)
-    {
-        $file->done = true;
-        $file->save();
     }
 
 }

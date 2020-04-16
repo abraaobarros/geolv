@@ -35,7 +35,7 @@ use Illuminate\Support\Carbon;
  * @property string name
  * @property string error_name
  * @method static GeocodingFile|Model create($data)
- * @method static Builder nextProcessable()
+ * @method static Builder processable()
  */
 class GeocodingFile extends Model
 {
@@ -88,7 +88,7 @@ class GeocodingFile extends Model
         return 'errors_' . $this->name;
     }
 
-    public function scopeNextProcessable(Builder $query)
+    public function scopeProcessable(Builder $query)
     {
         return $query
             ->where('done', false)
@@ -134,7 +134,8 @@ class GeocodingFile extends Model
 
     public function getInProcessAttribute()
     {
-        $next = static::nextProcessable()->first();
+        /** @var GeocodingFile $next */
+        $next = static::processable()->first();
         return $next && $this->id == $next->id;
     }
 

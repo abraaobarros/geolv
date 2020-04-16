@@ -43,8 +43,7 @@ class ProcessFilePoints implements ShouldQueue
             return;
 
         $callbackResults = function () {
-            $results = $this->getFileResults();
-            return $results;
+            return $this->getFileResults();
         };
 
         if ($this->file->done) {
