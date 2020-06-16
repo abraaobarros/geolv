@@ -101,12 +101,12 @@ class GeocoderProvider
     }
 
     /**
-     * @param User $user
+     * @param string $apiKey
      * @return GoogleMaps
      */
-    private function getGoogleProvider(User $user): GoogleMaps
+    private function getGoogleProvider(string $apiKey): GoogleMaps
     {
-        return new GoogleMaps($this->adapter, 'pt-BR', $user->google_maps_api_key);
+        return new GoogleMaps($this->adapter, 'pt-BR', $apiKey);
     }
 
     /**
@@ -118,21 +118,21 @@ class GeocoderProvider
     }
 
     /**
-     * @param User $user
+     * @param string $apiKey
      * @return HereGeocoder
      */
-    private function getHereGeocoderProvider(User $user): HereGeocoder
+    private function getHereGeocoderProvider(string $apiKey): HereGeocoder
     {
-        return new HereGeocoder($this->adapter, $user->here_geocoder_api_key);
+        return new HereGeocoder($this->adapter, $apiKey);
     }
 
     /**
-     * @param User $user
+     * @param string $apiKey
      * @return BingMaps
      */
-    private function getBingMapsProvider(User $user): BingMaps
+    private function getBingMapsProvider(string $apiKey): BingMaps
     {
-        return new BingMaps($this->adapter, $user->bing_maps_api_key);
+        return new BingMaps($this->adapter, $apiKey);
     }
 
     /**
