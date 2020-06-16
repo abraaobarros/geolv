@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f67b60f450720d4f86019855a0dbc8ad",
+    "content-hash": "3afb945f1fe2c9170f66a109090a05cd",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -60,16 +60,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.142.2",
+            "version": "3.142.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "92cf325bfabc80d919282729a25063876a73205e"
+                "reference": "3e593efcfd06237219a1ee85319a0b3c863ee67e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/92cf325bfabc80d919282729a25063876a73205e",
-                "reference": "92cf325bfabc80d919282729a25063876a73205e",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3e593efcfd06237219a1ee85319a0b3c863ee67e",
+                "reference": "3e593efcfd06237219a1ee85319a0b3c863ee67e",
                 "shasum": ""
             },
             "require": {
@@ -141,7 +141,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-06-15T18:17:20+00:00"
+            "time": "2020-06-16T18:16:10+00:00"
         },
         {
             "name": "bdelespierre/php-kmeans",
@@ -2490,6 +2490,72 @@
             ],
             "description": "Flysystem adapter for the AWS S3 SDK v3.x",
             "time": "2020-06-02T18:41:58+00:00"
+        },
+        {
+            "name": "mjaschen/phpgeo",
+            "version": "2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mjaschen/phpgeo.git",
+                "reference": "75b20ef705f6da256b3326bca40a54732a0528a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mjaschen/phpgeo/zipball/75b20ef705f6da256b3326bca40a54732a0528a7",
+                "reference": "75b20ef705f6da256b3326bca40a54732a0528a7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "daux/daux.io": "^0.11.0",
+                "jakub-onderka/php-parallel-lint": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Location\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcus Jaschen",
+                    "email": "mjaschen@gmail.com",
+                    "homepage": "https://www.marcusjaschen.de/"
+                }
+            ],
+            "description": "Simple Yet Powerful Geo Library",
+            "homepage": "https://phpgeo.marcusjaschen.de/",
+            "keywords": [
+                "Polygon",
+                "area",
+                "bearing",
+                "bounds",
+                "calculation",
+                "coordinate",
+                "distance",
+                "earth",
+                "ellipsoid",
+                "geo",
+                "geofence",
+                "gis",
+                "gps",
+                "haversine",
+                "length",
+                "perpendicular",
+                "point",
+                "polyline",
+                "projection",
+                "simplify",
+                "track",
+                "vincenty"
+            ],
+            "time": "2020-02-05T17:39:53+00:00"
         },
         {
             "name": "monolog/monolog",

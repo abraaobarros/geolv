@@ -5,7 +5,6 @@ namespace GeoLV\Geocode\Scoring\Calculators;
 
 use GeoLV\Address;
 use GeoLV\Locality;
-use GeoLV\Search;
 use Location\Coordinate;
 use Location\Polygon;
 
