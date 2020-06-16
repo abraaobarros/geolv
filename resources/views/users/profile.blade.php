@@ -72,14 +72,9 @@
                                     <div class="form-group">
                                         <label for="hereGeocoderId">ID</label>
                                         <input type="text" class="form-control" id="hereGeocoderId"
-                                               name="here_geocoder[here_id]" value="{{ $user->here_geocoder_id }}">
+                                               name="here_geocoder[api_key]" value="{{ $user->here_geocoder_api_key }}">
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="hereGeocoderCode">Code</label>
-                                        <input type="text" class="form-control" id="hereGeocoderCode"
-                                               name="here_geocoder[code]" value="{{ $user->here_geocoder_code }}">
-                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="bing-maps" role="tabpanel">
 
