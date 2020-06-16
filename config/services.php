@@ -38,28 +38,10 @@ return [
         'api_key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
-    '99taxi' => [
-        'sandbox' => env('NNTAXI_SANDBOX_ENABLED', true),
-        'api_key' => env('NNTAXI_API_KEY'),
-        'sandbox_api_key' => env('NNTAXI_SANDBOX_API_KEY'),
-
-        'webhook_username' => env('NNTAXI_WEBHOOK_USERNAME'),
-        'webhook_password' => env('NNTAXI_WEBHOOK_PASSWORD'),
-    ],
-
-    'wappa' => [
-        'username' => env('WAPPA_USERNAME'),
-        'password' => env('WAPPA_PASSWORD'),
-
-        'client_id' => env('WAPPA_CLIENT_ID'),
-        'client_secret' => env('WAPPA_CLIENT_SECRET'),
-
-        'sandbox' => env('WAPPA_SANDBOX_ENABLED', true)
-    ],
-
-    'uber' => [
-        'api_key' => env('UBER_API_KEY'),
-        'client_id' => env('UBER_CLIENT_ID'),
-    ],
+    'cluster' => [
+        'url' => env('SCIPY_CLUSTER_URL'),
+        'username' => env('SCIPY_USERNAME'),
+        'password' => env('SCIPY_PASSWORD'),
+    ]
 
 ];
