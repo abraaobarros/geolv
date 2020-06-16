@@ -15,7 +15,7 @@ use GeoLV\Address;
 use GeoLV\Geocode\Clusters\ClusterWithScipy;
 use GeoLV\Search;
 use GeoLV\User;
-use Http\Client\HttpClient;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Cache\Repository as CacheRepository;
@@ -34,7 +34,7 @@ class GeocoderProvider
     {
         $this->cache = $cache;
         $this->defaultProviders = ['google_maps', 'here_geocoder'];
-        $this->adapter = HttpClient::createWithConfig(['verify' => false]);
+        $this->adapter = new Client(['verify' => false]);
     }
 
     /**
