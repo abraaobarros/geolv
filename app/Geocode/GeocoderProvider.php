@@ -4,12 +4,12 @@ namespace GeoLV\Geocode;
 
 use Geocoder\Exception\UnsupportedOperation;
 use Geocoder\Provider\BingMaps\BingMaps;
+use Geocoder\Provider\Cache\ProviderCache;
 use Geocoder\Provider\Provider;
 use GeoLV\AddressCollection;
 use Geocoder\Location;
 use Geocoder\Provider\ArcGISOnline\ArcGISOnline;
 use Geocoder\Provider\GoogleMaps\GoogleMaps;
-use Geocoder\ProviderAggregator;
 use Geocoder\Query\GeocodeQuery;
 use GeoLV\Address;
 use GeoLV\Geocode\Clusters\ClusterWithScipy;
@@ -18,17 +18,21 @@ use GeoLV\User;
 use Http\Adapter\Guzzle6\Client;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
+use Illuminate\Cache\Repository as CacheRepository;
 
 class GeocoderProvider
 {
-    /** @var ProviderAggregator */
+    /** @var Provider */
     private $provider;
-    private $adapter;
-    private $defaultProviders;
-    private $providers;
 
-    public function __construct()
+    private $adapter;
+
+    private $defaultProviders;
+    private $cache;
+
+    public function __construct(CacheRepository $cache)
     {
+        $this->cache = $cache;
         $this->defaultProviders = ['google_maps', 'here_geocoder'];
         $this->adapter = Client::createWithConfig(['verify' => false]);
     }
@@ -39,17 +43,16 @@ class GeocoderProvider
      */
     public function setProviders(array $providers = null, User $user = null): void
     {
-        $this->provider = new ProviderAggregator();
-        $this->providers = empty($providers)? $this->defaultProviders : $providers;
+        $providers = empty($providers)? $this->defaultProviders : $providers;
         /** @var User $user */
         $user = $user ?: auth()->user();
         $config = [];
 
-        foreach ($this->providers as $provider) {
+        foreach ($providers as $provider) {
             $config[] = $this->resolveProvider($provider, $user);
         }
 
-        $this->provider->registerProvider(new GroupResults($config));
+        $this->provider = new ProviderCache(new GroupResults($config), $this->cache);
     }
 
     /**
@@ -88,13 +91,11 @@ class GeocoderProvider
      */
     private function getSearch($text, $locality, $postalCode): Search
     {
-        $search = Search::firstOrCreate([
+        return Search::firstOrCreate([
             'text' => filled($text)? $text : null,
             'locality' => filled($locality)? $locality : null,
             'postal_code' => filled($postalCode)? $postalCode : null,
         ]);
-
-        return $search;
     }
 
     /**
@@ -122,10 +123,9 @@ class GeocoderProvider
      */
     private function getHereGeocoderProvider(User $user): HereGeocoder
     {
-        $geocoderId = filled($user->here_geocoder_id) ? $user->here_geocoder_id : env('HERE_GEOCODER_ID');
-        $geocoderCode = filled($user->here_geocoder_code) ? $user->here_geocoder_code : env('HERE_GEOCODER_CODE');
+        $geocoderApiKey = filled($user->here_geocoder_api_key) ? $user->here_geocoder_api_key : env('HERE_GEOCODER_API_KEY');
 
-        return new HereGeocoder($this->adapter, $geocoderId, $geocoderCode);
+        return new HereGeocoder($this->adapter, $geocoderApiKey);
     }
 
     /**

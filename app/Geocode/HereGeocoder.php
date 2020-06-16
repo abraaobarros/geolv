@@ -17,15 +17,13 @@ use Http\Client\HttpClient;
 
 class HereGeocoder extends AbstractHttpProvider implements Provider
 {
-    private $appId;
-    private $appCode;
-    private $host = 'https://geocoder.cit.api.here.com/6.2/';
+    private $apiKey;
+    private $host = 'https://geocoder.ls.hereapi.com/6.2/';
 
-    public function __construct(HttpClient $client, string $appId, string $appCode, string $country = null)
+    public function __construct(HttpClient $client, string $apiKey, string $country = null)
     {
         parent::__construct($client);
-        $this->appId = $appId;
-        $this->appCode = $appCode;
+        $this->apiKey = $apiKey;
     }
 
     public function geocodeQuery(GeocodeQuery $query): Collection
@@ -57,8 +55,7 @@ class HereGeocoder extends AbstractHttpProvider implements Provider
             'searchtext' => $searchString,
             'gen' => 9,
             'contry' => 'BRA',
-            'app_id' => $this->appId,
-            'app_code' => $this->appCode
+            'apiKey' => $this->apiKey,
         ]);
         $response = $this->getUrlContents($uri);
         return $this->parseResponse($response);

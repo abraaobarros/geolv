@@ -3,6 +3,7 @@
 namespace GeoLV;
 
 use Carbon\Carbon;
+use Geocoder\Provider\GoogleMaps\GoogleMaps;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -24,9 +25,8 @@ use \Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
  * @property HereGeocoderProvider hereGeocoderProvider
  * @property BingMapsProvider bingMapsProvider
  * @property-read string google_maps_api_key
- * @property-read string here_geocoder_id
- * @property-read string here_geocoder_code
  * @property-read string bing_maps_api_key
+ * @property string here_geocoder_api_key
  * @method static User create(array $array)
  */
 class User extends Authenticatable implements MustVerifyEmail
@@ -59,14 +59,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return optional($this->googleMapsProvider)->api_key;
     }
 
-    public function getHereGeocoderIdAttribute()
+    public function getHereGeocoderApiKeyAttribute()
     {
-        return optional($this->hereGeocoderProvider)->here_id;
-    }
-
-    public function getHereGeocoderCodeAttribute()
-    {
-        return optional($this->hereGeocoderProvider)->code;
+        return optional($this->hereGeocoderProvider)->api_key;
     }
 
     public function getBingMapsApiKeyAttribute()
@@ -93,19 +88,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(GeocodingFile::class);
     }
 
+    public function providers()
+    {
+        return $this->hasMany(GeocodingProvider::class);
+    }
+
     public function googleMapsProvider()
     {
-        return $this->hasOne(GoogleProvider::class);
+        return $this->hasOne(GeocodingProvider::class)->googleMaps();
     }
 
     public function hereGeocoderProvider()
     {
-        return $this->hasOne(HereGeocoderProvider::class);
+        return $this->hasOne(GeocodingProvider::class)->hereGeocoder();
     }
 
     public function bingMapsProvider()
     {
-        return $this->hasOne(BingMapsProvider::class);
+        return $this->hasOne(GeocodingProvider::class)->bingMaps();
     }
 
     public function isAdmin()
@@ -120,21 +120,27 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * @param $provider
-     * @param array $options
-     * @return GoogleProvider|HereGeocoderProvider|BingMapsProvider
+     * @param $apiKey
+     * @return GeocodingProvider|Model|null
      */
-    public function provider($provider, array $options)
+    public function provider($provider, $apiKey = null)
     {
         $providerRelationName = camel_case($provider) . "Provider";
 
         try {
             /** @var Model $providerModel */
-            $providerModel = $this->{$providerRelationName}()->first();
+            $providerModel = $this->{$providerRelationName};
 
-            if ($providerModel)
-                $providerModel->update($options);
-            else
-                $providerModel = $this->{$providerRelationName}()->create($options);
+            if (filled($apiKey)) {
+                $credentials = ['api_key' => $apiKey];
+                if (filled($providerModel) && $providerModel->exists) {
+                    $providerModel->update($credentials);
+                } else {
+                    $providerModel = $this->providers()->create(
+                        array_merge($credentials, ['provider' => $provider])
+                    );
+                }
+            }
 
             return $providerModel;
         } catch (\Exception $e) {
