@@ -6,12 +6,12 @@ use Illuminate\Support\ServiceProvider;
 
 class GeocoderServiceProvider extends ServiceProvider
 {
-    protected $defer = false;
+    protected $defer = true;
 
     public function boot()
     {
         $this->app->singleton('geocoder', function ($app) {
-            return new GeocoderProvider();
+            return $app->make(GeocoderProvider::class);
         });
     }
 
