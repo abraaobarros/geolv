@@ -142,17 +142,17 @@ class GeocoderProvider
      */
     private function resolveProvider($provider, User $user): ?Provider
     {
-        $provider = $user->provider($provider);
-        if (empty($provider))
+        $config = $user->provider($provider);
+        if (empty($config))
             return null;
 
         switch ($provider) {
             case 'google_maps':
-                return $this->getGoogleProvider($provider->api_key);
+                return $this->getGoogleProvider($config->api_key);
             case 'here_geocoder':
-                return $this->getHereGeocoderProvider($provider->api_key);
+                return $this->getHereGeocoderProvider($config->api_key);
             case 'bing_maps':
-                return $this->getBingMapsProvider($provider->api_key);
+                return $this->getBingMapsProvider($config->api_key);
             case 'arcgis_online':
                 return $this->getArcGISOnlineProvider();
             default:
