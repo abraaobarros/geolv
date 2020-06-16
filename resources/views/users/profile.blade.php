@@ -70,8 +70,8 @@
                                 <div class="tab-pane fade" id="here-geocoder" role="tabpanel">
 
                                     <div class="form-group">
-                                        <label for="hereGeocoderId">ID</label>
-                                        <input type="text" class="form-control" id="hereGeocoderId"
+                                        <label for="hereGeocoderApiKey">API Key</label>
+                                        <input type="text" class="form-control" id="hereGeocoderApiKey"
                                                name="here_geocoder[api_key]" value="{{ $user->here_geocoder_api_key }}">
                                     </div>
 
