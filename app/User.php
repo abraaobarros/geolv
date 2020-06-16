@@ -21,9 +21,6 @@ use \Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
  * @property int id
  * @property Carbon updated_at
  * @property Carbon email_verified_at
- * @property GoogleProvider googleMapsProvider
- * @property HereGeocoderProvider hereGeocoderProvider
- * @property BingMapsProvider bingMapsProvider
  * @property-read string google_maps_api_key
  * @property-read string bing_maps_api_key
  * @property string here_geocoder_api_key
@@ -123,7 +120,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param $apiKey
      * @return GeocodingProvider|Model|null
      */
-    public function provider($provider, $apiKey = null)
+    public function provider($provider, $apiKey = null): ?GeocodingProvider
     {
         $providerRelationName = camel_case($provider) . "Provider";
 

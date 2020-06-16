@@ -5,6 +5,12 @@ namespace GeoLV;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class GeocodingProvider
+ * @package GeoLV
+ * @property string provider
+ * @property integer api_key
+ */
 class GeocodingProvider extends Model
 {
     protected $fillable = [

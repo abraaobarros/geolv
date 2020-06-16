@@ -15,7 +15,7 @@ use GeoLV\Address;
 use GeoLV\Geocode\Clusters\ClusterWithScipy;
 use GeoLV\Search;
 use GeoLV\User;
-use GuzzleHttp\Client;
+use Http\Adapter\Guzzle6\Client as GuzzleHttpClientAdapter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 use Illuminate\Cache\Repository as CacheRepository;
@@ -34,7 +34,7 @@ class GeocoderProvider
     {
         $this->cache = $cache;
         $this->defaultProviders = ['google_maps', 'here_geocoder'];
-        $this->adapter = new Client(['verify' => false]);
+        $this->adapter = GuzzleHttpClientAdapter::createWithConfig(['verify' => false]);
     }
 
     /**
@@ -49,7 +49,9 @@ class GeocoderProvider
         $config = [];
 
         foreach ($providers as $provider) {
-            $config[] = $this->resolveProvider($provider, $user);
+            $service = $this->resolveProvider($provider, $user);
+            if (!empty($service))
+                $config[] = $service;
         }
 
         $this->provider = new ProviderCache(new GroupResults($config), $this->cache);
@@ -104,9 +106,7 @@ class GeocoderProvider
      */
     private function getGoogleProvider(User $user): GoogleMaps
     {
-        $apiKey = filled($user->google_maps_api_key) ? $user->google_maps_api_key : env('GOOGLE_MAPS_API_KEY');
-
-        return new GoogleMaps($this->adapter, 'pt-BR', $apiKey);
+        return new GoogleMaps($this->adapter, 'pt-BR', $user->google_maps_api_key);
     }
 
     /**
@@ -123,9 +123,7 @@ class GeocoderProvider
      */
     private function getHereGeocoderProvider(User $user): HereGeocoder
     {
-        $geocoderApiKey = filled($user->here_geocoder_api_key) ? $user->here_geocoder_api_key : env('HERE_GEOCODER_API_KEY');
-
-        return new HereGeocoder($this->adapter, $geocoderApiKey);
+        return new HereGeocoder($this->adapter, $user->here_geocoder_api_key);
     }
 
     /**
@@ -134,25 +132,27 @@ class GeocoderProvider
      */
     private function getBingMapsProvider(User $user): BingMaps
     {
-        $apiKey = filled($user->bing_maps_api_key) ? $user->bing_maps_api_key : env('BING_MAPS_API_KEY');
-
-        return new BingMaps($this->adapter, $apiKey);
+        return new BingMaps($this->adapter, $user->bing_maps_api_key);
     }
 
     /**
      * @param $provider
      * @param User $user
-     * @return Provider
+     * @return Provider|null
      */
-    private function resolveProvider($provider, User $user): Provider
+    private function resolveProvider($provider, User $user): ?Provider
     {
+        $provider = $user->provider($provider);
+        if (empty($provider))
+            return null;
+
         switch ($provider) {
             case 'google_maps':
-                return $this->getGoogleProvider($user);
+                return $this->getGoogleProvider($provider->api_key);
             case 'here_geocoder':
-                return $this->getHereGeocoderProvider($user);
+                return $this->getHereGeocoderProvider($provider->api_key);
             case 'bing_maps':
-                return $this->getBingMapsProvider($user);
+                return $this->getBingMapsProvider($provider->api_key);
             case 'arcgis_online':
                 return $this->getArcGISOnlineProvider();
             default:
