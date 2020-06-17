@@ -30,6 +30,8 @@ class GeocodeNextFile implements ShouldQueue
         if (empty($file))
             return;
 
+        $lock = Cache::lock(implode('_', [class_basename($file), $file->id]), 600);
+
         try {
             if ($processor->process($file, static::CHUNK_SIZE) == 0) {
                 $this->notify($file);
@@ -41,6 +43,8 @@ class GeocodeNextFile implements ShouldQueue
             report($e);
             $this->notify($file,$e);
         }
+
+        $lock->release();
 
         if (GeocodingFile::processable()->first() != null)
             GeocodeNextFile::dispatch();

@@ -74,7 +74,7 @@ class GeocodingFileProcessor
         }
 
         $this->uploadOutput($file);
-        $this->updateFileOffset($file, $chunk);
+        $this->updateFileOffset($file, $size);
 
         return $size;
     }
