@@ -51,7 +51,6 @@ class GeocodingFileProcessor
     public function process(GeocodingFile $file, $chunk): int
     {
         $firstChunk = $file->offset == 0;
-        $this->updateFileOffset($file, $chunk);
 
         $reader = new GeocodingFileReader($file);
         $records = $reader->read(GeocodingFileReader::PREPROCESSED_FILE, $chunk, $file->offset);
@@ -75,6 +74,7 @@ class GeocodingFileProcessor
         }
 
         $this->uploadOutput($file);
+        $this->updateFileOffset($file, $chunk);
 
         return $size;
     }
