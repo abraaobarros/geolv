@@ -41,7 +41,7 @@
                                     <a class="nav-link" data-toggle="tab" href="#here-geocoder" role="tab"
                                        aria-controls="profile" aria-selected="false">
                                         Here Geocoder
-                                        @if (filled($user->here_geocoder_code) && filled($user->here_geocoder_id))
+                                        @if (filled($user->here_geocoder_api_key))
                                             <i class="fa fa-check text-success ml-2"></i>
                                         @endif
                                     </a>

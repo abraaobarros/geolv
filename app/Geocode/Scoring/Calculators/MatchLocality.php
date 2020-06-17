@@ -5,8 +5,6 @@ namespace GeoLV\Geocode\Scoring\Calculators;
 
 use GeoLV\Address;
 use GeoLV\Locality;
-use Location\Coordinate;
-use Location\Polygon;
 
 class MatchLocality extends SearchRelevanceCalculator
 {

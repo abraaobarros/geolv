@@ -53,7 +53,7 @@ return [
             'driver' => 'sqs',
             'key' => env('AWS_SQS_KEY'),
             'secret' => env('AWS_SQS_SECRET'),
-            'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-1.amazonaws.com/' . env('AWS_SQS_ACCOUNT_ID', 'your-account-id')),
+            'prefix' => env('SQS_PREFIX', 'https://sqs.' . env('AWS_SQS_REGION', 'us-east-1') . '.amazonaws.com/' . env('AWS_SQS_ACCOUNT_ID', 'your-account-id')),
             'queue' => env('AWS_SQS_QUEUE_NAME', 'your-queue-name'),
             'suffix' => env('SQS_SUFFIX'),
             'region' => env('AWS_SQS_REGION', 'us-east-1'),
