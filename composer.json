@@ -14,7 +14,7 @@
         "aws/aws-sdk-php": "^3.109",
         "bdelespierre/php-kmeans": "dev-master",
         "bugsnag/bugsnag-laravel": "^2.0",
-        "dusterio/laravel-aws-worker": "^0.1.17",
+        "dusterio/laravel-aws-worker": "^0.1.26",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "gasparesganga/php-shapefile": "^2.4",
@@ -32,10 +32,10 @@
         "laravel/ui": "^2.0",
         "league/csv": "^9.6",
         "league/flysystem-aws-s3-v3": "~1.0",
+        "mjaschen/phpgeo": "^2.0",
         "php-http/guzzle6-adapter": "^2.0",
         "predis/predis": "^1.1",
-        "toin0u/geocoder-laravel": "^4.3",
-        "mjaschen/phpgeo": "^2.0"
+        "toin0u/geocoder-laravel": "^4.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",
