@@ -4,6 +4,7 @@ namespace GeoLV\Geocode;
 
 
 use Geocoder\Collection;
+use Geocoder\Exception\InvalidCredentials;
 use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
@@ -44,6 +45,8 @@ class GroupResults implements Provider
                     foreach ($results as $result)
                         $list[] = $result;
                 }
+            } catch (InvalidCredentials $e) {
+                $this->providers = collect($this->providers)->reject($provider)->values()->toArray();
             } catch (Throwable $e) {
                 report($e);
             }

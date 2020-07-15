@@ -79,17 +79,18 @@ class ProcessFilePoints implements ShouldQueue
                 continue;
 
             $n_cols = count($row) - $n_fields;
+            $realLatitudeIdx = $n_cols + $lat_idx;
+            $realLongitudeIdx = $n_cols + $lng_idx;
 
-            try {
-                $text = $reader->getField($row, 'text');
+            $text = $reader->getField($row, 'text');
+            if (!empty($text) && !empty($row[$realLatitudeIdx]) && !empty($row[$realLongitudeIdx])) {
                 $results->add((object)[
                     'text' => $text,
-                    'latitude' => $row[$n_cols + $lat_idx],
-                    'longitude' => $row[$n_cols + $lng_idx],
+                    'latitude' => $row[$realLatitudeIdx],
+                    'longitude' => $row[$realLongitudeIdx],
                 ]);
-            } catch (\Exception $e) {
-                report($e);
             }
+
         }
 
         return $results;

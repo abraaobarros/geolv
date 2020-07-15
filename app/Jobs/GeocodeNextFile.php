@@ -39,7 +39,7 @@ class GeocodeNextFile implements ShouldQueue
             } catch (Exception $e) {
                 report($e);
                 $this->notify($file, $e);
-            } catch (TypeError $e) {
+            } catch (\ErrorException $e) {
                 report($e);
                 $this->notify($file,$e);
             }
