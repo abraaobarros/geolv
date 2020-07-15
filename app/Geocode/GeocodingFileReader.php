@@ -72,7 +72,15 @@ class GeocodingFileReader
             foreach ($this->file->indexes[$field] as $index)
                 array_push($value, $row[$index]);
 
-            return trim(implode(" ", $value));
+            $data = trim(implode(" ", $value));
+
+            // Convert field encoding to UTF-8
+            $encoding = mb_detect_encoding($data);
+            if (!empty($encoding) && $encoding != "UTF-8")
+                $data = mb_convert_encoding($data, 'UTF-8', $encoding);
+            //
+
+            return $data;
         } else {
             return null;
         }

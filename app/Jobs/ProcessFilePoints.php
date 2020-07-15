@@ -2,6 +2,7 @@
 
 namespace GeoLV\Jobs;
 
+use Geocoder\Exception\InvalidArgument;
 use GeoLV\Geocode\GeocodingFileReader;
 use GeoLV\Geocode\GeoLVPythonService;
 use GeoLV\GeocodingFile;
@@ -64,16 +65,25 @@ class ProcessFilePoints implements ShouldQueue
         $results = collect();
         $reader = new GeocodingFileReader($this->file);
         $stream = $reader->read(GeocodingFileReader::POST_PROCESSED_FILE, -1, $this->file->header ? 1 : 0);
-        $n_fields = count($this->file->fields);
         $lat_idx = array_search('latitude', $this->file->fields);
         $lng_idx = array_search('longitude', $this->file->fields);
+        $n_fields = count($this->file->fields);
+
+        if ($lat_idx === false || $lng_idx === false) {
+            report(new InvalidArgument("No latitude or longitude columns inside selected fields."));
+            return collect();
+        }
 
         foreach ($stream as $row) {
+            if (count($row) == 0)
+                continue;
+
             $n_cols = count($row) - $n_fields;
 
             try {
+                $text = $reader->getField($row, 'text');
                 $results->add((object)[
-                    'text' => $reader->getField($row, 'text'),
+                    'text' => $text,
                     'latitude' => $row[$n_cols + $lat_idx],
                     'longitude' => $row[$n_cols + $lng_idx],
                 ]);
