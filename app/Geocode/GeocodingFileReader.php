@@ -75,10 +75,7 @@ class GeocodingFileReader
             $data = trim(implode(" ", $value));
 
             // Convert field encoding to UTF-8
-            $encoding = mb_detect_encoding($data);
-            if (!empty($encoding) && $encoding != "UTF-8")
-                $data = mb_convert_encoding($data, 'UTF-8', $encoding);
-            //
+            $data = mb_convert_encoding($data, 'UTF-8');
 
             return $data;
         } else {
